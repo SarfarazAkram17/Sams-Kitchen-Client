@@ -2,7 +2,7 @@ import { Link, NavLink } from "react-router";
 import { useState } from "react";
 import { RiMenu2Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import useAuth from "../../Hooks/useAuth";
 import { toast } from "react-toastify";
 
@@ -59,7 +59,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logOutUser()
       .then(() => {
-        toast.warn("You Logout from TourNest");
+        toast.warn("You Logout from Sam's Kitchen");
       })
       .catch((error) => {
         toast.error(error.message);

@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../Firebase/firebase.config";
@@ -34,7 +35,13 @@ const AuthProvider = ({ children }) => {
   };
 
   const updateUserProfile = (profileInfo) => {
+    setLoading(true);
     return updateProfile(auth.currentUser, profileInfo);
+  };
+
+  const sendVerificationEmail = () => {
+    setLoading(true);
+    return sendEmailVerification(auth.currentUser);
   };
 
   const continueWithGoogle = () => {
@@ -70,6 +77,7 @@ const AuthProvider = ({ children }) => {
     createUser,
     loginUser,
     updateUserProfile,
+    sendVerificationEmail,
     continueWithGoogle,
     forgotPassword,
     logOutUser,

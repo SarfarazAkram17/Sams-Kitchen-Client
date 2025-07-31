@@ -3,14 +3,15 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-// import useAxios from "../../Hooks/useAxios";
+import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import SocialLogin from "../../Components/Shared/SocialLogin";
-
+import Lottie from "lottie-react";
+import loginLottie from '../../assets/animations/login.json'
 const Login = () => {
-//   const axiosInstance = useAxios();
+  const axiosInstance = useAxios();
   const [showPassword, setShowPassword] = useState(false);
-  const { loginUser, forgotPassword } = useAuth();
+  const { loginUser, forgotPassword, logOutUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,11 +33,25 @@ const Login = () => {
     const password = formData.password.trim();
 
     loginUser(email, password)
-      .then(async () => {
+      .then(async (res) => {
+        if (!res.user.emailVerified) {
+          logOutUser().then(() => {
+            toast.warn("Verify your email and then login");
+          });
+          return;
+        }
         toast.success("You logged in successfully");
         reset();
 
-        // await axiosInstance.post("/users", { email });
+        await axiosInstance.post("/users", {
+          email,
+          password,
+          name: res.user.displayName,
+          role: "customer",
+          photo: res.user.photoURL,
+          createdAt: res.user.metadata.createdAt,
+          last_log_in: Date.now().toString(),
+        });
 
         navigate(location.state || "/");
       })
@@ -64,7 +79,8 @@ const Login = () => {
   };
 
   return (
-    <div className="px-4">
+    <div className="flex flex-col md:flex-row gap-6 justify-start items-center md:justify-center">
+      <Lottie animationData={loginLottie} loop={true}></Lottie>
       <div className="card w-full shadow-xl max-w-md mx-auto my-12">
         <div className="card-body">
           <h1 className="text-3xl font-extrabold">Welcome Back</h1>

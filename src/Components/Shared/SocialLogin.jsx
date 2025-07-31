@@ -1,28 +1,29 @@
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-// import useAxios from "../../Hooks/useAxios";
+import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 
 const SocialLogin = ({ state, message }) => {
-//   const axiosInstance = useAxios();
+  const axiosInstance = useAxios();
   const { continueWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
     continueWithGoogle()
-      .then(async () => {
-        // const email = res.user?.providerData[0]?.email;
+      .then(async (res) => {
+        const email = res.user?.providerData[0]?.email;
 
-        // const userInfo = {
-        //   email,
-        //   name: res.user.displayName,
-        //   role: "customer",
-        //   photo: res.user.photoURL,
-        //   created_at: new Date().toISOString(),
-        //   last_log_in: new Date().toISOString(),
-        // };
+        const userInfo = {
+          email,
+          providerId: res.providerId,
+          name: res.user.displayName,
+          role: "customer",
+          photo: res.user.photoURL,
+          createdAt: res.user.metadata.createdAt,
+          last_log_in: Date.now().toString(),
+        };
 
-        // axiosInstance.post("/users", userInfo);
+        axiosInstance.post("/users", userInfo);
 
         navigate(state || "/");
         toast.success(message);

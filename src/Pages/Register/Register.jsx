@@ -3,15 +3,15 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import userImage from "../../assets/image-upload-icon.png";
+import userImage from "../../assets/images/image-upload-icon.png";
 import axios from "axios";
 import SocialLogin from "../../Components/Shared/SocialLogin";
 import useAuth from "../../Hooks/useAuth";
-// import useAxios from "../../Hooks/useAxios";
+import Lottie from "lottie-react";
+import registerLottie from '../../assets/animations/register.json'
 
 const Register = () => {
-//   const axiosInstance = useAxios();
-  const { createUser, updateUserProfile } = useAuth();
+  const { createUser, updateUserProfile, sendVerificationEmail, logOutUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -74,21 +74,14 @@ const Register = () => {
       };
 
       await updateUserProfile(userProfile);
+      await sendVerificationEmail();
+      await logOutUser();
 
-    //   const userInfo = {
-    //     email: email.trim(),
-    //     name: name.trim(),
-    //     role: "customer",
-    //     photo: imageUrl,
-    //     createdAt: new Date().toISOString(),
-    //     last_log_in: new Date().toISOString(),
-    //   };
-
-    //   await axiosInstance.post("/users", userInfo);
-
-      toast.success("Registered successfully");
-      navigate(location.state || "/");
+      toast.success(
+        "Registered successful. Now check email and verify yourself then login and also check email in spam folder"
+      );
       reset();
+      navigate("/login");
     } catch (err) {
       toast.error(err.message || "Registration failed");
     } finally {
@@ -97,7 +90,8 @@ const Register = () => {
   };
 
   return (
-    <div className="px-4">
+    <div className="flex flex-col md:flex-row gap-6 justify-start items-center md:justify-center">
+      <Lottie animationData={registerLottie} loop={true}></Lottie>
       <div className="card w-full shadow-xl max-w-md mx-auto my-10">
         <div className="card-body">
           <h1 className="text-3xl font-extrabold">Create Your Account</h1>
