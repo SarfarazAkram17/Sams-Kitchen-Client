@@ -12,9 +12,9 @@ const Navbar = () => {
 
   // Active link styling
   const activeClass =
-    "px-4 py-1 text-sm rounded-full font-bold text-primary bg-primary/10";
+    "px-3 py-0.5 text-sm rounded-full font-bold text-primary bg-primary/10";
   const normalClass =
-    "px-4 py-1 text-sm rounded-full font-semibold hover:font-bold hover:text-primary hover:bg-primary/10";
+    "px-3 py-0.5 text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
 
   const navLinks = (
     <>
@@ -26,18 +26,11 @@ const Navbar = () => {
         Home
       </NavLink>
       <NavLink
-        to="/foods"
+        to="/about"
         className={({ isActive }) => (isActive ? activeClass : normalClass)}
         onClick={() => setIsOpen(false)}
       >
-        Foods
-      </NavLink>
-      <NavLink
-        to="/offers"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
-        onClick={() => setIsOpen(false)}
-      >
-        Offers
+        About Us
       </NavLink>
       <NavLink
         to="/community"
@@ -47,11 +40,18 @@ const Navbar = () => {
         Community
       </NavLink>
       <NavLink
-        to="/about"
+        to="/foods"
         className={({ isActive }) => (isActive ? activeClass : normalClass)}
         onClick={() => setIsOpen(false)}
       >
-        About Us
+       All Foods
+      </NavLink>
+      <NavLink
+        to="/offers"
+        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        onClick={() => setIsOpen(false)}
+      >
+        Offers
       </NavLink>
     </>
   );
