@@ -10,9 +10,6 @@ const Navbar = () => {
   const { user, userEmail, logOutUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Active link styling
-  const activeClass =
-    "px-3 py-0.5 text-sm rounded-full font-bold text-primary bg-primary/10";
   const normalClass =
     "px-3 py-0.5 text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
 
@@ -20,35 +17,35 @@ const Navbar = () => {
     <>
       <NavLink
         to="/"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
       >
         Home
       </NavLink>
       <NavLink
         to="/about"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
       >
         About Us
       </NavLink>
       <NavLink
         to="/community"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
       >
         Community
       </NavLink>
       <NavLink
         to="/foods"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
       >
-       All Foods
+        All Foods
       </NavLink>
       <NavLink
         to="/offers"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
       >
         Offers

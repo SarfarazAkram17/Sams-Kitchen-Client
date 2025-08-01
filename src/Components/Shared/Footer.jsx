@@ -7,41 +7,37 @@ import {
 } from "react-icons/fa";
 
 const Footer = () => {
-  // Active link styling
-  const activeClass =
-    "px-3 py-0.5 block w-fit text-sm rounded-full font-bold text-primary bg-primary/10";
-  const normalClass =
-    "px-3 py-0.5 block w-fit text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
+  const normalClass = "px-3 py-0.5 block w-fit text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
 
   const navLinks = (
     <>
       <NavLink
         to="/"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
       >
         Home
       </NavLink>
       <NavLink
         to="/about"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+        className={`${normalClass}`}
       >
         About Us
       </NavLink>
       <NavLink
         to="/community"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+       className={`${normalClass}`}
       >
         Community
       </NavLink>
       <NavLink
         to="/foods"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+       className={`${normalClass}`}
       >
         All Foods
       </NavLink>
       <NavLink
         to="/offers"
-        className={({ isActive }) => (isActive ? activeClass : normalClass)}
+       className={`${normalClass}`}
       >
         Offers
       </NavLink>

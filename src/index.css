@@ -4,8 +4,14 @@
 @plugin "daisyui/theme" {
   name: "light";
 
-  --color-primary: #D62828;
-  --color-secondary: #BF5B1F;
-  --color-warning: #EF9120;
-  --color-info: #3ABFF8;
+  --color-primary: #d62828;
+  --color-secondary: #bf5b1f;
+  --color-warning: #ef9120;
+  --color-info: #3abff8;
+}
+
+.active {
+  background-color: #d6282810;
+  color: #d62828;
+  font-weight: bold;
 }
