@@ -67,7 +67,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar sticky top-0 z-50 bg-base-100 shadow-sm p-3 px-4 md:px-8">
+    <nav className="navbar sticky top-0 z-50 bg-base-100 shadow-sm p-3 px-3 md:px-6">
       {/* Left Section */}
       <div className="flex navbar-start items-center gap-2">
         {/* Mobile Menu Button */}
@@ -79,8 +79,11 @@ const Navbar = () => {
         </button>
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Sam's Kitchen Logo" className="h-16 w-auto" />
+        <Link to="/" className="flex items-center gap-1">
+          <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
+          <span className="text-[#392B12] font-bold sm:text-xl">
+            Sam's Kitchen
+          </span>
         </Link>
       </div>
 

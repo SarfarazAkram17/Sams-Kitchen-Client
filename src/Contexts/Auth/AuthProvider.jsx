@@ -13,11 +13,13 @@ import {
 } from "firebase/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../Firebase/firebase.config";
+import useAxios from "../../Hooks/useAxios";
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.addScope("email");
 
 const AuthProvider = ({ children }) => {
+  const axiosInstance = useAxios();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,21 +55,30 @@ const AuthProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
-  const logOutUser = () => {
+  const logOutUser = async () => {
     setLoading(true);
     queryClient.clear();
+    await axiosInstance.post("/logout");
     return signOut(auth);
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      if (currentUser) {
+        const email = currentUser.email || currentUser.providerData[0].email;
+        const tokenRes = await axiosInstance.post("/jwt", {
+          email,
+        });
+        console.log(tokenRes)
+      }
     });
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [axiosInstance]);
 
   const authInfo = {
     user,
