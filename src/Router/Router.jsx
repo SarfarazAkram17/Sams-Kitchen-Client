@@ -9,12 +9,12 @@ import PrivateRoutes from "../Routes/PrivateRoutes";
 import ManageProfile from "../Pages/Dashboard/ManageProfile/ManageProfile";
 import { lazy, Suspense } from "react";
 import Loading from "../Components/Loading/Loading";
-import ChangePassword from "../Pages/Dashboard/ChangePassword/ChangePassword";
+import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
-const Login = lazy(() => import("../Pages/Register/Register"));
-const Register = lazy(() => import("../Pages/Login/Login"));
+const Login = lazy(() => import("../Pages/Login/Login"));
+const Register = lazy(() => import("../Pages/Register/Register"));
 const ErrorPage = lazy(() => import("../Pages/ErrorPage/ErrorPage"));
 const Forbidden = lazy(() => import("../Pages/Forbidden/Forbidden"));
 
@@ -86,8 +86,8 @@ export const router = createBrowserRouter([
         Component: ManageProfile,
       },
       {
-        path: "changePassword",
-        Component: ChangePassword,
+        path: "allUsers",
+        Component: AllUsers,
       },
     ],
   },

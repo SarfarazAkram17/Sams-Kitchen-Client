@@ -45,7 +45,6 @@ const Login = () => {
 
         await axiosInstance.post("/users", {
           email,
-          password,
           name: res.user.displayName,
           role: "customer",
           photo: res.user.photoURL,
