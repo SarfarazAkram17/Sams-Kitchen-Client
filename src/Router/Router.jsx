@@ -1,14 +1,22 @@
 import { createBrowserRouter } from "react-router";
 import RootLayout from "../Layouts/RootLayout";
-import Home from "../Pages/Home/Home/Home";
-import Register from "../Pages/Register/Register";
-import Login from "../Pages/Login/Login";
-import AboutUs from "../Pages/AboutUs/AboutUs";
 import Community from "../Pages/Community/Community";
 import AllFoods from "../Pages/AllFoods/AllFoods";
 import Offers from "../Pages/Offers/Offers";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Dashboard from "../Pages/Dashboard/Dashboard/Dashboard";
+import PrivateRoutes from "../Routes/PrivateRoutes";
+import ManageProfile from "../Pages/Dashboard/ManageProfile/ManageProfile";
+import { lazy, Suspense } from "react";
+import Loading from "../Components/Loading/Loading";
+import ChangePassword from "../Pages/Dashboard/ChangePassword/ChangePassword";
+
+const Home = lazy(() => import("../Pages/Home/Home/Home"));
+const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
+const Login = lazy(() => import("../Pages/Register/Register"));
+const Register = lazy(() => import("../Pages/Login/Login"));
+const ErrorPage = lazy(() => import("../Pages/ErrorPage/ErrorPage"));
+const Forbidden = lazy(() => import("../Pages/Forbidden/Forbidden"));
 
 export const router = createBrowserRouter([
   {
@@ -17,19 +25,35 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home,
+        element: (
+          <Suspense fallback={<Loading></Loading>}>
+            <Home></Home>
+          </Suspense>
+        ),
       },
       {
         path: "/register",
-        Component: Register,
+        element: (
+          <Suspense fallback={<Loading></Loading>}>
+            <Register></Register>
+          </Suspense>
+        ),
       },
       {
         path: "/login",
-        Component: Login,
+        element: (
+          <Suspense fallback={<Loading></Loading>}>
+            <Login></Login>
+          </Suspense>
+        ),
       },
       {
         path: "/about",
-        Component: AboutUs,
+        element: (
+          <Suspense fallback={<Loading></Loading>}>
+            <AboutUs></AboutUs>
+          </Suspense>
+        ),
       },
       {
         path: "/community",
@@ -46,16 +70,41 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/dashboard',
-    Component: DashboardLayout,
+    path: "/dashboard",
+    element: (
+      <PrivateRoutes>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoutes>
+    ),
     children: [
       {
         index: true,
-        Component: Dashboard
+        Component: Dashboard,
       },
-      // {
-      //   path: '/manageProfile'
-      // }
-    ]
-  }
+      {
+        path: "manageProfile",
+        Component: ManageProfile,
+      },
+      {
+        path: "changePassword",
+        Component: ChangePassword,
+      },
+    ],
+  },
+  {
+    path: "/forbidden",
+    element: (
+      <Suspense fallback={<Loading></Loading>}>
+        <Forbidden></Forbidden>
+      </Suspense>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <Suspense fallback={<Loading></Loading>}>
+        <ErrorPage></ErrorPage>
+      </Suspense>
+    ),
+  },
 ]);

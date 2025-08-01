@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet } from "react-router";
 import logo from "../assets/images/logo.png";
 import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
+import { FiUser } from "react-icons/fi";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
@@ -69,9 +70,19 @@ const DashboardLayout = () => {
           </Link>
 
           {/* Navigation Links */}
-          <li className="my-1">
+          <li className="my-1 font-semibold">
             <NavLink to="/dashboard" end>
-              <TbLayoutDashboard size={18} /> Dashboard
+              <TbLayoutDashboard size={19} /> Dashboard
+            </NavLink>
+          </li>
+          <li className="my-1 font-semibold">
+            <NavLink to="/dashboard/manageProfile">
+              <FiUser size={17} /> Manage Profile
+            </NavLink>
+          </li>
+          <li className="my-1 font-semibold">
+            <NavLink to="/dashboard/changePassword">
+              <FiUser size={17} /> Change Password
             </NavLink>
           </li>
         </ul>
