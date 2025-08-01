@@ -1,8 +1,8 @@
 import { Link, NavLink } from "react-router";
+import logo from "../../assets/images/logo.png";
+import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 import { RiMenu2Line } from "react-icons/ri";
-import { RxCross2 } from "react-icons/rx";
-import logo from "../../assets/images/logo.png";
 import useAuth from "../../Hooks/useAuth";
 import { toast } from "react-toastify";
 
@@ -10,53 +10,46 @@ const Navbar = () => {
   const { user, userEmail, logOutUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
-  const normalClass =
-    "px-3 py-0.5 text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
-
   const navLinks = (
     <>
       <NavLink
-        to="/"
-        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
+        className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
+        to="/"
       >
         Home
       </NavLink>
       <NavLink
-        to="/about"
-        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
+        className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
+        to="/about"
       >
         About Us
       </NavLink>
       <NavLink
-        to="/community"
-        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
+        className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
+        to="/community"
       >
         Community
       </NavLink>
       <NavLink
-        to="/foods"
-        className={`${normalClass}`}
         onClick={() => setIsOpen(false)}
+        className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
+        to="/foods"
       >
         All Foods
       </NavLink>
-      <NavLink
-        to="/offers"
-        className={`${normalClass}`}
-        onClick={() => setIsOpen(false)}
-      >
+      {/* <NavLink to="/offers" className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10" onClick={() => setIsOpen(false)}>
         Offers
-      </NavLink>
+      </NavLink> */}
     </>
   );
 
   const handleLogout = () => {
     logOutUser()
       .then(() => {
-        toast.warn("You Logout from Sam's Kitchen");
+        toast.warn("You Logout from TourNest");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -64,19 +57,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar sticky top-0 z-50 bg-base-100 shadow-sm p-3 px-3 md:px-6">
-      {/* Left Section */}
-      <div className="flex navbar-start items-center gap-2">
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(true)}
-          className="btn btn-ghost md:hidden"
-        >
-          <RiMenu2Line size={22} />
-        </button>
+    <div className="navbar sticky z-50 bg-base-100 p-3 shadow-sm top-0">
+      <div className="navbar-start">
+        <div className="md:hidden">
+          <button onClick={() => setIsOpen(!isOpen)} className="btn btn-ghost">
+            {isOpen ? <RxCross2 size={20} /> : <RiMenu2Line size={20} />}
+          </button>
+        </div>
 
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-1">
+        <Link to="/" className="flex items-center gap-1 ml-2 md:ml-0">
           <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
           <span className="text-[#392B12] font-bold sm:text-xl">
             Sam's Kitchen
@@ -84,49 +73,49 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Center Section - Desktop Nav */}
       <div className="hidden navbar-center md:flex items-center gap-1">
         {navLinks}
       </div>
 
-      {/* Right Section */}
-      <div className="flex navbar-end items-center gap-5">
+      <div className="flex navbar-end items-center gap-6">
         <div className="indicator">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
+            className="h-6.5 w-6.5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            {" "}
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-            />{" "}
+            />
           </svg>
-          <span className="badge badge-xs indicator-item">2</span>
+          <span className="text-[13px] bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
+            2
+          </span>
         </div>
 
         <div className="indicator">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
+            className="h-6.5 w-6.5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            {" "}
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-            />{" "}
+            />
           </svg>
-          <span className="badge badge-xs indicator-item">8</span>
+          <span className="text-[13px] bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
+            8
+          </span>
         </div>
 
         {/* Auth Section */}
@@ -166,7 +155,7 @@ const Navbar = () => {
                 Login
               </button>
             </Link>
-            <Link to="/register" className="hidden md:inline -ml-3">
+            <Link to="/register" className="hidden md:inline -ml-4">
               <button className="btn bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white">
                 Register
               </button>
@@ -175,29 +164,24 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Mobile Menu - Fullscreen Modal */}
+      {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex">
-          <div className="bg-base-100 w-64 p-5 flex flex-col gap-4 shadow-lg">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="self-end btn btn-ghost"
-            >
-              <RxCross2 size={22} />
-            </button>
-            <div className="flex flex-col gap-3">{navLinks}</div>
+        <div
+          className="absolute top-full w-40 -mt-2 left-4 z-10 md:hidden bg-base-100 rounded-box p-2 place-items-center shadow"
+        >
+          <ul className="menu space-y-2 text-center">
+            {navLinks}
             {!user && (
-              <Link to="/register" onClick={() => setIsOpen(false)}>
-                <button className="btn btn-primary text-white w-full">
+              <Link to="/register">
+                <button className="btn bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white">
                   Register
                 </button>
               </Link>
             )}
-          </div>
-          <div className="flex-1" onClick={() => setIsOpen(false)}></div>
+          </ul>
         </div>
       )}
-    </nav>
+    </div>
   );
 };
 

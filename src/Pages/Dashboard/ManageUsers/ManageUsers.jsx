@@ -18,7 +18,7 @@ const roleOptions = [
   { value: "admin", label: "Admin" },
 ];
 
-const AllUsers = () => {
+const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
   const { userEmail } = useAuth();
 
@@ -56,7 +56,7 @@ const AllUsers = () => {
   return (
     <div className="px-4">
       <h2 className="text-2xl font-bold mb-4 text-center text-primary">
-        All Users
+        Manage Users
       </h2>
 
       {/* Filters */}
@@ -104,13 +104,14 @@ const AllUsers = () => {
       ) : (
         <>
           <div className="overflow-x-auto border border-base-content/5 rounded-lg">
-            <table className="table table-sm w-full">
+            <table className="table table-sm text-center w-full">
               <thead>
                 <tr className="bg-base-200">
                   <th>#</th>
                   <th>Photo</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Method</th>
                   <th>Role</th>
                 </tr>
               </thead>
@@ -118,7 +119,7 @@ const AllUsers = () => {
                 {users.map((user, i) => (
                   <tr key={user._id}>
                     <td>{(page - 1) * 10 + i + 1}</td>
-                    <td>
+                    <td className="flex justify-center">
                       <img
                         className="h-11 w-11 rounded-full"
                         src={user.photo}
@@ -127,6 +128,11 @@ const AllUsers = () => {
                     </td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
+                    <td>
+                      {user.providerId
+                        ? user.providerId === "google.com" ? "Google" : 'Facebook'
+                        : "Email/Password"}
+                    </td>
                     <td className="capitalize">{user.role}</td>
                   </tr>
                 ))}
@@ -153,4 +159,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default ManageUsers;

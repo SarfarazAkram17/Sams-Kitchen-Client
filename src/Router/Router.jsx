@@ -2,14 +2,15 @@ import { createBrowserRouter } from "react-router";
 import RootLayout from "../Layouts/RootLayout";
 import Community from "../Pages/Community/Community";
 import AllFoods from "../Pages/AllFoods/AllFoods";
-import Offers from "../Pages/Offers/Offers";
+// import Offers from "../Pages/Offers/Offers";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Dashboard from "../Pages/Dashboard/Dashboard/Dashboard";
 import PrivateRoutes from "../Routes/PrivateRoutes";
 import ManageProfile from "../Pages/Dashboard/ManageProfile/ManageProfile";
 import { lazy, Suspense } from "react";
 import Loading from "../Components/Loading/Loading";
-import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
+import AdminRoutes from "../Routes/AdminRoutes";
+import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -63,10 +64,10 @@ export const router = createBrowserRouter([
         path: "/foods",
         Component: AllFoods,
       },
-      {
-        path: "/offers",
-        Component: Offers,
-      },
+      // {
+      //   path: "/offers",
+      //   Component: Offers,
+      // },
     ],
   },
   {
@@ -86,8 +87,8 @@ export const router = createBrowserRouter([
         Component: ManageProfile,
       },
       {
-        path: "allUsers",
-        Component: AllUsers,
+        path: "manageUsers",
+        element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
       },
     ],
   },

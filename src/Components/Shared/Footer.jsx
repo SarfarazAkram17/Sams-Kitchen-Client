@@ -1,10 +1,11 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import {
   FaFacebookF,
   FaInstagram,
   FaTwitter,
   FaLinkedinIn,
 } from "react-icons/fa";
+import logo from "../../assets/images/logo.png";
 
 const Footer = () => {
   const normalClass = "px-3 py-0.5 block w-fit text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
@@ -35,12 +36,12 @@ const Footer = () => {
       >
         All Foods
       </NavLink>
-      <NavLink
+      {/* <NavLink
         to="/offers"
        className={`${normalClass}`}
       >
         Offers
-      </NavLink>
+      </NavLink> */}
     </>
   );
   return (
@@ -48,9 +49,12 @@ const Footer = () => {
       <div className="px-6 py-10 grid md:grid-cols-3 gap-10">
         {/* Brand Section */}
         <div>
-          <h2 className="text-2xl font-extrabold text-primary">
+        <Link to="/" className="flex items-center gap-1">
+          <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
+          <span className="text-[#392B12] font-bold sm:text-xl">
             Sam's Kitchen
-          </h2>
+          </span>
+        </Link>
           <p className="mt-3 text-sm text-gray-600 leading-relaxed">
             Fresh, delicious meals delivered to your door. Experience the taste
             of love in every bite. 🍴

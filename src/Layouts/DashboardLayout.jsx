@@ -4,9 +4,12 @@ import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FiUser } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
+import useUserRole from "../Hooks/useUserRole";
+import { LuCodesandbox } from "react-icons/lu";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
+  const { roleLoading, role } = useUserRole();
 
   return (
     <div className="drawer lg:drawer-open h-screen">
@@ -64,7 +67,11 @@ const DashboardLayout = () => {
         <ul className="menu bg-base-200 text-base-content w-60 lg:w-64 p-4 h-full overflow-y-auto flex flex-col flex-nowrap hide-scrollbar">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1 mb-4">
-            <img src={logo} alt="Sam's Kitchen Logo" className="h-12 lg:h-14 w-auto" />
+            <img
+              src={logo}
+              alt="Sam's Kitchen Logo"
+              className="h-12 lg:h-14 w-auto"
+            />
             <span className="text-[#392B12] font-bold text-lg sm:text-xl">
               Sam's Kitchen
             </span>
@@ -72,20 +79,29 @@ const DashboardLayout = () => {
 
           {/* Navigation Links */}
           <li className="my-1 font-semibold">
-            <NavLink className='rounded-md' to="/dashboard" end>
+            <NavLink className="rounded-md" to="/dashboard" end>
               <TbLayoutDashboard size={19} /> Dashboard
             </NavLink>
           </li>
           <li className="my-1 font-semibold">
-            <NavLink className='rounded-md' to="/dashboard/manageProfile">
+            <NavLink className="rounded-md" to="/dashboard/manageProfile">
               <FiUser size={17} /> Manage Profile
             </NavLink>
           </li>
+
           <li className="my-1 font-semibold">
-            <NavLink className='rounded-md' to="/dashboard/allUsers">
-              <FaUsers size={20} /> All Users
+            <NavLink className="rounded-md" to="/dashboard/myOrders">
+              <LuCodesandbox size={17} /> My Orders
             </NavLink>
           </li>
+
+          {!roleLoading && role === "admin" && (
+            <li className="my-1 font-semibold">
+              <NavLink className="rounded-md" to="/dashboard/manageUsers">
+                <FaUsers size={20} /> Manage Users
+              </NavLink>
+            </li>
+          )}
         </ul>
       </div>
     </div>
