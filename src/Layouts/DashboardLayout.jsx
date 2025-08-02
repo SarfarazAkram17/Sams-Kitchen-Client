@@ -2,7 +2,7 @@ import { Link, NavLink, Outlet } from "react-router";
 import logo from "../assets/images/logo.png";
 import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
-import { FiUser } from "react-icons/fi";
+import { FiPlusCircle, FiUser } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
@@ -91,16 +91,23 @@ const DashboardLayout = () => {
 
           <li className="my-1 font-semibold">
             <NavLink className="rounded-md" to="/dashboard/myOrders">
-              <LuCodesandbox size={17} /> My Orders
+              <LuCodesandbox size={18} /> My Orders
             </NavLink>
           </li>
 
           {!roleLoading && role === "admin" && (
-            <li className="my-1 font-semibold">
-              <NavLink className="rounded-md" to="/dashboard/manageUsers">
-                <FaUsers size={20} /> Manage Users
-              </NavLink>
-            </li>
+            <>
+              <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/addFood">
+                 <FiPlusCircle size={17} /> Add Food
+                </NavLink>
+              </li>
+              <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/manageUsers">
+                  <FaUsers size={19} /> Manage Users
+                </NavLink>
+              </li>
+            </>
           )}
         </ul>
       </div>

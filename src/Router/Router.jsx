@@ -11,6 +11,8 @@ import { lazy, Suspense } from "react";
 import Loading from "../Components/Loading/Loading";
 import AdminRoutes from "../Routes/AdminRoutes";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
+import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
+import AddFood from "../Pages/Dashboard/AddFood/AddFood";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -87,8 +89,16 @@ export const router = createBrowserRouter([
         Component: ManageProfile,
       },
       {
+        path: "myOrders",
+        Component: MyOrders,
+      },
+      {
         path: "manageUsers",
         element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
+      },
+      {
+        path: "addFood",
+        element: <AdminRoutes><AddFood></AddFood></AdminRoutes>
       },
     ],
   },
