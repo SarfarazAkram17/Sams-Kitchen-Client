@@ -121,7 +121,7 @@ const ManageUsers = () => {
                     <td>{(page - 1) * 10 + i + 1}</td>
                     <td className="flex justify-center">
                       <img
-                        className="h-11 w-11 rounded-full"
+                        className="h-11 object-cover w-11 rounded-full"
                         src={user.photo}
                         alt={user.name}
                       />

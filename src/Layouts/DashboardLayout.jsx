@@ -7,6 +7,7 @@ import { FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
 import { IoFastFoodOutline } from "react-icons/io5";
+import { BsCart3 } from "react-icons/bs";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
@@ -93,6 +94,12 @@ const DashboardLayout = () => {
           <li className="my-1 font-semibold">
             <NavLink className="rounded-md" to="/dashboard/myOrders">
               <LuCodesandbox size={18} /> My Orders
+            </NavLink>
+          </li>
+
+          <li className="my-1 font-semibold">
+            <NavLink className="rounded-md" to="/dashboard/myCart">
+              <BsCart3 size={18} /> My Cart
             </NavLink>
           </li>
 

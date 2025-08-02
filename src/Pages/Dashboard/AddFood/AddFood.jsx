@@ -20,7 +20,7 @@ const AddFood = () => {
   } = useForm();
 
   const [uploading, setUploading] = useState(false);
-  const [imageURLs, setImageURLs] = useState([]);
+  const [imageURL, setImageURL] = useState("");
 
   const cloudName = import.meta.env.VITE_cloudinary_cloud_name;
   const uploadPreset = import.meta.env.VITE_cloudinary_preset_name;
@@ -29,24 +29,25 @@ const AddFood = () => {
   const handleImageUpload = async (files) => {
     if (!files.length) return;
 
+    const totalImages = imageURL.length + files.length;
+    if (totalImages > 1) {
+      toast.error("You can upload 1 image.");
+      return;
+    }
+
     setUploading(true);
     try {
-      const uploaded = [];
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("upload_preset", uploadPreset);
 
-      for (let i = 0; i < files.length; i++) {
-        const formData = new FormData();
-        formData.append("file", files[i]);
-        formData.append("upload_preset", uploadPreset);
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
+      );
 
-        const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          formData
-        );
+      setImageURL(res.data.secure_url);
 
-        uploaded.push(res.data.secure_url);
-      }
-
-      setImageURLs((prev) => [...prev, ...uploaded]);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
       toast.error(`Image upload failed: ${err.message}`);
@@ -55,8 +56,8 @@ const AddFood = () => {
     }
   };
 
-  const handleImageRemove = (index) => {
-    setImageURLs((prev) => prev.filter((_, i) => i !== index));
+  const handleImageRemove = () => {
+    setImageURL("");
   };
 
   // ---------------- POST FOOD MUTATION ----------------
@@ -71,7 +72,7 @@ const AddFood = () => {
     onSuccess: (data) => {
       if (data.foodId) {
         Swal.fire("Success", "🎉 Food added successfully!", "success");
-        setImageURLs([]);
+        setImageURL("");
         reset();
       }
     },
@@ -81,8 +82,8 @@ const AddFood = () => {
   });
 
   const handleAddFood = async (data) => {
-    if (imageURLs.length === 0) {
-      toast.error("Please upload at least 1 image before submitting.");
+    if (!imageURL) {
+      toast.error("Please upload 1 image before submitting.");
       return;
     }
 
@@ -91,7 +92,7 @@ const AddFood = () => {
       price: parseFloat(data.price),
       discount: parseFloat(data.discount) || 0,
       description: data.description,
-      images: imageURLs,
+      image: imageURL,
       available: data.available === "true",
       addedAt: new Date().toISOString(),
     };
@@ -184,32 +185,32 @@ const AddFood = () => {
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            multiple
             onChange={(e) => handleImageUpload(e.target.files)}
             className="file-input file-input-bordered w-full"
-            disabled={uploading}
+            disabled={uploading || imageURL}
           />
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-2">
-            {imageURLs.map((url, i) => (
-              <div key={i} className="relative group">
-                <img
-                  src={url}
-                  alt={`uploaded-${i}`}
-                  className="h-24 w-full object-cover rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleImageRemove(i)}
-                  className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
-          <p className="text-sm text-gray-600 mt-1">
-            Uploaded: {imageURLs.length} image
-            {imageURLs.length > 1 ? "s" : ""}
+
+          {imageURL && (
+            <div className="relative my-1 w-fit">
+              <img
+                src={imageURL}
+                alt="food image"
+                className="h-28 w-auto object-cover rounded border"
+              />
+              <button
+                type="button"
+                onClick={() => handleImageRemove()}
+                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          <p className="text-xs text-gray-600 mt-1">
+            {imageURL
+              ? "You have uploaded 1 image."
+              : `Uploaded: ${imageURL.length} / 1`}
           </p>
         </div>
 
@@ -228,14 +229,14 @@ const AddFood = () => {
         {/* Submit */}
         <div className="flex justify-end">
           <button
-            className="btn w-full mt-8 btn-primary text-white"
+            className="btn w-full mt-8 btn-primary disabled:text-black/50 text-white"
             disabled={uploading || isPending}
             type="submit"
           >
             {uploading || isPending ? (
               <>
                 <span className="loading loading-spinner text-primary"></span>{" "}
-                Add Food
+                {uploading ? "Uploading image" : "Adding Food"}
               </>
             ) : (
               "Add Food"

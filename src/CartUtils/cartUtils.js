@@ -27,9 +27,6 @@ export function updateCartQuantity(foodId, quantity) {
   const index = cart.findIndex(item => item.foodId === foodId);
   if (index >= 0) {
     cart[index].quantity = quantity;
-    if (quantity <= 0) {
-      cart.splice(index, 1);
-    }
   }
   saveCart(cart);
 }

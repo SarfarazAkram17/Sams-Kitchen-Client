@@ -9,7 +9,6 @@ import { addToCart } from "../../CartUtils/cartUtils";
 const FoodDetails = () => {
   const { foodId } = useParams();
   const axiosInstance = useAxios();
-  const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
   // Fetch single food
@@ -42,7 +41,7 @@ const FoodDetails = () => {
         <div>
           <div className="w-full h-80 border relative rounded-lg overflow-hidden">
             <img
-              src={food.images?.[0]}
+              src={food.image}
               alt={food.name}
               className="w-full h-full object-cover"
             />
@@ -52,28 +51,13 @@ const FoodDetails = () => {
               </span>
             )}
           </div>
-          {/* Thumbnail gallery */}
-          <div className="flex gap-3 mt-4">
-            {food.images?.map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                onClick={() => setSelectedImage(img)}
-                className={`h-20 w-20 object-cover rounded cursor-pointer border-2 ${
-                  selectedImage === img
-                    ? "border-primary"
-                    : "border-transparent"
-                }`}
-              />
-            ))}
-          </div>
         </div>
 
         {/* Right Section - Details */}
         <div className="space-y-4">
           <h2 className="text-3xl font-bold text-primary">{food.name}</h2>
 
-          <p className="text-gray-700 text-lg">{food.description}</p>
+          <p className="text-gray-700 text-sm leading-relaxed">{food.description}</p>
 
           {/* Price + Discount */}
           <div className="text-xl">
@@ -87,7 +71,7 @@ const FoodDetails = () => {
                 </span>
               </div>
             ) : (
-              <span className="text-secondary font-semibold">
+              <span className="text-green-500 font-semibold">
                 ৳ {food.price.toFixed(2)}
               </span>
             )}
@@ -128,14 +112,14 @@ const FoodDetails = () => {
                 <button
                   onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
                   disabled={quantity === 1}
-                  className="px-3 py-2 text-xl font-bold disabled:opacity-40"
+                  className="px-3 cursor-pointer disabled:cursor-no-drop py-2 text-xl font-bold disabled:opacity-40"
                 >
                   -
                 </button>
                 <span className="px-4 text-lg font-semibold">{quantity}</span>
                 <button
                   onClick={() => setQuantity((prev) => prev + 1)}
-                  className="px-3 py-2 text-xl font-bold"
+                  className="px-3 cursor-pointer py-2 text-xl font-bold"
                 >
                   +
                 </button>

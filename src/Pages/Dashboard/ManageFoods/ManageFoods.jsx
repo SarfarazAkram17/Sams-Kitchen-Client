@@ -75,7 +75,7 @@ const ManageFoods = () => {
                 className="border h-full rounded-xl overflow-hidden shadow hover:shadow-lg transition duration-500"
               >
                 <img
-                  src={food.images?.[0]}
+                  src={food.image}
                   alt={food.name}
                   className="w-full h-52 object-cover"
                 />

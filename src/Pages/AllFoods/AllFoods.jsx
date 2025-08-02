@@ -76,7 +76,7 @@ const AllFoods = () => {
                   )}
 
                   <img
-                    src={food.images?.[0]}
+                    src={food.image}
                     alt={food.name}
                     className="w-full h-48 object-cover"
                   />
@@ -102,7 +102,7 @@ const AllFoods = () => {
                           </span>
                         </>
                       ) : (
-                        <span className="text-secondary font-semibold">
+                        <span className="text-green-500 font-semibold">
                           ৳{food.price.toFixed(2)}
                         </span>
                       )}
@@ -121,7 +121,7 @@ const AllFoods = () => {
                       )}
                     </p>
 
-                    <div className="flex justify-between items-center mt-4">
+                    <div className="flex justify-between items-center mt-6">
                       <Link to={`/foods/${food._id}`}>
                         <button className="btn btn-sm btn-outline btn-primary hover:text-white">
                           Details

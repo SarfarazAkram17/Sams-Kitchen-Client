@@ -18,8 +18,8 @@ const EditFood = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef();
 
-  const [existingImages, setExistingImages] = useState([]);
-  const [newImagesURLs, setNewImagesURLs] = useState([]);
+  const [existingImage, setExistingImage] = useState(null);
+  const [newImageURL, setNewImageURL] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const cloudName = import.meta.env.VITE_cloudinary_cloud_name;
@@ -53,7 +53,7 @@ const EditFood = () => {
         description: foodData.description,
         available: foodData.available ? "true" : "false",
       });
-      setExistingImages(foodData.images || []);
+      setExistingImage(foodData.image || null);
     }
   }, [foodData, reset]);
 
@@ -63,20 +63,16 @@ const EditFood = () => {
     setUploading(true);
 
     try {
-      const uploaded = [];
-      for (let i = 0; i < files.length; i++) {
-        const formData = new FormData();
-        formData.append("file", files[i]);
-        formData.append("upload_preset", uploadPreset);
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("upload_preset", uploadPreset);
 
-        const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          formData
-        );
-        uploaded.push(res.data.secure_url);
-      }
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
+      );
+      setNewImageURL(res.data.secure_url);
 
-      setNewImagesURLs((prev) => [...prev, ...uploaded]);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       toast.error(`Image upload failed: ${error.message}`);
@@ -85,12 +81,12 @@ const EditFood = () => {
     }
   };
 
-  const handleRemoveExistingImage = (url) => {
-    setExistingImages((prev) => prev.filter((img) => img !== url));
+  const handleRemoveExistingImage = () => {
+    setExistingImage(null);
   };
 
-  const handleRemoveNewImage = (index) => {
-    setNewImagesURLs((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveNewImage = () => {
+    setNewImageURL(null);
   };
 
   // ---------------- UPDATE FOOD MUTATION ----------------
@@ -112,14 +108,10 @@ const EditFood = () => {
   });
 
   const handleFoodUpdate = async (data) => {
-    if (existingImages.length + newImagesURLs.length === 0) {
-      toast.error("Please keep at least one image.");
+    if (!existingImage && !newImageURL) {
+      toast.error("Please upload 1 image.");
       return;
     }
-
-    const imagesToRemove = foodData.images.filter(
-      (img) => !existingImages.includes(img)
-    );
 
     const payload = {
       name: data.name,
@@ -127,8 +119,7 @@ const EditFood = () => {
       discount: parseFloat(data.discount) || 0,
       description: data.description,
       available: data.available === "true",
-      imagesToAdd: newImagesURLs,
-      imagesToRemove,
+      image: newImageURL || existingImage,
     };
 
     updateFood(payload);
@@ -204,59 +195,58 @@ const EditFood = () => {
           )}
         </div>
 
-        {/* Existing Images */}
+        {/* Existing Image */}
         <div>
-          <label className="block font-semibold mb-1">Existing Images</label>
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
-            {existingImages.map((url, i) => (
-              <div key={i} className="relative group">
-                <img
-                  src={url}
-                  alt={`existing-img-${i}`}
-                  className="h-24 w-full object-cover rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveExistingImage(url)}
-                  className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
+          <label className="block font-semibold mb-1">Existing Image</label>
+          {existingImage ? (
+            <div className="relative group my-1 w-fit">
+              <img
+                src={existingImage}
+                alt="Existing Food"
+                className="h-28 w-auto object-cover rounded border"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveExistingImage}
+                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <p className="text-xs text-gray-500 mt-1">No existing image yet.</p>
+          )}
         </div>
 
-        {/* Upload New Images */}
+        {/* Upload New Image */}
         <div>
-          <label className="block font-semibold mb-1">Add New Images</label>
+          <label className="block font-semibold mb-1">Add New Image</label>
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            multiple
             onChange={(e) => handleImageUpload(e.target.files)}
             className="file-input file-input-bordered w-full"
-            disabled={uploading}
+            disabled={uploading || existingImage}
           />
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-2">
-            {newImagesURLs.map((url, i) => (
-              <div key={i} className="relative group">
-                <img
-                  src={url}
-                  alt={`new-uploaded-${i}`}
-                  className="h-24 w-full object-cover rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveNewImage(i)}
-                  className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
+        </div>
+        <div>
+          {newImageURL && (
+            <div className="relative group my-1 w-fit">
+              <img
+                src={newImageURL}
+                alt="Existing Food"
+                className="h-28 w-auto object-cover rounded border"
+              />
+              <button
+                type="button"
+                onClick={handleRemoveNewImage}
+                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Availability */}
@@ -274,14 +264,14 @@ const EditFood = () => {
         {/* Submit */}
         <div className="flex justify-end">
           <button
-            className="btn w-full mt-8 btn-primary text-white"
+            className="btn w-full mt-8 btn-primary disabled:text-black/50 text-white"
             disabled={uploading || isPending}
             type="submit"
           >
             {uploading || isPending ? (
               <>
                 <span className="loading loading-spinner text-primary"></span>{" "}
-                Update Food
+                {uploading ? "Uploading image" : "Updating Food"}
               </>
             ) : (
               "Update Food"

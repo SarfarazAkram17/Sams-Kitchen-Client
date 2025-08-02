@@ -1,34 +1,14 @@
 import { Link, NavLink } from "react-router";
 import logo from "../../assets/images/logo.png";
 import { RxCross2 } from "react-icons/rx";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RiMenu2Line } from "react-icons/ri";
 import useAuth from "../../Hooks/useAuth";
 import { toast } from "react-toastify";
-import { getCart } from "../../CartUtils/cartUtils";
 
 const Navbar = () => {
   const { user, userEmail, logOutUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [cartQuantity, setCartQuantity] = useState(0);
-
-  const calculateTotalQuantity = () => {
-    const cart = getCart();
-    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-    setCartQuantity(total);
-  };
-
-  useEffect(() => {
-    calculateTotalQuantity();
-  }, []);
-
-  useEffect(() => {
-    const cartUpdateInterval = setInterval(() => {
-      calculateTotalQuantity();
-    }, 50);
-
-    return () => clearInterval(cartUpdateInterval);
-  }, []);
 
   const navLinks = (
     <>
@@ -115,27 +95,6 @@ const Navbar = () => {
           </span>
         </div>
 
-        {/* Other Indicators */}
-        <div className="indicator">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6.5 w-6.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-          <span className="text-xs bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
-            {cartQuantity}
-          </span>
-        </div>
-
         {/* Auth Section */}
         {user ? (
           <div className="dropdown dropdown-bottom dropdown-end">
@@ -184,7 +143,7 @@ const Navbar = () => {
 
       {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="absolute top-full w-40 -mt-2 left-4 z-10 md:hidden bg-base-100 rounded-box p-2 place-items-center shadow">
+        <div className="absolute top-full w-32 -mt-2 left-4 z-10 md:hidden bg-base-100 rounded-box p-2 place-items-center shadow">
           <ul className="menu space-y-2 text-center">
             {navLinks}
             {!user && (

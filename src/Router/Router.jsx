@@ -16,6 +16,7 @@ import AddFood from "../Pages/Dashboard/AddFood/AddFood";
 import ManageFoods from "../Pages/Dashboard/ManageFoods/ManageFoods";
 import EditFood from "../Pages/Dashboard/EditFood/EditFood";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
+import MyCart from "../Pages/Dashboard/MyCart/MyCart";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -98,6 +99,10 @@ export const router = createBrowserRouter([
       {
         path: "myOrders",
         Component: MyOrders,
+      },
+      {
+        path: "myCart",
+        Component: MyCart,
       },
       {
         path: "manageUsers",
