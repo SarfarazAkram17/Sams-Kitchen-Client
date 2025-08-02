@@ -89,7 +89,7 @@ const AddFood = () => {
     const newFood = {
       name: data.name,
       price: parseFloat(data.price),
-      discount: parseInt(data.discount) || 0,
+      discount: parseFloat(data.discount) || 0,
       description: data.description,
       images: imageURLs,
       available: data.available === "true",
