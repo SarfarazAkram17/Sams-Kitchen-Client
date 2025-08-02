@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
         Component: Community,
       },
       {
-        path: "/foods",
+        path: "/allFoods",
         Component: AllFoods,
       },
       // {

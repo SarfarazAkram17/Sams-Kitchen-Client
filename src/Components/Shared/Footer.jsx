@@ -31,7 +31,7 @@ const Footer = () => {
         Community
       </NavLink>
       <NavLink
-        to="/foods"
+        to="/allFoods"
        className={`${normalClass}`}
       >
         All Foods

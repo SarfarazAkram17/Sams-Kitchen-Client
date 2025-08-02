@@ -105,7 +105,7 @@ const DashboardLayout = () => {
               </li>
               <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/addFood">
-                 <FiPlusCircle size={17} /> Add Food
+                 <FiPlusCircle size={18} /> Add Food
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
