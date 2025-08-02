@@ -73,7 +73,7 @@ const DashboardLayout = () => {
               alt="Sam's Kitchen Logo"
               className="h-12 lg:h-14 w-auto"
             />
-            <span className="text-[#392B12] font-bold text-lg sm:text-xl">
+            <span className="text-[#392B12] font-bold text-lg">
               Sam's Kitchen
             </span>
           </Link>
@@ -109,8 +109,8 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/manageFood">
-                 <IoFastFoodOutline size={20} /> Manage Food
+                <NavLink className="rounded-md" to="/dashboard/manageFoods">
+                 <IoFastFoodOutline size={20} /> Manage Foods
                 </NavLink>
               </li>
             </>

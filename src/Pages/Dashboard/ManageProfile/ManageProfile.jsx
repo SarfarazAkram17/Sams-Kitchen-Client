@@ -149,7 +149,7 @@ const ManageProfile = () => {
           </div>
         </div>
 
-        {!roleLoading && role === "tourist" && (
+        {!roleLoading && role === "customer" && (
           <div className="mt-10">
             <Link to="/dashboard/joinAsRider">
               <button className="text-white btn btn-sm btn-primary">

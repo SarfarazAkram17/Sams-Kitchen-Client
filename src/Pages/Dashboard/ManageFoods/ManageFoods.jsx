@@ -92,7 +92,7 @@ const ManageFoods = () => {
                   </p>
 
                   <p className="text-sm">
-                    <strong>Price:</strong> ৳{food.price.toFixed(2)}
+                    <strong>Price:</strong>৳ {food.price.toFixed(2)}
                   </p>
 
                   <p className="text-sm">
@@ -110,7 +110,7 @@ const ManageFoods = () => {
 
                   <div className="flex justify-between items-center mt-4">
                     <div className="flex gap-2">
-                      <Link to={`/dashboard/editFoods/${food._id}`}>
+                      <Link to={`/dashboard/editFood/${food._id}`}>
                         <button className="btn btn-sm btn-outline btn-primary hover:text-white">
                           <FiEdit3 className="mr-1" /> Edit
                         </button>
