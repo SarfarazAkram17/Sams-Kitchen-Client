@@ -13,6 +13,7 @@ import AdminRoutes from "../Routes/AdminRoutes";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
 import AddFood from "../Pages/Dashboard/AddFood/AddFood";
+import ManageFoods from "../Pages/Dashboard/ManageFoods/ManageFoods";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -99,6 +100,10 @@ export const router = createBrowserRouter([
       {
         path: "addFood",
         element: <AdminRoutes><AddFood></AddFood></AdminRoutes>
+      },
+      {
+        path: "manageFood",
+        element: <AdminRoutes><ManageFoods></ManageFoods></AdminRoutes>
       },
     ],
   },

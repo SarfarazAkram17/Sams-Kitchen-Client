@@ -6,6 +6,7 @@ import { FiPlusCircle, FiUser } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
+import { IoFastFoodOutline } from "react-icons/io5";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
@@ -98,13 +99,18 @@ const DashboardLayout = () => {
           {!roleLoading && role === "admin" && (
             <>
               <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/manageUsers">
+                  <FaUsers size={19} /> Manage Users
+                </NavLink>
+              </li>
+              <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/addFood">
                  <FiPlusCircle size={17} /> Add Food
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/manageUsers">
-                  <FaUsers size={19} /> Manage Users
+                <NavLink className="rounded-md" to="/dashboard/manageFood">
+                 <IoFastFoodOutline size={20} /> Manage Food
                 </NavLink>
               </li>
             </>
