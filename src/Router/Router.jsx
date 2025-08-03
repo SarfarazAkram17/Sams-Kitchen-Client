@@ -16,6 +16,7 @@ import ManageFoods from "../Pages/Dashboard/ManageFoods/ManageFoods";
 import EditFood from "../Pages/Dashboard/EditFood/EditFood";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
 import PlaceOrder from "../Pages/PlaceOrder/PlaceOrder";
+import Payment from "../Pages/Dashboard/Payment/Payment";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -132,8 +133,8 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/dashboard/payment/:id",
-        element: <p>working</p>,
+        path: "/dashboard/payment/:orderId",
+        Component: Payment
       },
     ],
   },

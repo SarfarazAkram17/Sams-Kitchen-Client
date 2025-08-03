@@ -81,7 +81,7 @@ const PlaceOrder = () => {
           <div className="bg-white/25 border-white/50 border rounded-full py-1 px-4 text-sm">
             {cartQuantity > 1 ? (
               <>{cartQuantity} items</>
-            ) : cartQuantity.length === 1 ? (
+            ) : cartQuantity === 1 ? (
               "1 item"
             ) : (
               "0 items"

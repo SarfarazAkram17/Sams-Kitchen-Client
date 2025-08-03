@@ -21,7 +21,7 @@ const AllFoods = () => {
     queryKey: ["allFoods", page],
     queryFn: async () => {
       const res = await axiosInstance.get("/foods", {
-        params: { page, limit: 12 }, // show 12 per page
+        params: { page, limit: 12 },
       });
       return res.data;
     },

@@ -47,17 +47,21 @@ const Navbar = () => {
     if (isLoading) {
       return <Loading></Loading>;
     }
+
+    if (!foods || !Array.isArray(foods) || foods.length === 0) {
+      return 0;
+    }
+
     let total = 0;
     for (let i = 0; i < foods.length; i++) {
       const food = foods[i];
+      const cartItem = cartItems.find((item) => item.foodId === food._id);
+
       if (food.discount > 0) {
         const price = food.price - (food.price * food.discount) / 100;
-        total +=
-          price * cartItems.find((item) => item.foodId === food._id)?.quantity;
+        total += price * cartItem.quantity;
       } else {
-        total +=
-          food.price *
-          cartItems.find((item) => item.foodId === food._id)?.quantity;
+        total += food.price * cartItem.quantity;
       }
     }
     return total.toFixed(2);
@@ -375,7 +379,10 @@ const Navbar = () => {
             <span className="text-xl font-bold text-green-600">৳{total}</span>
           </div>
           {cartItems.length === 0 ? (
-            <button onClick={()=>setIsDrawerOpen(false)} className="btn bg-red-600 text-white w-full mt-2">
+            <button
+              onClick={() => setIsDrawerOpen(false)}
+              className="btn bg-red-600 text-white w-full mt-2"
+            >
               Proceed To Order
             </button>
           ) : (

@@ -7,14 +7,13 @@ import { FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
 import { IoFastFoodOutline } from "react-icons/io5";
-import { BsCart3 } from "react-icons/bs";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
   const { roleLoading, role } = useUserRole();
 
   return (
-    <div className="drawer lg:drawer-open h-screen">
+    <div className="drawer lg:drawer-open h-screen xl:container mx-auto">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
       {/* Main Content Area */}
@@ -97,12 +96,6 @@ const DashboardLayout = () => {
             </NavLink>
           </li>
 
-          <li className="my-1 font-semibold">
-            <NavLink className="rounded-md" to="/dashboard/myCart">
-              <BsCart3 size={18} /> My Cart
-            </NavLink>
-          </li>
-
           {!roleLoading && role === "admin" && (
             <>
               <li className="my-1 font-semibold">
@@ -112,12 +105,12 @@ const DashboardLayout = () => {
               </li>
               <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/addFood">
-                 <FiPlusCircle size={18} /> Add Food
+                  <FiPlusCircle size={18} /> Add Food
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/manageFoods">
-                 <IoFastFoodOutline size={20} /> Manage Foods
+                  <IoFastFoodOutline size={20} /> Manage Foods
                 </NavLink>
               </li>
             </>
