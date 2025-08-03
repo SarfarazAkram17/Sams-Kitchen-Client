@@ -1,0 +1,686 @@
+[
+  {
+    "region": "Dhaka",
+    "district": "Dhaka",
+    "city": "Dhaka",
+    "covered_area": [
+      "Uttara",
+      "Dhanmondi",
+      "Mirpur",
+      "Mohammadpur"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Faridpur",
+    "city": "Faridpur",
+    "covered_area": [
+      "Goalanda",
+      "Boalmari",
+      "Bhanga"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Gazipur",
+    "city": "Gazipur",
+    "covered_area": [
+      "Tongi",
+      "Kaliakair",
+      "Sreepur"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Gopalganj",
+    "city": "Gopalganj",
+    "covered_area": [
+      "Tungipara",
+      "Kotalipara",
+      "Kashiani"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Kishoreganj",
+    "city": "Kishoreganj",
+    "covered_area": [
+      "Bajitpur",
+      "Kuliarchar",
+      "Pakundia"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Madaripur",
+    "city": "Madaripur",
+    "covered_area": [
+      "Rajoir",
+      "Kalkini",
+      "Shibchar"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Manikganj",
+    "city": "Manikganj",
+    "covered_area": [
+      "Saturia",
+      "Shivalaya",
+      "Ghior"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Munshiganj",
+    "city": "Munshiganj",
+    "covered_area": [
+      "Sreenagar",
+      "Lohajang",
+      "Sirajdikhan"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Narayanganj",
+    "city": "Narayanganj",
+    "covered_area": [
+      "Fatullah",
+      "Siddhirganj",
+      "Rupganj"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Narsingdi",
+    "city": "Narsingdi",
+    "covered_area": [
+      "Palash",
+      "Belabo",
+      "Raipura"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Rajbari",
+    "city": "Rajbari",
+    "covered_area": [
+      "Pangsha",
+      "Kalukhali",
+      "Baliakandi"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Shariatpur",
+    "city": "Shariatpur",
+    "covered_area": [
+      "Zajira",
+      "Naria",
+      "Gosairhat"
+    ]
+  },
+  {
+    "region": "Dhaka",
+    "district": "Tangail",
+    "city": "Tangail",
+    "covered_area": [
+      "Delduar",
+      "Ghatail",
+      "Kalihati"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Chattogram",
+    "city": "Chattogram",
+    "covered_area": [
+      "Pahartali",
+      "Kotwali",
+      "Halishahar",
+      "Panchlaish",
+      "Agrabad",
+      "Chandgaon"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Cox's Bazar",
+    "city": "Cox's Bazar",
+    "covered_area": [
+      "Teknaf",
+      "Ukhia",
+      "Chakaria",
+      "Ramu"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Cumilla",
+    "city": "Cumilla",
+    "covered_area": [
+      "Laksam",
+      "Debidwar",
+      "Chandina",
+      "Muradnagar"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Brahmanbaria",
+    "city": "Brahmanbaria",
+    "covered_area": [
+      "Nabinagar",
+      "Ashuganj",
+      "Sarail"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Chandpur",
+    "city": "Chandpur",
+    "covered_area": [
+      "Haimchar",
+      "Matlab",
+      "Shahrasti"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Feni",
+    "city": "Feni",
+    "covered_area": [
+      "Parshuram",
+      "Daganbhuiyan",
+      "Chhagalnaiya"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Khagrachari",
+    "city": "Khagrachari",
+    "covered_area": [
+      "Ramgarh",
+      "Mahalchari",
+      "Dighinala"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Lakshmipur",
+    "city": "Lakshmipur",
+    "covered_area": [
+      "Raipur",
+      "Ramganj",
+      "Kamalnagar"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Noakhali",
+    "city": "Noakhali",
+    "covered_area": [
+      "Begumganj",
+      "Senbagh",
+      "Chatkhil"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Rangamati",
+    "city": "Rangamati",
+    "covered_area": [
+      "Baghaichhari",
+      "Kaptai",
+      "Juraichhari"
+    ]
+  },
+  {
+    "region": "Sylhet",
+    "district": "Sylhet",
+    "city": "Sylhet",
+    "covered_area": [
+      "Zindabazar",
+      "Ambarkhana",
+      "Dargah Gate",
+      "South Surma",
+      "Subid Bazar",
+      "Tilagor"
+    ]
+  },
+  {
+    "region": "Sylhet",
+    "district": "Moulvibazar",
+    "city": "Moulvibazar",
+    "covered_area": [
+      "Sreemangal",
+      "Kamalganj",
+      "Kulaura",
+      "Barlekha"
+    ]
+  },
+  {
+    "region": "Sylhet",
+    "district": "Habiganj",
+    "city": "Habiganj",
+    "covered_area": [
+      "Shaistaganj",
+      "Madhabpur",
+      "Chunarughat",
+      "Nabiganj"
+    ]
+  },
+  {
+    "region": "Sylhet",
+    "district": "Sunamganj",
+    "city": "Sunamganj",
+    "covered_area": [
+      "Jagannathpur",
+      "Chhatak",
+      "Tahirpur",
+      "Dowarabazar"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Rangpur",
+    "city": "Rangpur",
+    "covered_area": [
+      "Jahaj Company",
+      "Pairaband",
+      "Mahiganj",
+      "Satmatha",
+      "Lalbagh"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Dinajpur",
+    "city": "Dinajpur",
+    "covered_area": [
+      "Birampur",
+      "Fulbari",
+      "Parbatipur",
+      "Nawabganj"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Thakurgaon",
+    "city": "Thakurgaon",
+    "covered_area": [
+      "Pirganj",
+      "Ranisankail",
+      "Baliadangi"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Panchagarh",
+    "city": "Panchagarh",
+    "covered_area": [
+      "Tetulia",
+      "Boda",
+      "Atwari"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Nilphamari",
+    "city": "Nilphamari",
+    "covered_area": [
+      "Saidpur",
+      "Domar",
+      "Jaldhaka"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Lalmonirhat",
+    "city": "Lalmonirhat",
+    "covered_area": [
+      "Hatibandha",
+      "Patgram",
+      "Aditmari"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Kurigram",
+    "city": "Kurigram",
+    "covered_area": [
+      "Nageshwari",
+      "Bhurungamari",
+      "Chilmari",
+      "Ulipur"
+    ]
+  },
+  {
+    "region": "Rangpur",
+    "district": "Gaibandha",
+    "city": "Gaibandha",
+    "covered_area": [
+      "Gobindaganj",
+      "Sundarganj",
+      "Palashbari",
+      "Phulchhari"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Khulna",
+    "city": "Khulna",
+    "covered_area": [
+      "Sonadanga",
+      "Khalishpur",
+      "Daulatpur",
+      "Shib Bari",
+      "Boyra"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Jessore",
+    "city": "Jessore",
+    "covered_area": [
+      "Chowgachha",
+      "Bagharpara",
+      "Manirampur",
+      "Abhaynagar"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Satkhira",
+    "city": "Satkhira",
+    "covered_area": [
+      "Tala",
+      "Assasuni",
+      "Kalaroa",
+      "Debhata"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Bagerhat",
+    "city": "Bagerhat",
+    "covered_area": [
+      "Mongla",
+      "Rampal",
+      "Fakirhat",
+      "Kachua"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Magura",
+    "city": "Magura",
+    "covered_area": [
+      "Sreepur",
+      "Mohammadpur",
+      "Shalikha"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Narail",
+    "city": "Narail",
+    "covered_area": [
+      "Lohagara",
+      "Kalia",
+      "Narail Sadar"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Jhenaidah",
+    "city": "Jhenaidah",
+    "covered_area": [
+      "Harinakunda",
+      "Shailkupa",
+      "Kaliganj"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Chuadanga",
+    "city": "Chuadanga",
+    "covered_area": [
+      "Alamdanga",
+      "Damurhuda",
+      "Jibannagar"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Meherpur",
+    "city": "Meherpur",
+    "covered_area": [
+      "Mujibnagar",
+      "Gangni"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Rajshahi",
+    "city": "Rajshahi",
+    "covered_area": [
+      "Boalia",
+      "Rajpara",
+      "Motihar",
+      "Shah Makhdum",
+      "Paba"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Natore",
+    "city": "Natore",
+    "covered_area": [
+      "Baraigram",
+      "Bagatipara",
+      "Lalpur",
+      "Singra"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Naogaon",
+    "city": "Naogaon",
+    "covered_area": [
+      "Manda",
+      "Sapahar",
+      "Porsha",
+      "Patnitala"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Chapainawabganj",
+    "city": "Chapainawabganj",
+    "covered_area": [
+      "Shibganj",
+      "Bholahat",
+      "Gomostapur"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Pabna",
+    "city": "Pabna",
+    "covered_area": [
+      "Ishwardi",
+      "Bera",
+      "Chatmohar",
+      "Atgharia"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Sirajganj",
+    "city": "Sirajganj",
+    "covered_area": [
+      "Ullapara",
+      "Kazipur",
+      "Shahjadpur",
+      "Belkuchi"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Joypurhat",
+    "city": "Joypurhat",
+    "covered_area": [
+      "Akkelpur",
+      "Kalai",
+      "Panchbibi"
+    ]
+  },
+  {
+    "region": "Rajshahi",
+    "district": "Bogura",
+    "city": "Bogura",
+    "covered_area": [
+      "Sariakandi",
+      "Sonatola",
+      "Gabtali",
+      "Sherpur",
+      "Shajahanpur"
+    ]
+  },
+  {
+    "region": "Barisal",
+    "district": "Barisal",
+    "city": "Barisal",
+    "covered_area": [
+      "Band Road",
+      "Cox’s Road",
+      "Kawnia",
+      "Rupatali",
+      "Nathullabad"
+    ]
+  },
+  {
+    "region": "Barisal",
+    "district": "Bhola",
+    "city": "Bhola",
+    "covered_area": [
+      "Borhanuddin",
+      "Tazumuddin",
+      "Daulatkhan",
+      "Char Fasson"
+    ]
+  },
+  {
+    "region": "Barisal",
+    "district": "Patuakhali",
+    "city": "Patuakhali",
+    "covered_area": [
+      "Kalapara",
+      "Mirzaganj",
+      "Dashmina",
+      "Galachipa"
+    ]
+  },
+  {
+    "region": "Barisal",
+    "district": "Pirojpur",
+    "city": "Pirojpur",
+    "covered_area": [
+      "Mathbaria",
+      "Bhandaria",
+      "Kawkhali",
+      "Nazirpur"
+    ]
+  },
+  {
+    "region": "Barisal",
+    "district": "Barguna",
+    "city": "Barguna",
+    "covered_area": [
+      "Amtali",
+      "Patharghata",
+      "Betagi",
+      "Bamna"
+    ]
+  },
+  {
+    "region": "Barisal",
+    "district": "Jhalokati",
+    "city": "Jhalokati",
+    "covered_area": [
+      "Nalchity",
+      "Rajapur",
+      "Kathalia"
+    ]
+  },
+  {
+    "region": "Mymensingh",
+    "district": "Mymensingh",
+    "city": "Mymensingh",
+    "covered_area": [
+      "Trishal",
+      "Muktagachha",
+      "Bhaluka",
+      "Phulpur",
+      "Haluaghat"
+    ]
+  },
+  {
+    "region": "Mymensingh",
+    "district": "Netrokona",
+    "city": "Netrokona",
+    "covered_area": [
+      "Khaliajuri",
+      "Mohanganj",
+      "Durgapur",
+      "Barhatta"
+    ]
+  },
+  {
+    "region": "Mymensingh",
+    "district": "Jamalpur",
+    "city": "Jamalpur",
+    "covered_area": [
+      "Madarganj",
+      "Islampur",
+      "Sarishabari",
+      "Baksiganj"
+    ]
+  },
+  {
+    "region": "Mymensingh",
+    "district": "Sherpur",
+    "city": "Sherpur",
+    "covered_area": [
+      "Nakla",
+      "Nalitabari",
+      "Jhenaigati",
+      "Sreebardi"
+    ]
+  },
+  {
+    "region": "Chattogram",
+    "district": "Bandarban",
+    "city": "Bandarban",
+    "covered_area": [
+      "Bandarban Sadar",
+      "Thanchi",
+      "Lama",
+      "Rowangchhari"
+    ]
+  },
+  {
+    "region": "Khulna",
+    "district": "Kushtia",
+    "city": "Kushtia",
+    "covered_area": [
+      "Kushtia Sadar",
+      "Kumarkhali",
+      "Khoksa",
+      "Mirpur",
+      "Bheramara",
+      "Daulatpur"
+    ]
+  }
+]

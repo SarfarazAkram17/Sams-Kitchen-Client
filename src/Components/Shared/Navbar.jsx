@@ -37,21 +37,33 @@ const Navbar = () => {
   const { data: foods, isLoading } = useQuery({
     queryKey: ["foods", cartFoodIds],
     queryFn: async () => {
-      const res = await axiosInstance.post(`/cartFoods`, { ids: cartFoodIds });
+      const res = await axiosInstance.post(`/foods/cart`, { ids: cartFoodIds });
       return res.data;
     },
     enabled: !!cartFoodIds,
   });
 
   const calculateCartTotal = () => {
-    return cartItems.reduce(
-      (sum, item) =>
-        sum +
-        (foods?.find((food) => food._id === item.foodId)?.price || 0) *
-          item.quantity,
-      0
-    );
+    if (isLoading) {
+      return <Loading></Loading>;
+    }
+    let total = 0;
+    for (let i = 0; i < foods.length; i++) {
+      const food = foods[i];
+      if (food.discount > 0) {
+        const price = food.price - (food.price * food.discount) / 100;
+        total +=
+          price * cartItems.find((item) => item.foodId === food._id)?.quantity;
+      } else {
+        total +=
+          food.price *
+          cartItems.find((item) => item.foodId === food._id)?.quantity;
+      }
+    }
+    return total.toFixed(2);
   };
+
+  const total = calculateCartTotal();
 
   useEffect(() => {
     const cartUpdateInterval = setInterval(() => {
@@ -236,7 +248,7 @@ const Navbar = () => {
 
       {/* Cart Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 sm:w-96 bg-white z-50 shadow-lg transition-all transform ${
+        className={`fixed top-0 right-0 h-full w-72 sm:w-96 bg-white z-50 shadow-lg transition-all duration-500 transform ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -272,7 +284,7 @@ const Navbar = () => {
             </div>
           ) : (
             // Cart Items
-            <div className="space-y-4 pt-6 pb-16 sm:py-6">
+            <div className="space-y-4 pt-6 mb-16">
               {cartItems.map((item) => {
                 const foodItem = foods?.find(
                   (food) => food._id === item.foodId
@@ -323,7 +335,7 @@ const Navbar = () => {
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1 sm:gap-3">
-                      <p>
+                      <div>
                         {foodItem.discount > 0 ? (
                           <div>
                             <span className="line-through block text-[10px] sm:text-xs text-gray-400">
@@ -343,7 +355,7 @@ const Navbar = () => {
                             ৳ {foodItem.price * item.quantity.toFixed(2)}
                           </span>
                         )}
-                      </p>
+                      </div>
                       <FaRegTrashCan
                         className="hover:text-red-500 cursor-pointer"
                         onClick={() => removeFromCart(item.foodId)}
@@ -360,24 +372,22 @@ const Navbar = () => {
         <div className="w-full p-4 border-t fixed bottom-0 left-0 bg-white">
           <div className="flex justify-between items-center">
             <span className="text-lg font-semibold text-gray-700">Total:</span>
-            <span className="text-xl font-bold text-green-600">
-              ৳{calculateCartTotal().toFixed(2)}
-            </span>
+            <span className="text-xl font-bold text-green-600">৳{total}</span>
           </div>
-          <button
-            onClick={() => {
-              navigate("/placeOrder", {
-                state: {
-                  cartItems,
-                  foods,
-                },
-              }),
-                setIsDrawerOpen(false);
-            }}
-            className="btn bg-red-600 text-white w-full mt-2"
-          >
-            Proceed To Order
-          </button>
+          {cartItems.length === 0 ? (
+            <button onClick={()=>setIsDrawerOpen(false)} className="btn bg-red-600 text-white w-full mt-2">
+              Proceed To Order
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                navigate("/placeOrder"), setIsDrawerOpen(false);
+              }}
+              className="btn bg-red-600 text-white w-full mt-2"
+            >
+              Proceed To Order
+            </button>
+          )}
         </div>
       </div>
     </div>
