@@ -94,7 +94,7 @@ const AllFoods = () => {
                       <strong>Price:</strong>{" "}
                       {food.discount > 0 ? (
                         <>
-                          <span className="text-green-500 font-semibold">
+                          <span className="text-green-600 font-semibold">
                             ৳{discountedPrice.toFixed(2)}
                           </span> {' '}
                           <span className="line-through text-xs text-gray-400 mr-2">
@@ -102,7 +102,7 @@ const AllFoods = () => {
                           </span>
                         </>
                       ) : (
-                        <span className="text-green-500 font-semibold">
+                        <span className="text-green-600 font-semibold">
                           ৳{food.price.toFixed(2)}
                         </span>
                       )}

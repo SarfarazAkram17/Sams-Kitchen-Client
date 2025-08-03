@@ -36,12 +36,6 @@ const Footer = () => {
       >
         All Foods
       </NavLink>
-      {/* <NavLink
-        to="/offers"
-       className={`${normalClass}`}
-      >
-        Offers
-      </NavLink> */}
     </>
   );
   return (

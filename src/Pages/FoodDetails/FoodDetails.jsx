@@ -71,7 +71,7 @@ const FoodDetails = () => {
                 </span>
               </div>
             ) : (
-              <span className="text-green-500 font-semibold">
+              <span className="text-green-600 font-semibold">
                 ৳ {food.price.toFixed(2)}
               </span>
             )}

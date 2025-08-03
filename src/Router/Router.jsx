@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router";
 import RootLayout from "../Layouts/RootLayout";
 import Community from "../Pages/Community/Community";
 import AllFoods from "../Pages/AllFoods/AllFoods";
-// import Offers from "../Pages/Offers/Offers";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Dashboard from "../Pages/Dashboard/Dashboard/Dashboard";
 import PrivateRoutes from "../Routes/PrivateRoutes";
@@ -16,7 +15,7 @@ import AddFood from "../Pages/Dashboard/AddFood/AddFood";
 import ManageFoods from "../Pages/Dashboard/ManageFoods/ManageFoods";
 import EditFood from "../Pages/Dashboard/EditFood/EditFood";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
-import MyCart from "../Pages/Dashboard/MyCart/MyCart";
+import PlaceOrder from "../Pages/PlaceOrder/PlaceOrder";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -74,10 +73,10 @@ export const router = createBrowserRouter([
         path: "/foods/:foodId",
         Component: FoodDetails,
       },
-      // {
-      //   path: "/offers",
-      //   Component: Offers,
-      // },
+      {
+        path: "/placeOrder",
+        Component: PlaceOrder,
+      },
     ],
   },
   {
@@ -101,24 +100,40 @@ export const router = createBrowserRouter([
         Component: MyOrders,
       },
       {
-        path: "myCart",
-        Component: MyCart,
-      },
-      {
         path: "manageUsers",
-        element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
+        element: (
+          <AdminRoutes>
+            <ManageUsers></ManageUsers>
+          </AdminRoutes>
+        ),
       },
       {
         path: "addFood",
-        element: <AdminRoutes><AddFood></AddFood></AdminRoutes>
+        element: (
+          <AdminRoutes>
+            <AddFood></AddFood>
+          </AdminRoutes>
+        ),
       },
       {
         path: "manageFoods",
-        element: <AdminRoutes><ManageFoods></ManageFoods></AdminRoutes>
+        element: (
+          <AdminRoutes>
+            <ManageFoods></ManageFoods>
+          </AdminRoutes>
+        ),
       },
       {
         path: "/dashboard/editFood/:foodId",
-        element: <AdminRoutes><EditFood></EditFood></AdminRoutes>
+        element: (
+          <AdminRoutes>
+            <EditFood></EditFood>
+          </AdminRoutes>
+        ),
+      },
+      {
+        path: "/dashboard/payment/:id",
+        element: <p>working</p>,
       },
     ],
   },
