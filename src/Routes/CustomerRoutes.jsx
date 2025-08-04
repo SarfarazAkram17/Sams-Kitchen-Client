@@ -12,7 +12,7 @@ const CustomerRoutes = ({children}) => {
     return <Loading></Loading>;
   }
 
-  if (!user || role !== "tourist") {
+  if (!user || role !== "customer") {
     return <Navigate to="/forbidden"></Navigate>;
   }
 

@@ -151,9 +151,9 @@ const ManageProfile = () => {
 
         {!roleLoading && role === "customer" && (
           <div className="mt-10">
-            <Link to="/dashboard/joinAsRider">
-              <button className="text-white btn btn-sm btn-primary">
-                Apply For Rider
+            <Link to="/dashboard/beARider">
+              <button className="text-white btn btn-primary">
+                Be a Rider
               </button>
             </Link>{" "}
           </div>

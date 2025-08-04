@@ -116,7 +116,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logOutUser()
       .then(() => {
-        toast.warn("You Logout from TourNest");
+        toast.warn("You Logout from Sam's Kitchen");
       })
       .catch((error) => {
         toast.error(error.message);

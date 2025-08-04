@@ -3,7 +3,7 @@ import logo from "../assets/images/logo.png";
 import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FiPlusCircle, FiUser } from "react-icons/fi";
-import { FaUsers } from "react-icons/fa";
+import { FaMotorcycle, FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
 import { IoFastFoodOutline } from "react-icons/io5";
@@ -111,6 +111,16 @@ const DashboardLayout = () => {
               <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/manageFoods">
                   <IoFastFoodOutline size={20} /> Manage Foods
+                </NavLink>
+              </li>
+            </>
+          )}
+
+          {!roleLoading && role === "customer" && (
+            <>
+              <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/beARider">
+                  <FaMotorcycle size={20} /> Be a Rider
                 </NavLink>
               </li>
             </>

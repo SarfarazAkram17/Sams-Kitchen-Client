@@ -11,7 +11,7 @@ const RiderRoutes = ({ children }) => {
     return <Loading></Loading>;
   }
 
-  if (!user || role !== "tour guide") {
+  if (!user || role !== "rider") {
     return <Navigate to="/forbidden"></Navigate>;
   }
 

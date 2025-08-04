@@ -60,11 +60,15 @@ const PlaceOrder = () => {
     return sum + discountAmount;
   }, 0);
 
-  const deliveryCharge =
+  let deliveryCharge =
     cartItems.length > 1 ? 50 : cartItems.length === 1 ? 30 : 0;
 
-  const total = subtotal + deliveryCharge - discount;
+    if (subtotal + deliveryCharge - discount >= 1000) {
+      deliveryCharge = 0;
+    }
 
+  const total = subtotal + deliveryCharge - discount;
+  
   return (
     <div className="flex flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8 py-10">
       {/* Left Section: Personal & Delivery Details Form */}

@@ -38,7 +38,7 @@ const SslPayment = () => {
       orderId,
       name: user.displayName,
       email: userEmail,
-      amount: parseInt(orderInfo.total),
+      amount: parseFloat(orderInfo.total),
       transactionId: "",
       paymentMethod: "SSL Commerz",
       status: "pending",

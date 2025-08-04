@@ -17,6 +17,8 @@ import EditFood from "../Pages/Dashboard/EditFood/EditFood";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
 import PlaceOrder from "../Pages/PlaceOrder/PlaceOrder";
 import Payment from "../Pages/Dashboard/Payment/Payment";
+import BeARider from "../Pages/Dashboard/BeARider/BeARider";
+import CustomerRoutes from "../Routes/CustomerRoutes";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -101,6 +103,12 @@ export const router = createBrowserRouter([
         Component: MyOrders,
       },
       {
+        path: "/dashboard/payment/:orderId",
+        Component: Payment,
+      },
+
+      // admin routes
+      {
         path: "manageUsers",
         element: (
           <AdminRoutes>
@@ -132,9 +140,11 @@ export const router = createBrowserRouter([
           </AdminRoutes>
         ),
       },
+
+      // customer routes
       {
-        path: "/dashboard/payment/:orderId",
-        Component: Payment
+        path: "/dashboard/beARider",
+        element: <CustomerRoutes><BeARider></BeARider></CustomerRoutes>,
       },
     ],
   },
