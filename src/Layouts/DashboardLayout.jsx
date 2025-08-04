@@ -118,6 +118,11 @@ const DashboardLayout = () => {
                   <FaUserClock size={20} /> Pending Riders
                 </NavLink>
               </li>
+              <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/assignRider">
+                  <FaMotorcycle size={20} /> Assign Rider
+                </NavLink>
+              </li>
             </>
           )}
 

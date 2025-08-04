@@ -20,6 +20,7 @@ import Payment from "../Pages/Dashboard/Payment/Payment";
 import BeARider from "../Pages/Dashboard/BeARider/BeARider";
 import CustomerRoutes from "../Routes/CustomerRoutes";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
+import AssignRider from "../Pages/Dashboard/AssignRider/AssignRider";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -146,6 +147,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoutes>
             <PendingRiders></PendingRiders>
+          </AdminRoutes>
+        ),
+      },
+      {
+        path: "/dashboard/assignRider",
+        element: (
+          <AdminRoutes>
+            <AssignRider></AssignRider>
           </AdminRoutes>
         ),
       },
