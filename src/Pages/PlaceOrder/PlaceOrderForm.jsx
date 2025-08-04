@@ -170,7 +170,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
         discount: Number(discount.toFixed(2)),
         total: Number(total.toFixed(2)),
         payment_status: "not_paid",
-        delivery_status: "not_assigned",
+        status: "pending",
         placedAt: new Date().toISOString(),
         notification_status: "unread",
       };
@@ -253,7 +253,8 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                 <input
                   type="email"
                   className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
-                  defaultValue={userEmail}
+                  value={userEmail}
+                  readOnly
                   {...register("email", {
                     required: "Email is required",
                   })}
@@ -328,7 +329,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   value={selectedRegion}
                   onChange={handleRegionChange}
                   placeholder="Select Region"
-                  className="text-xs xl:text-sm"
+                  className="text-xs xl:text-sm mt-1"
                 />
                 {errors.region && (
                   <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -348,7 +349,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   onChange={handleDistrictChange}
                   isDisabled={!selectedRegion}
                   placeholder="Select District"
-                  className="text-xs xl:text-sm"
+                  className="text-xs xl:text-sm mt-1"
                 />
                 {errors.district && (
                   <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -367,7 +368,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   onChange={handleThanaChange}
                   isDisabled={!selectedRegion || !selectedDistrict}
                   placeholder="Select Thana"
-                  className="text-xs xl:text-sm"
+                  className="text-xs xl:text-sm mt-1"
                 />
                 {errors.thana && (
                   <span className="text-red-500 text-xs mt-1 font-semibold">

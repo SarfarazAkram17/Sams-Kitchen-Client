@@ -108,10 +108,10 @@ const PlaceOrder = () => {
                         className="h-10 sm:h-16 w-13 sm:w-20 object-cover rounded-md"
                       />
                       <div className="ml-4 space-y-1 sm:space-y-3">
-                        <h4 className="font-bold text-xs sm:text-[1rem]">
+                        <h4 className="font-bold text-xs sm:text-[0.9rem] px-1">
                           {foodItem?.name}
                         </h4>
-                        <div className="flex items-center h-5 sm:h-6 border border-gray-400 rounded-lg">
+                        <div className="flex w-fit items-center h-5 sm:h-6 border border-gray-400 rounded-lg">
                           <span className="text-[8px] sm:text-xs font-semibold px-2.5">
                             {item.quantity} x ৳
                             {foodItem.discount > 0
@@ -128,10 +128,10 @@ const PlaceOrder = () => {
                       <div>
                         {foodItem.discount > 0 ? (
                           <div>
-                            <span className="line-through block text-[10px] sm:text-xs text-gray-400">
+                            <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
                               ৳ {(foodItem.price * item.quantity).toFixed(2)}
                             </span>
-                            <span className="text-green-600 text-xs sm:text-sm block font-semibold">
+                            <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
                               {(
                                 (foodItem.price -
@@ -141,7 +141,7 @@ const PlaceOrder = () => {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-green-600 text-xs sm:text-sm font-semibold">
+                          <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
                             ৳ {foodItem.price * item.quantity.toFixed(2)}
                           </span>
                         )}

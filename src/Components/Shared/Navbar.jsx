@@ -304,11 +304,11 @@ const Navbar = () => {
                         alt={foodItem?.name}
                         className="h-10 sm:h-16 w-13 sm:w-20 object-cover rounded-md"
                       />
-                      <div className="ml-4 space-y-1 sm:space-y-3">
+                      <div className="ml-4 space-y-1 sm:space-y-3 px-0.5">
                         <h4 className="font-bold text-xs sm:text-[1rem]">
                           {foodItem?.name}
                         </h4>
-                        <div className="flex items-center h-5 sm:h-6 border border-gray-400 rounded-md">
+                        <div className="flex w-fit items-center h-5 sm:h-6 border border-gray-400 rounded-md">
                           <button
                             onClick={() =>
                               updateCartQuantity(item.foodId, item.quantity - 1)
@@ -342,10 +342,10 @@ const Navbar = () => {
                       <div>
                         {foodItem.discount > 0 ? (
                           <div>
-                            <span className="line-through block text-[10px] sm:text-xs text-gray-400">
+                            <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
                               ৳ {(foodItem.price * item.quantity).toFixed(2)}
                             </span>
-                            <span className="text-green-600 text-xs sm:text-sm block font-semibold">
+                            <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
                               {(
                                 (foodItem.price -
@@ -355,7 +355,7 @@ const Navbar = () => {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-green-600 text-xs sm:text-sm font-semibold">
+                          <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
                             ৳ {foodItem.price * item.quantity.toFixed(2)}
                           </span>
                         )}
@@ -376,7 +376,7 @@ const Navbar = () => {
         <div className="w-full p-4 border-t fixed bottom-0 left-0 bg-white">
           <div className="flex justify-between items-center">
             <span className="text-lg font-semibold text-gray-700">Total:</span>
-            <span className="text-xl font-bold text-green-600">৳{total}</span>
+            <span className="text-xl font-bold text-green-600">৳ {total}</span>
           </div>
           {cartItems.length === 0 ? (
             <button

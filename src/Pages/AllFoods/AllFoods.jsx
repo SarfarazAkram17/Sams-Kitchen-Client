@@ -21,7 +21,7 @@ const AllFoods = () => {
     queryKey: ["allFoods", page],
     queryFn: async () => {
       const res = await axiosInstance.get("/foods", {
-        params: { page, limit: 12 },
+        params: { page, limit: 10 },
       });
       return res.data;
     },
@@ -85,7 +85,7 @@ const AllFoods = () => {
                     <h3 className="text-lg font-semibold text-primary mb-1">
                       {food.name}
                     </h3>
-                    <p className="text-sm text-gray-600 flex-grow line-clamp-2">
+                    <p className="text-sm text-gray-600 line-clamp-2">
                       {food.description}
                     </p>
 
@@ -147,7 +147,7 @@ const AllFoods = () => {
               current={page}
               align="center"
               total={total}
-              pageSize={12}
+              pageSize={10}
               showSizeChanger={false}
               onChange={(newPage) => {
                 setPage(newPage);
