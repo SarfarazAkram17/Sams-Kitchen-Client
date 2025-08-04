@@ -19,6 +19,7 @@ import PlaceOrder from "../Pages/PlaceOrder/PlaceOrder";
 import Payment from "../Pages/Dashboard/Payment/Payment";
 import BeARider from "../Pages/Dashboard/BeARider/BeARider";
 import CustomerRoutes from "../Routes/CustomerRoutes";
+import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -137,6 +138,14 @@ export const router = createBrowserRouter([
         element: (
           <AdminRoutes>
             <EditFood></EditFood>
+          </AdminRoutes>
+        ),
+      },
+      {
+        path: "/dashboard/pendingRiders",
+        element: (
+          <AdminRoutes>
+            <PendingRiders></PendingRiders>
           </AdminRoutes>
         ),
       },

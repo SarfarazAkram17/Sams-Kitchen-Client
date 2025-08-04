@@ -88,7 +88,7 @@ const BeARider = () => {
       setThanas([]);
     }
 
-    setSelectedThana(null);  // Reset thana selection when district changes
+    setSelectedThana(null); 
     setValue("thana", "");
     trigger("thana");
   };
@@ -106,16 +106,18 @@ const BeARider = () => {
       const riderApplication = {
         name: data.name,
         email: data.email,
-        age: data.age,
+        age: parseInt(data.age),
         phone: data.phone,
         experience: parseInt(data.experience),
         region: data.region,
         district: data.district,
         thana: data.thana,
+        status: "pending",
+        appliedAt: new Date().toISOString()
       };
 
       const res = await axiosSecure.post(
-        `/applications?email=${userEmail}`,
+        `/riders?email=${userEmail}`,
         riderApplication
       );
       if (res.data.insertedId) {
@@ -123,8 +125,8 @@ const BeARider = () => {
         setSelectedRegion(null);
         setSelectedDistrict(null);
         setThanas([]);
-        setSelectedThana(null);  // Reset selected thana state
-        setValue("thana", "");  // Reset thana field value
+        setSelectedThana(null);
+        setValue("thana", "");
 
         Swal.fire({
           icon: "success",
@@ -139,7 +141,7 @@ const BeARider = () => {
         setSelectedRegion(null);
         setSelectedDistrict(null);
         setThanas([]);
-        setSelectedThana(null);  // Reset selected thana state
+        setSelectedThana(null);
         toast.info(res.data.message);
       }
     } catch (err) {

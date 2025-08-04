@@ -3,7 +3,7 @@ import logo from "../assets/images/logo.png";
 import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FiPlusCircle, FiUser } from "react-icons/fi";
-import { FaMotorcycle, FaUsers } from "react-icons/fa";
+import { FaMotorcycle, FaUserClock, FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
 import { IoFastFoodOutline } from "react-icons/io5";
@@ -99,11 +99,6 @@ const DashboardLayout = () => {
           {!roleLoading && role === "admin" && (
             <>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/manageUsers">
-                  <FaUsers size={19} /> Manage Users
-                </NavLink>
-              </li>
-              <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/addFood">
                   <FiPlusCircle size={18} /> Add Food
                 </NavLink>
@@ -111,6 +106,16 @@ const DashboardLayout = () => {
               <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/manageFoods">
                   <IoFastFoodOutline size={20} /> Manage Foods
+                </NavLink>
+              </li>
+              <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/manageUsers">
+                  <FaUsers size={20} /> Manage Users
+                </NavLink>
+              </li>
+              <li className="my-1 font-semibold">
+                <NavLink className="rounded-md" to="/dashboard/pendingRiders">
+                  <FaUserClock size={20} /> Pending Riders
                 </NavLink>
               </li>
             </>

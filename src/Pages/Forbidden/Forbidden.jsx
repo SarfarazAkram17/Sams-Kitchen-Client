@@ -22,7 +22,7 @@ const Forbidden = () => {
       {/* Actions */}
       <div className="mt-6">
         <Link to="/" className="btn btn-primary text-white">
-          Go Back Home
+          Go to Home
         </Link>
       </div>
     </div>
