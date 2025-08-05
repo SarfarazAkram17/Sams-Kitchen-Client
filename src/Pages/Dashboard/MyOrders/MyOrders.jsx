@@ -101,7 +101,9 @@ const MyOrders = () => {
       {isLoading ? (
         <Loading />
       ) : orders.length === 0 ? (
-        <p className="text-center text-gray-600 text-xl mt-10">No orders yet.</p>
+        <p className="text-center text-gray-600 text-xl mt-10">
+          No orders yet.
+        </p>
       ) : (
         <>
           <div className="overflow-x-auto border border-base-content/10 rounded-lg">
@@ -121,7 +123,9 @@ const MyOrders = () => {
                   <tr key={o._id}>
                     <td>{(page - 1) * 10 + i + 1}</td>
                     <td>{new Date(o.placedAt).toLocaleString()}</td>
-                    <td className="text-green-600 font-semibold">৳ {o.total.toLocaleString("en-BD")}</td>
+                    <td className="text-green-600 font-semibold">
+                      ৳ {o.total.toLocaleString("en-BD")}
+                    </td>
                     <td className="capitalize">
                       {o.status === "pending" && (
                         <span className="text-purple-500 font-semibold">
@@ -170,7 +174,7 @@ const MyOrders = () => {
                       )}
                     </td>
                     <td className="flex items-center justify-center gap-1">
-                      {o.status === "pending" ? (
+                      {o.status === "pending" && (
                         <>
                           <Link to={`/dashboard/payment/${o._id}`}>
                             <button className="btn btn-xs btn-primary text-white">
@@ -185,8 +189,12 @@ const MyOrders = () => {
                             Cancel
                           </button>
                         </>
-                      ) : (
-                        "- -"
+                      )}
+                      {o.status === "cancelled" && "- -"}
+                      {o.status !== "cancelled" && o.status !== "pending" && (
+                        <a className="text-blue-600 hover:underline cursor-pointer">
+                          Dowload receipt
+                        </a>
                       )}
                     </td>
                   </tr>

@@ -21,6 +21,9 @@ import BeARider from "../Pages/Dashboard/BeARider/BeARider";
 import CustomerRoutes from "../Routes/CustomerRoutes";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
 import AssignRider from "../Pages/Dashboard/AssignRider/AssignRider";
+import RiderRoutes from "../Routes/RiderRoutes";
+import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliveries";
+import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -164,6 +167,16 @@ export const router = createBrowserRouter([
         path: "/dashboard/beARider",
         element: <CustomerRoutes><BeARider></BeARider></CustomerRoutes>,
       },
+
+      // rider router
+      {
+        path: '/dashboard/pendingDeliveries',
+        element: <RiderRoutes><PendingDeliveries></PendingDeliveries></RiderRoutes>
+      },
+      {
+        path: '/dashboard/completedDeliveries',
+         element: <RiderRoutes><CompletedDeliveries></CompletedDeliveries></RiderRoutes>
+      }
     ],
   },
   {

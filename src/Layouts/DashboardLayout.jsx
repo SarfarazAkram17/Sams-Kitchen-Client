@@ -3,7 +3,7 @@ import logo from "../assets/images/logo.png";
 import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FiPlusCircle, FiUser } from "react-icons/fi";
-import { FaMotorcycle, FaUserClock, FaUsers } from "react-icons/fa";
+import { FaCheckCircle, FaMotorcycle, FaTasks, FaUserClock, FaUsers } from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
 import { IoFastFoodOutline } from "react-icons/io5";
@@ -131,6 +131,27 @@ const DashboardLayout = () => {
               <li className="my-1 font-semibold">
                 <NavLink className="rounded-md" to="/dashboard/beARider">
                   <FaMotorcycle size={20} /> Be a Rider
+                </NavLink>
+              </li>
+            </>
+          )}
+
+          {!roleLoading && role === "rider" && (
+            <>
+              <li className="my-1 font-semibold">
+                <NavLink
+                  className="rounded-md"
+                  to="/dashboard/pendingDeliveries"
+                >
+                  <FaTasks size={17} /> Pending Deliveries
+                </NavLink>
+              </li>
+              <li className="my-1 font-semibold">
+                <NavLink
+                  className="rounded-md"
+                  to="/dashboard/completedDeliveries"
+                >
+                  <FaCheckCircle size={17} /> Completed Deliveries
                 </NavLink>
               </li>
             </>
