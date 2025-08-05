@@ -13,7 +13,7 @@ import {
 import useAxios from "../../Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading/Loading";
-import { BsCart3 } from "react-icons/bs";
+import { PiShoppingCartBold } from "react-icons/pi";
 import { FaRegTrashCan } from "react-icons/fa6";
 
 const Navbar = () => {
@@ -257,7 +257,10 @@ const Navbar = () => {
         }`}
       >
         <div className="flex justify-between items-center p-4 border-b">
-          <h3 className="font-semibold text-lg">Shopping Cart</h3>
+          <h3 className="font-semibold text-lg flex items-center gap-2">
+            <PiShoppingCartBold size={25} /> Shopping
+            Cart
+          </h3>
           <button
             onClick={() => setIsDrawerOpen(false)}
             className="hover:text-red-500 text-2xl cursor-pointer"
@@ -276,7 +279,7 @@ const Navbar = () => {
           ) : cartItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full pt-6 pb-16 sm:py-6">
               <div className="h-24 sm:h-32 w-24 sm:w-32 flex justify-center items-center rounded-full animate-pulse p-4 bg-red-200 shadow">
-                <BsCart3 className="text-red-600 text-4xl sm:text-5xl" />
+                <PiShoppingCartBold className="text-red-600 text-4xl sm:text-5xl" />
               </div>
               <h4 className="font-semibold sm:text-lg mt-6 mb-3">
                 Your Cart is empty.

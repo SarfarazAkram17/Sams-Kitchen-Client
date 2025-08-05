@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../../Components/Loading/Loading";
 import useAxios from "../../Hooks/useAxios";
 import PlaceOrderForm from "./PlaceOrderForm";
-import { BsCart3 } from "react-icons/bs";
 import { useNavigate } from "react-router";
+import { PiShoppingCartBold } from "react-icons/pi";
 
 const PlaceOrder = () => {
   const axiosInstance = useAxios();
@@ -157,7 +157,7 @@ const PlaceOrder = () => {
             ) : (
               <div className="flex bg-sky-50 rounded-lg flex-col items-center justify-center h-full pt-6 pb-16 sm:py-6">
                 <div className="lg:h-24 h-32 lg:w-24 w-32 flex justify-center items-center rounded-full animate-pulse p-4 bg-red-200 shadow">
-                  <BsCart3 className="text-red-600 sm:text-4xl text-5xl" />
+                  <PiShoppingCartBold className="text-red-600 sm:text-4xl text-5xl" />
                 </div>
                 <h4 className="font-semibold text-lg sm:text-[1rem] mt-6 mb-3">
                   Your Cart is empty.
