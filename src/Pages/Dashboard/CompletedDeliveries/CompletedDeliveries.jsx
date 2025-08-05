@@ -128,7 +128,7 @@ const CompletedDeliveries = () => {
                           disabled={loadingOrderId === order._id}
                         >
                           {loadingOrderId === order._id ? (
-                            <span className="loading loading-spinner loading-xs"></span>
+                            <span className="loading loading-spinner loading-xs text-primary"></span>
                           ) : (
                             "Cashout"
                           )}

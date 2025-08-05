@@ -15,6 +15,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../Firebase/firebase.config";
 import useAxios from "../../Hooks/useAxios";
+import { clearCart } from "../../CartUtils/cartUtils";
 
 const googleProvider = new GoogleAuthProvider();
 googleProvider.addScope("email");
@@ -65,6 +66,7 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     queryClient.clear();
     await axiosInstance.post("/logout");
+    clearCart();
     return signOut(auth);
   };
 

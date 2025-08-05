@@ -143,7 +143,7 @@ const DashboardLayout = () => {
                   className="rounded-md"
                   to="/dashboard/pendingDeliveries"
                 >
-                  <FaTasks size={17} /> Pending Deliveries
+                  <FaTasks size={16} /> Pending Deliveries
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
@@ -151,7 +151,7 @@ const DashboardLayout = () => {
                   className="rounded-md"
                   to="/dashboard/completedDeliveries"
                 >
-                  <FaCheckCircle size={17} /> Completed Deliveries
+                  <FaCheckCircle size={16} /> Completed Deliveries
                 </NavLink>
               </li>
             </>

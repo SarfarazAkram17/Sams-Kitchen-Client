@@ -180,7 +180,7 @@ const AssignRider = () => {
                                 })
                               }
                               disabled={isAssigning}
-                              className="btn btn-xs btn-primary text-white"
+                              className="btn btn-xs btn-primary whitespace-nowrap text-white"
                             >
                               {isAssigning ? (
                                 <>

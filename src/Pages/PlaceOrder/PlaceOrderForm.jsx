@@ -147,7 +147,12 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
         (sum, i) => sum + i.price * (i.discount / 100) * i.quantity,
         0
       );
-      const deliveryCharge = cartItems.length > 1 ? 50 : 30;
+
+      let deliveryCharge = cartItems.length > 1 ? 50 : 30;
+      if (subtotal + deliveryCharge - discount >= 1000) {
+        deliveryCharge = 0;
+      }
+
       const total = subtotal + deliveryCharge - discount;
 
       // 🔹 Build payload
@@ -380,17 +385,17 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           </div>
 
           {/* Buttons */}
-          <div className="p-6 flex justify-center items-center gap-8 shadow-xl mt-8 rounded-xl border border-sky-300">
+          <div className="p-6 flex justify-center items-center gap-4 sm:gap-8 shadow-xl mt-8 rounded-xl border border-sky-300">
             <button
               type="button"
               onClick={() => navigate("/allFoods")}
-              className="btn flex items-center gap-2 w-[49%]"
+              className="btn flex whitespace-nowrap items-center gap-2 w-[49%]"
             >
               <PiArrowBendUpLeftLight size={20} /> Continue Ordering
             </button>
             <button
               type="submit"
-              className="btn flex items-center gap-2 btn-primary w-[49%] text-white disabled:text-black/50"
+              className="btn flex whitespace-nowrap items-center gap-2 btn-primary w-[49%] text-white disabled:text-black/50"
               disabled={isProcessing || cartItems.length <= 0}
             >
               {isProcessing ? (

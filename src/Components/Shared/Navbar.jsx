@@ -302,7 +302,7 @@ const Navbar = () => {
                       <img
                         src={foodItem?.image}
                         alt={foodItem?.name}
-                        className="h-10 sm:h-16 w-13 sm:w-20 object-cover rounded-md"
+                        className="h-12 sm:h-16 w-15 sm:w-20 object-cover rounded-md"
                       />
                       <div className="ml-4 space-y-1 sm:space-y-3 px-0.5">
                         <h4 className="font-bold text-xs sm:text-[1rem]">

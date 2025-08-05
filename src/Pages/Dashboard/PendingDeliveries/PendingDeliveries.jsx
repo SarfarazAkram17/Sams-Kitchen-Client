@@ -92,7 +92,7 @@ const PendingDeliveries = () => {
                   <th>Receiver</th>
                   <th>Receiver Thana</th>
                   <th>Total Cost</th>
-                  <th>Delivery Cost</th>
+                  <th>Your Earning</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -107,7 +107,12 @@ const PendingDeliveries = () => {
                       ৳{order.total}
                     </td>
                     <td className="text-secondary font-semibold">
-                      ৳{order.deliveryCharge}
+                      ৳
+                      {order.deliveryCharge
+                        ? order.deliveryCharge
+                        : order.items.length > 1
+                        ? 50
+                        : 30}
                     </td>
                     <td className="capitalize">
                       {order.status === "assigned" && (
@@ -129,7 +134,7 @@ const PendingDeliveries = () => {
                     <td>
                       {order.status === "assigned" && (
                         <button
-                          className="btn btn-xs btn-secondary text-white"
+                          className="btn btn-xs btn-secondary whitespace-nowrap text-white"
                           disabled={activeOrderId === order._id}
                           onClick={() => handleStatusUpdate(order, "picked")}
                         >
@@ -143,7 +148,7 @@ const PendingDeliveries = () => {
                       {order.status === "picked" && (
                         <button
                           disabled={activeOrderId === order._id}
-                          className="btn btn-xs btn-primary text-white"
+                          className="btn btn-xs btn-primary whitespace-nowrap text-white"
                           onClick={() => handleStatusUpdate(order, "delivered")}
                         >
                           {activeOrderId === order._id ? (
