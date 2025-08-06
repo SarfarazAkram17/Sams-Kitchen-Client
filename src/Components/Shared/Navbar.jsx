@@ -102,39 +102,41 @@ const Navbar = () => {
       </div>
 
       <div className="flex navbar-end items-center gap-6 relative">
-        <Notification />
-        <Cart />
-
         {/* Auth Section */}
         {user ? (
-          <div className="dropdown dropdown-bottom dropdown-end">
-            <div tabIndex={0} role="button">
-              <img
-                src={user.photoURL}
-                alt="Profile"
-                className="rounded-full object-cover w-13 mr-2 h-13 cursor-pointer"
-              />
+          <>
+            {" "}
+            <Notification />
+            <Cart />
+            <div className="dropdown dropdown-bottom dropdown-end">
+              <div tabIndex={0} role="button">
+                <img
+                  src={user.photoURL}
+                  alt="Profile"
+                  className="rounded-full object-cover w-13 mr-2 h-13 cursor-pointer"
+                />
+              </div>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 w-56 rounded-box z-10 mt-1 space-y-2 text-center shadow"
+              >
+                <li className="text-xs">Hi, {user.displayName}</li>
+                <li className="text-xs">{userEmail}</li>
+                <NavLink
+                  className="px-4 py-1 font-semibold rounded-full text-sm"
+                  to="/dashboard"
+                >
+                  Dashboard
+                </NavLink>
+                <button
+                  onClick={handleLogout}
+                  className="btn btn-sm font-bold w-[50%] mx-auto btn-error"
+                >
+                  Logout
+                </button>
+              </ul>
             </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 w-56 rounded-box z-10 mt-1 space-y-2 text-center shadow"
-            >
-              <li className="text-xs">Hi, {user.displayName}</li>
-              <li className="text-xs">{userEmail}</li>
-              <NavLink
-                className="px-4 py-1 font-semibold rounded-full text-sm"
-                to="/dashboard"
-              >
-                Dashboard
-              </NavLink>
-              <button
-                onClick={handleLogout}
-                className="btn btn-sm font-bold w-[50%] mx-auto btn-error"
-              >
-                Logout
-              </button>
-            </ul>
-          </div>
+          </>
         ) : (
           <>
             <Link to="/login">

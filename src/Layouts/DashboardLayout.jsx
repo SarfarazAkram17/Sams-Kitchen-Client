@@ -3,7 +3,13 @@ import logo from "../assets/images/logo.png";
 import useAuth from "../Hooks/useAuth";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FiPlusCircle, FiUser } from "react-icons/fi";
-import { FaCheckCircle, FaMotorcycle, FaTasks, FaUserClock, FaUsers } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaMotorcycle,
+  FaTasks,
+  FaUserClock,
+  FaUsers,
+} from "react-icons/fa";
 import useUserRole from "../Hooks/useUserRole";
 import { LuCodesandbox } from "react-icons/lu";
 import { IoFastFoodOutline } from "react-icons/io5";
@@ -11,6 +17,15 @@ import { IoFastFoodOutline } from "react-icons/io5";
 const DashboardLayout = () => {
   const { user } = useAuth();
   const { roleLoading, role } = useUserRole();
+
+  // ✅ Function to close drawer on small devices
+  const handleLinkClick = () => {
+    const drawerCheckbox = document.getElementById("my-drawer-2");
+    if (drawerCheckbox && window.innerWidth < 1024) {
+      drawerCheckbox.checked = false;
+      drawerCheckbox.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  };
 
   return (
     <div className="drawer lg:drawer-open h-screen xl:container mx-auto">
@@ -59,15 +74,12 @@ const DashboardLayout = () => {
 
       {/* Sidebar */}
       <div className="drawer-side z-40 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
-        <label
-          htmlFor="my-drawer-2"
-          className="drawer-overlay lg:hidden"
-        ></label>
+        <label htmlFor="my-drawer-2" className="drawer-overlay lg:hidden"></label>
 
         {/* ✅ Keep sidebar scrollable and single-column */}
         <ul className="menu bg-base-200 text-base-content w-60 lg:w-64 p-4 h-full overflow-y-auto flex flex-col flex-nowrap hide-scrollbar">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-1 mb-4">
+          <Link to="/" className="flex items-center gap-1 mb-4" onClick={handleLinkClick}>
             <img
               src={logo}
               alt="Sam's Kitchen Logo"
@@ -80,18 +92,18 @@ const DashboardLayout = () => {
 
           {/* Navigation Links */}
           <li className="my-1 font-semibold">
-            <NavLink className="rounded-md" to="/dashboard" end>
+            <NavLink className="rounded-md" to="/dashboard" end onClick={handleLinkClick}>
               <TbLayoutDashboard size={19} /> Dashboard
             </NavLink>
           </li>
           <li className="my-1 font-semibold">
-            <NavLink className="rounded-md" to="/dashboard/manageProfile">
+            <NavLink className="rounded-md" to="/dashboard/manageProfile" onClick={handleLinkClick}>
               <FiUser size={17} /> Manage Profile
             </NavLink>
           </li>
 
           <li className="my-1 font-semibold">
-            <NavLink className="rounded-md" to="/dashboard/myOrders">
+            <NavLink className="rounded-md" to="/dashboard/myOrders" onClick={handleLinkClick}>
               <LuCodesandbox size={19} /> My Orders
             </NavLink>
           </li>
@@ -99,27 +111,27 @@ const DashboardLayout = () => {
           {!roleLoading && role === "admin" && (
             <>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/addFood">
+                <NavLink className="rounded-md" to="/dashboard/addFood" onClick={handleLinkClick}>
                   <FiPlusCircle size={18} /> Add Food
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/manageFoods">
+                <NavLink className="rounded-md" to="/dashboard/manageFoods" onClick={handleLinkClick}>
                   <IoFastFoodOutline size={20} /> Manage Foods
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/manageUsers">
+                <NavLink className="rounded-md" to="/dashboard/manageUsers" onClick={handleLinkClick}>
                   <FaUsers size={20} /> Manage Users
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/pendingRiders">
+                <NavLink className="rounded-md" to="/dashboard/pendingRiders" onClick={handleLinkClick}>
                   <FaUserClock size={20} /> Pending Riders
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/assignRider">
+                <NavLink className="rounded-md" to="/dashboard/assignRider" onClick={handleLinkClick}>
                   <FaMotorcycle size={20} /> Assign Rider
                 </NavLink>
               </li>
@@ -129,7 +141,7 @@ const DashboardLayout = () => {
           {!roleLoading && role === "customer" && (
             <>
               <li className="my-1 font-semibold">
-                <NavLink className="rounded-md" to="/dashboard/beARider">
+                <NavLink className="rounded-md" to="/dashboard/beARider" onClick={handleLinkClick}>
                   <FaMotorcycle size={20} /> Be a Rider
                 </NavLink>
               </li>
@@ -139,18 +151,12 @@ const DashboardLayout = () => {
           {!roleLoading && role === "rider" && (
             <>
               <li className="my-1 font-semibold">
-                <NavLink
-                  className="rounded-md"
-                  to="/dashboard/pendingDeliveries"
-                >
+                <NavLink className="rounded-md" to="/dashboard/pendingDeliveries" onClick={handleLinkClick}>
                   <FaTasks size={16} /> Pending Deliveries
                 </NavLink>
               </li>
               <li className="my-1 font-semibold">
-                <NavLink
-                  className="rounded-md"
-                  to="/dashboard/completedDeliveries"
-                >
+                <NavLink className="rounded-md" to="/dashboard/completedDeliveries" onClick={handleLinkClick}>
                   <FaCheckCircle size={16} /> Completed Deliveries
                 </NavLink>
               </li>

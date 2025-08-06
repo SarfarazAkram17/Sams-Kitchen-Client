@@ -9,6 +9,10 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { Pagination } from "antd";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import logo from "../../../assets/images/logo.png";
+
 const MyOrders = () => {
   const { userEmail } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -21,12 +25,8 @@ const MyOrders = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["myOrders", page],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/orders`, {
-        params: {
-          email: userEmail,
-          page,
-          limit: 10,
-        },
+      const res = await axiosSecure.get("/orders", {
+        params: { email: userEmail, page, limit: 10 },
       });
       return res.data;
     },
@@ -38,7 +38,6 @@ const MyOrders = () => {
 
   useEffect(() => {
     const paidCount = orders.filter((o) => o.payment_status === "paid").length;
-
     if (paidCount >= 5) {
       setShowConfetti(true);
       setShowCongrats(true);
@@ -68,10 +67,162 @@ const MyOrders = () => {
         Swal.fire("Cancelled", "Order has been cancelled.", "success");
         refetch();
       } catch (error) {
-        Swal.fire(error.message, "Failed to cancel order.", "error");
+        Swal.fire("Failed to cancel order.", error.message, "error");
       }
     }
   };
+
+const generateReceipt = (order) => {
+  const doc = new jsPDF();
+  const margin = 10;
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  // Header
+  const fixedLogoHeight = 20;
+  const logoAspectRatio = 3 / 2;
+  const logoHeight = fixedLogoHeight;
+  const logoWidth = logoHeight * logoAspectRatio;
+  const gap = 5;
+
+  const title = "Sam's Kitchen";
+  const fontSize = 18;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(fontSize);
+  doc.setTextColor(57, 43, 18);
+
+  const titleWidth = doc.getTextWidth(title);
+  const textHeight = fontSize * 0.3528;
+  const totalWidth = logoWidth + gap + titleWidth;
+  const startX = (pageWidth - totalWidth) / 2;
+  const centerY = margin + logoHeight / 2;
+  const textY = centerY + textHeight / 2 - 1;
+
+  doc.addImage(logo, "PNG", startX, margin, logoWidth, logoHeight);
+  doc.text(title, startX + logoWidth + gap, textY);
+
+  // Divider
+  doc.setLineDash([2, 2], 0);
+  doc.line(margin, margin + logoHeight + 10, pageWidth - margin, margin + logoHeight + 10);
+  doc.setLineDash([]);
+
+  let currentY = margin + logoHeight + 20;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  doc.setTextColor(0);
+
+  // Customer Info
+  doc.text(`Customer Name: ${order.customer.firstName} ${order.customer.lastName}`, margin, currentY);
+  currentY += 10;
+  doc.text(`Customer Email: ${order.customer.email}`, margin, currentY);
+  currentY += 10;
+  doc.text(`Phone: ${order.customer.phone}`, margin, currentY);
+  currentY += 10;
+
+  const address = order.customer.address || {};
+  const addressParts = [address.street, address.thana, address.district, address.region].filter(Boolean);
+  const addressStr = addressParts.join(", ");
+  doc.text(`Address: ${addressStr}`, margin, currentY, { maxWidth: pageWidth - 2 * margin });
+  currentY += 15;
+
+  // Order Summary Title
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(44, 62, 80);
+  doc.text("Order Summary", pageWidth / 2, currentY, { align: "center" });
+  currentY += 10;
+
+  // Table
+  const tableColumn = ["Item", "Qty × Price", "Subtotal"];
+  const tableRows = [];
+
+  order.items.forEach((item) => {
+    const unitPrice =
+      item.discount > 0
+        ? (item.price - (item.price * item.discount) / 100).toFixed(2)
+        : Number(item.price).toFixed(2);
+    const quantity = item.quantity;
+    const subtotal = item.subtotal.toFixed(2);
+
+    tableRows.push([item.name, `${quantity} × ${unitPrice} TK`, `${subtotal} TK`]);
+  });
+
+  autoTable(doc, {
+    startY: currentY,
+    head: [tableColumn],
+    body: tableRows,
+    theme: "grid",
+    headStyles: { fillColor: [34, 139, 34], textColor: 255 },
+    styles: { halign: "center", fontSize: 11, cellPadding: 2, valign: "middle" },
+    margin: { left: margin, right: margin },
+  });
+
+  currentY = doc.lastAutoTable.finalY + 10;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  doc.setTextColor(0);
+
+  const labelX = margin;
+  const valueX = pageWidth - margin;
+
+  // Subtotal
+  doc.text(`Subtotal:`, labelX, currentY);
+  doc.text(`${Number(order.subtotal).toFixed(2)} TK`, valueX, currentY, { align: "right" });
+  currentY += 8;
+
+  // Delivery Charge (conditionally green if free)
+  doc.text(`Delivery Charge:`, labelX, currentY);
+  const deliveryCharge = Number(order.deliveryCharge);
+  if (deliveryCharge === 0) {
+    doc.setTextColor(0, 128, 0); // green
+    doc.text("Free", valueX, currentY, { align: "right" });
+    doc.setTextColor(0); // reset
+  } else {
+    doc.text(`${deliveryCharge.toFixed(2)} TK`, valueX, currentY, { align: "right" });
+  }
+  currentY += 8;
+
+  // Discount
+  doc.setTextColor(255, 87, 34);
+  doc.text(`Discount:`, labelX, currentY);
+  doc.text(`- ${Number(order.discount).toFixed(2)} TK`, valueX, currentY, { align: "right" });
+  doc.setTextColor(0);
+  currentY += 10;
+
+  // Line before total
+  doc.setDrawColor(180);
+  doc.setLineDash([]);
+  doc.line(margin, currentY, pageWidth - margin, currentY);
+  currentY += 10;
+
+  // Total
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(0, 128, 0);
+  doc.text(`Total Amount:`, labelX, currentY);
+  doc.text(`${Number(order.total).toFixed(2)} TK`, valueX, currentY, { align: "right" });
+
+  // Dashed thank you line
+  currentY += 15;
+  doc.setDrawColor(150);
+  doc.setLineDash([2, 2], 0);
+  doc.line(margin, currentY, pageWidth - margin, currentY);
+  doc.setLineDash([]);
+
+  // Thank You Message
+  currentY += 10;
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(60);
+  doc.text("Thank you for ordering with Sam's Kitchen", pageWidth / 2, currentY, {
+    align: "center",
+  });
+
+  // Save
+  doc.save(`receipt_${order._id}.pdf`);
+};
+
+
+
 
   return (
     <div className="p-4">
@@ -120,11 +271,11 @@ const MyOrders = () => {
               </thead>
               <tbody>
                 {orders.map((o, i) => (
-                  <tr key={o._id}>
+                  <tr key={o._id.$oid || o._id}>
                     <td>{(page - 1) * 10 + i + 1}</td>
                     <td>{new Date(o.placedAt).toLocaleString()}</td>
                     <td className="text-green-600 font-semibold">
-                      ৳ {o.total.toLocaleString("en-BD")}
+                      ৳ {Number(o.total).toLocaleString("en-BD")}
                     </td>
                     <td className="capitalize">
                       {o.status === "pending" && (
@@ -176,15 +327,16 @@ const MyOrders = () => {
                     <td className="flex items-center justify-center gap-1">
                       {o.status === "pending" && (
                         <>
-                          <Link to={`/dashboard/payment/${o._id}`}>
+                          <Link
+                            to={`/dashboard/payment/${o._id.$oid || o._id}`}
+                          >
                             <button className="btn btn-xs btn-primary text-white">
                               Pay
                             </button>
                           </Link>
-
                           <button
                             className="btn btn-xs btn-error text-white"
-                            onClick={() => handleCancel(o._id)}
+                            onClick={() => handleCancel(o._id.$oid || o._id)}
                           >
                             Cancel
                           </button>
@@ -192,9 +344,12 @@ const MyOrders = () => {
                       )}
                       {o.status === "cancelled" && "- -"}
                       {o.status !== "cancelled" && o.status !== "pending" && (
-                        <a className="text-blue-600 font-semibold hover:underline cursor-pointer">
-                          Dowload receipt
-                        </a>
+                        <button
+                          onClick={() => generateReceipt(o)}
+                          className="text-blue-600 font-semibold hover:underline cursor-pointer"
+                        >
+                          Download receipt
+                        </button>
                       )}
                     </td>
                   </tr>
@@ -203,7 +358,6 @@ const MyOrders = () => {
             </table>
           </div>
 
-          {/* Ant Design Pagination */}
           <div className="flex justify-center mt-10">
             <Pagination
               current={page}

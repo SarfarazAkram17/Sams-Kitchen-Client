@@ -31,6 +31,7 @@ const Notification = () => {
       return undefined;
     },
     enabled: !!userEmail,
+    refetchInterval: 1000,
   });
 
   // 🔹 Mark all as read (direct → isRead, broadcast → readBy array update)
