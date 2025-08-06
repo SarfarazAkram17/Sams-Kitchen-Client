@@ -10,7 +10,7 @@ import { Pagination } from "antd";
 import useAuth from "../../../Hooks/useAuth";
 
 const ManageFoods = () => {
-  const {userEmail} = useAuth()
+  const { userEmail } = useAuth();
   const axiosInstance = useAxios();
   const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
@@ -41,7 +41,9 @@ const ManageFoods = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await axiosSecure.delete(`/foods/${id}?email=${userEmail}`);
+          const res = await axiosSecure.delete(
+            `/foods/${id}?email=${userEmail}`
+          );
           if (res.data.deletedCount) {
             Swal.fire("Deleted!", "The food has been deleted.", "success");
             refetch();
@@ -87,12 +89,14 @@ const ManageFoods = () => {
                     <strong>Added On:</strong>{" "}
                     {new Date(food.addedAt).toLocaleString("en-BD")}
                   </p>
-                  <p className="text-sm text-gray-600">
-                    {food.description}
+                  <p className="text-sm text-gray-600">{food.description}</p>
+
+                  <p className="text-sm">
+                    <strong>Price:</strong> ৳ {food.price.toFixed(2)}
                   </p>
 
                   <p className="text-sm">
-                    <strong>Price:</strong>৳ {food.price.toFixed(2)}
+                    <strong>Discount:</strong> {food.discount}%
                   </p>
 
                   <p className="text-sm">

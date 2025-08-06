@@ -192,7 +192,7 @@ const MyOrders = () => {
                       )}
                       {o.status === "cancelled" && "- -"}
                       {o.status !== "cancelled" && o.status !== "pending" && (
-                        <a className="text-blue-600 hover:underline cursor-pointer">
+                        <a className="text-blue-600 font-semibold hover:underline cursor-pointer">
                           Dowload receipt
                         </a>
                       )}

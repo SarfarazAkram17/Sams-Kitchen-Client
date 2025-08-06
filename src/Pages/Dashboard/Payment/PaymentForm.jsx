@@ -70,7 +70,7 @@ const PaymentForm = () => {
       setLoading(true);
 
       const res = await axiosSecure.post(
-        `/create-payment-intent?email=${userEmail}`,
+        `/payments/create-payment-intent?email=${userEmail}`,
         {
           amountInCents,
         }
@@ -101,7 +101,6 @@ const PaymentForm = () => {
             email: userEmail,
             amount,
             transactionId,
-            status: "payment done",
             paymentMethod: result.paymentIntent.payment_method_types,
           };
 

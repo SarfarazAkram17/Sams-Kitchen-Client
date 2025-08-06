@@ -187,7 +187,7 @@ const PlaceOrder = () => {
           <div className="mt-4 flex justify-between items-center">
             <span className="text-[13px] text-gray-500">Delivery Charge</span>
             <span className="text-[12px] font-semibold text-primary">
-              ৳ {deliveryCharge.toFixed(2)}
+             {deliveryCharge ?  <>৳ {deliveryCharge.toFixed(2)}</> : <span className="text-green-600">Free</span>}
             </span>
           </div>
 

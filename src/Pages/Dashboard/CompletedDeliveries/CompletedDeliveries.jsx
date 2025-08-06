@@ -16,7 +16,7 @@ const CompletedDeliveries = () => {
     queryKey: ["completedDeliveries", userEmail],
     enabled: !!userEmail,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/rider/completedOrders`, {
+      const res = await axiosSecure.get(`/riders/completedOrders`, {
         params: {
           email: userEmail,
           page,
@@ -140,20 +140,20 @@ const CompletedDeliveries = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Ant Design Pagination */}
+          <div className="flex justify-center mt-10">
+            <Pagination
+              current={page}
+              align="center"
+              total={total}
+              pageSize={10}
+              showSizeChanger={false}
+              onChange={(newPage) => setPage(newPage)}
+            />
+          </div>
         </>
       )}
-
-      {/* Ant Design Pagination */}
-      <div className="flex justify-center mt-10">
-        <Pagination
-          current={page}
-          align="center"
-          total={total}
-          pageSize={10}
-          showSizeChanger={false}
-          onChange={(newPage) => setPage(newPage)}
-        />
-      </div>
     </div>
   );
 };

@@ -16,7 +16,7 @@ const CustomerDashboard = () => {
   const { data: stats = {}, isLoading } = useQuery({
     queryKey: ["customerStats"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/customer/stats?email=${userEmail}`);
+      const res = await axiosSecure.get(`/stats/customer?email=${userEmail}`);
       return res.data;
     },
     enabled: !roleLoading && role === "customer",

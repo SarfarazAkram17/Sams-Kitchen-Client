@@ -92,7 +92,7 @@ const DashboardLayout = () => {
 
           <li className="my-1 font-semibold">
             <NavLink className="rounded-md" to="/dashboard/myOrders">
-              <LuCodesandbox size={18} /> My Orders
+              <LuCodesandbox size={19} /> My Orders
             </NavLink>
           </li>
 

@@ -196,6 +196,18 @@ const AssignRider = () => {
                       ))}
                     </tbody>
                   </table>
+
+                        {/* Ant Design Pagination */}
+      <div className="flex justify-center mt-10">
+        <Pagination
+          current={page}
+          align="center"
+          total={total}
+          pageSize={10}
+          showSizeChanger={false}
+          onChange={(newPage) => setPage(newPage)}
+        />
+      </div>
                 </div>
               )}
 
@@ -214,18 +226,6 @@ const AssignRider = () => {
           </div>
         </div>
       )}
-
-      {/* Ant Design Pagination */}
-      <div className="flex justify-center mt-10">
-        <Pagination
-          current={page}
-          align="center"
-          total={total}
-          pageSize={10}
-          showSizeChanger={false}
-          onChange={(newPage) => setPage(newPage)}
-        />
-      </div>
     </div>
   );
 };

@@ -45,7 +45,7 @@ const SslPayment = () => {
     };
 
     const res = await axiosSecure.post(
-      `/create-ssl-payment?email=${userEmail}`,
+      `/payments/create-ssl-payment?email=${userEmail}`,
       paymentData
     );
 

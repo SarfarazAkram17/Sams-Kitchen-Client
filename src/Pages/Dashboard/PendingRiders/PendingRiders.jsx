@@ -10,18 +10,24 @@ const PendingRiders = () => {
   const { userEmail } = useAuth();
   const [selectedRiders, setSelectedRiders] = useState(null);
   const axiosSecure = useAxiosSecure();
+  const [page, setPage] = useState(1);
 
-  const {
-    isPending,
-    data: riders = [],
-    refetch,
-  } = useQuery({
+  const { isPending, data, refetch } = useQuery({
     queryKey: ["pending-riders"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/riders/pending?email=${userEmail}`);
+      const res = await axiosSecure.get(`/riders/pending`, {
+        params: {
+          email: userEmail,
+          page,
+          limit: 10,
+        },
+      });
       return res.data;
     },
   });
+
+  const riders = data?.riders || [];
+  const total = data?.total || 0;
 
   if (isPending) {
     return <Loading></Loading>;
@@ -146,6 +152,18 @@ const PendingRiders = () => {
                 ))}
               </tbody>
             </table>
+
+            {/* Ant Design Pagination */}
+            <div className="flex justify-center mt-10">
+              <Pagination
+                current={page}
+                align="center"
+                total={total}
+                pageSize={10}
+                showSizeChanger={false}
+                onChange={(newPage) => setPage(newPage)}
+              />
+            </div>
           </div>
         </>
       )}

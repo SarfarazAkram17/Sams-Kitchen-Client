@@ -16,7 +16,7 @@ const RiderDashboard = () => {
   const { data: stats = {}, isLoading } = useQuery({
     queryKey: ["riderStats"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/rider/stats?email=${userEmail}`);
+      const res = await axiosSecure.get(`/stats/rider?email=${userEmail}`);
       return res.data;
     },
     enabled: !roleLoading && role === "rider",

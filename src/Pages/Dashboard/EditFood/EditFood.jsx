@@ -115,8 +115,10 @@ const EditFood = () => {
 
     const payload = {
       name: data.name,
-      price: parseFloat(data.price),
-      discount: parseFloat(data.discount) || 0,
+      price: data.price ? Number(parseFloat(data.price).toFixed(2)) : 0,
+      discount: data.discount
+        ? Number(parseFloat(data.discount).toFixed(2))
+        : 0,
       description: data.description,
       available: data.available === "true",
       image: newImageURL || existingImage,

@@ -177,7 +177,6 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
         payment_status: "not_paid",
         status: "pending",
         placedAt: new Date().toISOString(),
-        notification_status: "unread",
       };
 
       // 🔹 Send to server

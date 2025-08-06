@@ -65,7 +65,7 @@ const AuthProvider = ({ children }) => {
   const logOutUser = async () => {
     setLoading(true);
     queryClient.clear();
-    await axiosInstance.post("/logout");
+    await axiosInstance.post("/auth/logout");
     clearCart();
     return signOut(auth);
   };
@@ -77,7 +77,7 @@ const AuthProvider = ({ children }) => {
 
       if (currentUser) {
         const email = currentUser.email || currentUser.providerData[0].email;
-        await axiosInstance.post("/jwt", {
+        await axiosInstance.post("/auth/jwt", {
           email,
         });
       }

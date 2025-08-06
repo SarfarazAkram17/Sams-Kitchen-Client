@@ -21,7 +21,7 @@ const AdminDashboard = () => {
   const { data: stats = {}, isLoading } = useQuery({
     queryKey: ["adminStats"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/admin/stats?email=${userEmail}`);
+      const res = await axiosSecure.get(`/stats/admin?email=${userEmail}`);
       return res.data;
     },
     enabled: !roleLoading && role === "admin",
