@@ -5,11 +5,14 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
+import { FaRegBell } from "react-icons/fa6";
 
 const Notification = () => {
   const { userEmail } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const axiosInstance = useAxios();
   const queryClient = useQueryClient();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -19,7 +22,7 @@ const Notification = () => {
   const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: ["notifications", userEmail],
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await axiosSecure.get(
+      const res = await axiosInstance.get(
         `/notifications?email=${userEmail}&page=${pageParam}&limit=7`
       );
       return res.data;
@@ -31,6 +34,7 @@ const Notification = () => {
       return undefined;
     },
     enabled: !!userEmail,
+    retry: 3,
     refetchInterval: 1000,
   });
 
@@ -93,20 +97,7 @@ const Notification = () => {
         className="indicator cursor-pointer"
         onClick={handleShowNotifications}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6.5 w-6.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
+        <FaRegBell size={25} className="text-white" />
         {unreadCount > 0 && (
           <span className="text-xs bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
             {unreadCount}
@@ -116,17 +107,17 @@ const Notification = () => {
 
       {/* 🔔 Dropdown */}
       {showNotifications && (
-        <div className="absolute top-10 hide-scrollbar -right-20 bg-white border shadow-md rounded-md w-44 sm:w-56 md:w-64 lg:w-72 h-44 sm:h-56 md:h-64 lg:h-72 overflow-y-auto z-50">
+        <div className="absolute top-12 hide-scrollbar -right-12 sm:-right-24 bg-white border shadow-md rounded-md w-44 sm:w-56 md:w-64 lg:w-72 max-h-44 sm:max-h-56 md:max-h-64 lg:max-h-72 overflow-y-auto z-50">
           {isLoading ? (
             <p className="p-3 text-sm animate-pulse">Loading...</p>
-          ) : data?.pages?.length ? (
+          ) : data?.pages?.length && data?.pages?.[0].notifications.length ? (
             data.pages.map((page, i) => (
               <div key={i}>
                 {page.notifications.map((n) => (
                   <div
                     key={n._id}
-                    className={`p-3 space-y-2 text-sm ${
-                      n.isRead ? "bg-white" : "bg-gray-50 font-semibold"
+                    className={`p-3 space-y-2 text-sm font-semibold ${
+                      n.isRead ? "bg-white" : "bg-gray-50"
                     } hover:bg-gray-100`}
                   >
                     <p>🔔 {n.message}</p>

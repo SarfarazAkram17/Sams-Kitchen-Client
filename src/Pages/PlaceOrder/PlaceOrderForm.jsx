@@ -384,17 +384,17 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           </div>
 
           {/* Buttons */}
-          <div className="p-6 flex justify-center items-center gap-4 sm:gap-8 shadow-xl mt-8 rounded-xl border border-sky-300">
+          <div className="p-6 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 shadow-xl mt-8 rounded-xl border border-sky-300">
             <button
               type="button"
               onClick={() => navigate("/allFoods")}
-              className="btn flex whitespace-nowrap items-center gap-2 w-[49%]"
+              className="btn flex whitespace-nowrap w-full items-center gap-2 sm:w-[49%]"
             >
               <PiArrowBendUpLeftLight size={20} /> Continue Ordering
             </button>
             <button
               type="submit"
-              className="btn flex whitespace-nowrap items-center gap-2 btn-primary w-[49%] text-white disabled:text-black/50"
+              className="btn flex whitespace-nowrap w-full items-center gap-2 btn-primary sm:w-[49%] text-white disabled:text-black/50"
               disabled={isProcessing || cartItems.length <= 0}
             >
               {isProcessing ? (

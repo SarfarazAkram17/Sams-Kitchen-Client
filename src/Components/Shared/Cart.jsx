@@ -86,7 +86,7 @@ const Cart = () => {
       {/* 🛒 Cart Indicator */}
       <div
         onClick={() => setIsDrawerOpen(true)}
-        className="indicator cursor-pointer"
+        className="indicator cursor-pointer text-white"
       >
         <PiShoppingCartBold size={25} />
         <span className="text-xs bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">

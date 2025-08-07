@@ -5,8 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import { RiMenu2Line } from "react-icons/ri";
 import useAuth from "../../Hooks/useAuth";
 import { toast } from "react-toastify";
-import Cart from "./Cart";
-import Notification from "./Notification";
 
 const Navbar = () => {
   const { user, userEmail, logOutUser } = useAuth();
@@ -80,7 +78,7 @@ const Navbar = () => {
   return (
     <div
       ref={menuRef}
-      className="navbar sticky z-50 bg-base-100 p-3 shadow-sm top-0"
+      className="navbar bg-base-100 px-4 py-1 shadow-sm top-0"
     >
       <div className="navbar-start">
         <div className="md:hidden">
@@ -105,9 +103,6 @@ const Navbar = () => {
         {/* Auth Section */}
         {user ? (
           <>
-            {" "}
-            <Notification />
-            <Cart />
             <div className="dropdown dropdown-bottom dropdown-end">
               <div tabIndex={0} role="button">
                 <img

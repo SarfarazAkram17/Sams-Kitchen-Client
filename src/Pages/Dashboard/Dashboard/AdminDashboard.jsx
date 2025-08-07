@@ -12,6 +12,7 @@ import useUserRole from "../../../Hooks/useUserRole";
 import Loading from "../../../Components/Loading/Loading";
 import { BsTruck } from "react-icons/bs";
 import { FaArrowsRotate } from "react-icons/fa6";
+import { IoFastFoodOutline } from "react-icons/io5";
 
 const AdminDashboard = () => {
   const axiosSecure = useAxiosSecure();
@@ -51,6 +52,14 @@ const AdminDashboard = () => {
               <div>
                 <p className="text-lg font-bold">{stats.totalRiders || 0}</p>
                 <p className="text-sm font-medium">Total Riders</p>
+              </div>
+            </div>
+
+            <div className="bg-indigo-100 text-indigo-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 flex items-center gap-4">
+              <IoFastFoodOutline size={35} />
+              <div>
+                <p className="text-lg font-bold">{stats.totalFoods || 0}</p>
+                <p className="text-sm font-medium">Total Foods</p>
               </div>
             </div>
 

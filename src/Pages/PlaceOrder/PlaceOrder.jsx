@@ -77,12 +77,12 @@ const PlaceOrder = () => {
       </div>
       {/* Right Section: Order Summary */}
       <div className="bg-white shadow-lg w-full rounded-xl overflow-hidden lg:w-[38%]">
-        <div className="bg-primary p-4 rounded-t-xl mb-4 text-white flex items-center justify-between">
+        <div className="bg-primary p-4 rounded-t-xl mb-4 text-white flex gap-1 items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Order Summary</h2>{" "}
             <p className="text-[11px]">Review your items before place order</p>
           </div>
-          <div className="bg-white/25 border-white/50 border rounded-full py-1 px-4 text-sm">
+          <div className="bg-white/25 whitespace-nowrap border-white/50 border rounded-full py-1 px-3 sm:px-4 text-sm">
             {cartQuantity > 1 ? (
               <>{cartQuantity} items</>
             ) : cartQuantity === 1 ? (
@@ -109,13 +109,13 @@ const PlaceOrder = () => {
                       <img
                         src={foodItem?.image}
                         alt={foodItem?.name}
-                        className="h-12 sm:h-16 w-15 sm:w-20 object-cover rounded-md"
+                        className="h-14 sm:h-[4.5rem] w-16 sm:w-20 object-cover rounded-md"
                       />
-                      <div className="ml-4 space-y-1 sm:space-y-3">
+                      <div className="ml-4 space-y-1.5 sm:space-y-3">
                         <h4 className="font-bold text-xs sm:text-[0.9rem] px-1">
                           {foodItem?.name}
                         </h4>
-                        <div className="flex w-fit items-center h-5 sm:h-6 border border-gray-400 rounded-lg">
+                        <div className="flex w-fit items-center h-4 sm:h-6 border border-gray-400 rounded-lg">
                           <span className="text-[8px] sm:text-xs font-semibold px-2.5">
                             {item.quantity} x ৳
                             {foodItem.discount > 0
