@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { addToCart } from "../../CartUtils/cartUtils";
 import FoodCard from "../../Components/Shared/FoodCard";
 
-const AllFoods = () => {
+const Offers = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +20,7 @@ const AllFoods = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["allFoods", page],
     queryFn: async () => {
-      const res = await axiosInstance.get("/foods", {
+      const res = await axiosInstance.get("/foods/offer", {
         params: { page, limit: 12 },
       });
       return res.data;
@@ -45,13 +45,14 @@ const AllFoods = () => {
 
   return (
     <div className="py-6">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
-        All Foods
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-2">
+        Foods on sale
       </h2>
+      <p className="text-gray-700 text-center mb-10">Choose your foods from here and avail discounts!</p>
 
       {foods.length === 0 ? (
         <p className="text-center text-lg text-gray-600">
-          No foods available yet.
+          No foods on sale yet.
         </p>
       ) : (
         <>
@@ -93,4 +94,4 @@ const AllFoods = () => {
   );
 };
 
-export default AllFoods;
+export default Offers;

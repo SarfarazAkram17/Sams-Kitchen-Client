@@ -154,6 +154,7 @@ const AddFood = () => {
           <label className="block font-semibold mb-1">Discount (%)</label>
           <input
             type="number"
+            step="0.01"
             placeholder="Discount (%)"
             className="input input-bordered w-full"
             defaultValue={0}

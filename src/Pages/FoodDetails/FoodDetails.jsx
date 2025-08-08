@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { FiShoppingCart } from "react-icons/fi";
+import { PiShoppingCartBold } from "react-icons/pi";
 import { useState, useRef } from "react";
 import useAxios from "../../Hooks/useAxios";
 import Loading from "../../Components/Loading/Loading";
@@ -267,7 +267,7 @@ const FoodDetails = () => {
                 onClick={handleAddToCart}
                 className="btn btn-primary text-white flex items-center"
               >
-                <FiShoppingCart size={18} className="mr-2" /> Add to Cart
+                <PiShoppingCartBold size={20} className="mr-2" /> Add to Cart
               </button>
             </div>
           )}

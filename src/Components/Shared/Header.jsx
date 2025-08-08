@@ -153,7 +153,7 @@ const Header = () => {
           )}
         </div>
 
-        <div className="flex w-[30%] justify-end mt-2 items-center gap-6 sm:mr-8">
+        <div className="flex w-[30%] justify-end mt-2 items-center gap-6">
           <Notification />
           <Cart />
         </div>

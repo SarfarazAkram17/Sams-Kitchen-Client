@@ -42,16 +42,23 @@ const Navbar = () => {
       <NavLink
         onClick={() => setIsOpen(false)}
         className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
-        to="/community"
+        to="/allFoods"
       >
-        Community
+        All Foods
       </NavLink>
       <NavLink
         onClick={() => setIsOpen(false)}
         className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
-        to="/allFoods"
+        to="/offers"
       >
-        All Foods
+        Offers
+      </NavLink>
+      <NavLink
+        onClick={() => setIsOpen(false)}
+        className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
+        to="/coverage"
+      >
+        Coverage
       </NavLink>
     </>
   );
@@ -76,10 +83,7 @@ const Navbar = () => {
   }, [isOpen]);
 
   return (
-    <div
-      ref={menuRef}
-      className="navbar bg-base-100 px-4 py-1 shadow-sm top-0"
-    >
+    <div ref={menuRef} className="navbar bg-base-100 px-4 py-1 shadow-sm top-0">
       <div className="navbar-start">
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="btn btn-ghost">

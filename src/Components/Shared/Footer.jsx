@@ -8,33 +8,25 @@ import {
 import logo from "../../assets/images/logo.png";
 
 const Footer = () => {
-  const normalClass = "px-3 py-0.5 block w-fit text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
+  const normalClass =
+    "px-3 py-0.5 block w-fit text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10";
 
   const navLinks = (
     <>
-      <NavLink
-        to="/"
-        className={`${normalClass}`}
-      >
+      <NavLink to="/" className={`${normalClass}`}>
         Home
       </NavLink>
-      <NavLink
-        to="/about"
-        className={`${normalClass}`}
-      >
+      <NavLink to="/about" className={`${normalClass}`}>
         About Us
       </NavLink>
-      <NavLink
-        to="/community"
-       className={`${normalClass}`}
-      >
-        Community
-      </NavLink>
-      <NavLink
-        to="/allFoods"
-       className={`${normalClass}`}
-      >
+      <NavLink to="/allFoods" className={`${normalClass}`}>
         All Foods
+      </NavLink>
+      <NavLink to="/offers" className={`${normalClass}`}>
+        Offers
+      </NavLink>
+      <NavLink to="/coverage" className={`${normalClass}`}>
+        Coverage
       </NavLink>
     </>
   );
@@ -43,12 +35,12 @@ const Footer = () => {
       <div className="px-6 py-10 grid md:grid-cols-3 gap-10">
         {/* Brand Section */}
         <div>
-        <Link to="/" className="flex items-center gap-1">
-          <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
-          <span className="text-[#392B12] font-bold sm:text-xl">
-            Sam's Kitchen
-          </span>
-        </Link>
+          <Link to="/" className="flex items-center gap-1">
+            <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
+            <span className="text-[#392B12] font-bold sm:text-xl">
+              Sam's Kitchen
+            </span>
+          </Link>
           <p className="mt-3 text-sm text-gray-600 leading-relaxed">
             Fresh, delicious meals delivered to your door. Experience the taste
             of love in every bite. 🍴

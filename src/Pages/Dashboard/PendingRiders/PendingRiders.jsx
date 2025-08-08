@@ -5,6 +5,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
 import { FaCheck, FaEye, FaTimes } from "react-icons/fa";
+import { Pagination } from "antd";
 
 const PendingRiders = () => {
   const { userEmail } = useAuth();
@@ -26,7 +27,7 @@ const PendingRiders = () => {
     },
   });
 
-  const riders = data?.riders || [];
+  const riders = data?.pendingRiders || [];
   const total = data?.total || 0;
 
   if (isPending) {
@@ -153,6 +154,7 @@ const PendingRiders = () => {
               </tbody>
             </table>
 
+          </div>
             {/* Ant Design Pagination */}
             <div className="flex justify-center mt-10">
               <Pagination
@@ -164,7 +166,6 @@ const PendingRiders = () => {
                 onChange={(newPage) => setPage(newPage)}
               />
             </div>
-          </div>
         </>
       )}
 
