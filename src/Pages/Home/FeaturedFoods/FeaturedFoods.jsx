@@ -1,35 +1,27 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Pagination } from "antd";
-import { useLocation, useNavigate } from "react-router";
-import useAxios from "../../Hooks/useAxios";
-import Loading from "../../Components/Loading/Loading";
-import useAuth from "../../Hooks/useAuth";
 import { toast } from "react-toastify";
-import { addToCart } from "../../CartUtils/cartUtils";
-import FoodCard from "../../Components/Shared/FoodCard";
+import { addToCart } from "../../../CartUtils/cartUtils";
+import useAuth from "../../../Hooks/useAuth";
+import { useLocation, useNavigate } from "react-router";
+import useAxios from "../../../Hooks/useAxios";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../Components/Loading/Loading";
+import FoodCard from "../../../Components/Shared/FoodCard";
 
-const AllFoods = () => {
+const FeaturedFoods = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const axiosInstance = useAxios();
-  const [page, setPage] = useState(1);
 
   // Fetch foods with pagination
-  const { data, isLoading } = useQuery({
-    queryKey: ["allFoods", page],
+  const { data: foods = [], isLoading } = useQuery({
+    queryKey: ["randomFoods"],
     queryFn: async () => {
-      const res = await axiosInstance.get("/foods", {
-        params: { page, limit: 12 },
-      });
+      const res = await axiosInstance.get("/foods/random");
       return res.data;
     },
     keepPreviousData: true,
   });
-
-  const foods = data?.foods || [];
-  const total = data?.total || 0;
 
   if (isLoading) return <Loading />;
 
@@ -44,9 +36,9 @@ const AllFoods = () => {
   };
 
   return (
-    <div className="py-6 max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
-        All Foods
+        Featured Foods
       </h2>
 
       {foods.length === 0 ? (
@@ -73,24 +65,10 @@ const AllFoods = () => {
               );
             })}
           </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center mt-10">
-            <Pagination
-              current={page}
-              align="center"
-              total={total}
-              pageSize={10}
-              showSizeChanger={false}
-              onChange={(newPage) => {
-                setPage(newPage);
-              }}
-            />
-          </div>
         </>
       )}
     </div>
   );
 };
 
-export default AllFoods;
+export default FeaturedFoods;

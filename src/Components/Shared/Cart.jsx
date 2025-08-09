@@ -88,7 +88,7 @@ const Cart = () => {
         onClick={() => setIsDrawerOpen(true)}
         className="indicator cursor-pointer text-white"
       >
-        <PiShoppingCartBold size={25} />
+        <PiShoppingCartBold size={23} />
         <span className="text-xs bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
           {cartQuantity}
         </span>
@@ -97,7 +97,7 @@ const Cart = () => {
       {/* Drawer */}
       <div
         ref={drawerRef}
-        className={`fixed top-0 right-0 h-full w-72 sm:w-96 bg-white z-50 shadow-lg transition-all duration-500 transform ${
+        className={`fixed top-0 right-0 h-full w-72 sm:w-96 bg-white z-100 shadow-lg transition-all duration-500 transform ${
           isDrawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

@@ -9,7 +9,7 @@ const FoodCard = ({ food, discountedPrice, handleAddToCart }) => {
     >
       {/* Discount Badge */}
       {food.discount > 0 && (
-        <span className="absolute top-1.5 right-1.5 bg-secondary text-white text-xs font-semibold px-2 py-1 rounded-full shadow z-50">
+        <span className="absolute top-1.5 right-1.5 bg-secondary text-white text-xs font-semibold px-2 py-1 rounded-full shadow z-10">
           {food.discount}% off
         </span>
       )}

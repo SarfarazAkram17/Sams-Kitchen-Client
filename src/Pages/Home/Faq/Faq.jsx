@@ -51,7 +51,7 @@ const Faq = () => {
   const visibleFaqs = showAll ? faqs : faqs.slice(0, 5);
 
   return (
-    <div className="py-16 px-4 max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <motion.h1
         className="mb-10 text-center text-primary text-3xl md:text-4xl font-bold"
         initial={{ opacity: 0, y: -40 }}
@@ -62,7 +62,7 @@ const Faq = () => {
         Frequently Asked Questions
       </motion.h1>
 
-      <div className="space-y-4">
+      <div className="space-y-4 px-4">
         {visibleFaqs.map((faq, index) => {
           const isActive = activeIndex === index;
           return (

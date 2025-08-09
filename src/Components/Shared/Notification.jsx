@@ -97,7 +97,7 @@ const Notification = () => {
         className="indicator cursor-pointer"
         onClick={handleShowNotifications}
       >
-        <FaRegBell size={25} className={`text-white transition-all duration-300 ${showNotifications ? 'rotate-[20deg]' : ''}`} />
+        <FaRegBell size={23} className={`text-white transition-all duration-300 ${showNotifications ? 'rotate-[20deg]' : ''}`} />
         {unreadCount > 0 && (
           <span className="text-xs bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
             {unreadCount}
@@ -107,7 +107,7 @@ const Notification = () => {
 
       {/* 🔔 Dropdown */}
       {showNotifications && (
-        <div className="absolute top-12 hide-scrollbar -right-12 sm:-right-16 bg-white border shadow-md rounded-md w-44 sm:w-56 md:w-64 lg:w-72 max-h-44 sm:max-h-56 md:max-h-64 lg:max-h-72 overflow-y-auto z-50">
+        <div className="absolute top-12 hide-scrollbar -right-10 sm:-right-16 bg-white border shadow-md rounded-md w-44 sm:w-56 md:w-64 lg:w-72 max-h-44 sm:max-h-56 md:max-h-64 lg:max-h-72 overflow-y-auto z-50">
           {isLoading ? (
             <p className="p-3 text-sm animate-pulse text-center">Loading...</p>
           ) : data?.pages?.length && data?.pages?.[0].notifications.length ? (

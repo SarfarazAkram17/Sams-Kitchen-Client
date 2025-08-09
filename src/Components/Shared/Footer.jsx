@@ -32,7 +32,7 @@ const Footer = () => {
   );
   return (
     <footer className="bg-base-200 text-base-content mt-10 border-t border-gray-200">
-      <div className="px-6 py-10 grid md:grid-cols-3 gap-10">
+      <div className="max-w-5xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-6">
         {/* Brand Section */}
         <div>
           <Link to="/" className="flex items-center gap-1">

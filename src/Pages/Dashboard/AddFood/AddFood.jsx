@@ -108,7 +108,7 @@ const AddFood = () => {
         Add New Food
       </h2>
       <p className="text-center text-sm text-gray-600 mb-8 max-w-2xl mx-auto">
-        Add a new food item to the menu. Upload at least one image, set price
+        Add a new food item to the menu. Upload one image, set price
         and details. Discount defaults to 0% but can be updated later by Admin.
       </p>
 

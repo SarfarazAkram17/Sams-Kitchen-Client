@@ -83,90 +83,95 @@ const Navbar = () => {
   }, [isOpen]);
 
   return (
-    <div ref={menuRef} className="navbar bg-base-100 px-4 py-1 shadow-sm top-0">
-      <div className="navbar-start">
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} className="btn btn-ghost">
-            {isOpen ? <RxCross2 size={20} /> : <RiMenu2Line size={20} />}
-          </button>
+    <div className="bg-base-100 p-0 shadow-sm top-0">
+      <div ref={menuRef} className="navbar px-4 max-w-5xl mx-auto">
+        <div className="navbar-start">
+          <div className="md:hidden mr-2">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="btn btn-ghost"
+            >
+              {isOpen ? <RxCross2 size={20} /> : <RiMenu2Line size={20} />}
+            </button>
+          </div>
+
+          <Link to="/" className="flex items-center gap-1">
+            <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
+            <span className="text-[#392B12] font-bold sm:text-xl">
+              Sam's Kitchen
+            </span>
+          </Link>
         </div>
 
-        <Link to="/" className="flex items-center gap-1 ml-2 md:ml-0">
-          <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
-          <span className="text-[#392B12] font-bold sm:text-xl">
-            Sam's Kitchen
-          </span>
-        </Link>
-      </div>
+        <div className="hidden navbar-center md:flex items-center gap-1">
+          {navLinks}
+        </div>
 
-      <div className="hidden navbar-center md:flex items-center gap-1">
-        {navLinks}
-      </div>
-
-      <div className="flex navbar-end items-center gap-6 relative">
-        {/* Auth Section */}
-        {user ? (
-          <>
-            <div className="dropdown dropdown-bottom dropdown-end">
-              <div tabIndex={0} role="button">
-                <img
-                  src={user.photoURL}
-                  alt="Profile"
-                  className="rounded-full object-cover w-13 mr-2 h-13 cursor-pointer"
-                />
+        <div className="flex navbar-end items-center gap-6 relative">
+          {/* Auth Section */}
+          {user ? (
+            <>
+              <div className="dropdown dropdown-bottom dropdown-end">
+                <div tabIndex={0} role="button">
+                  <img
+                    src={user.photoURL}
+                    alt="Profile"
+                    className="rounded-full object-cover w-13 mr-2 h-13 cursor-pointer"
+                  />
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content bg-base-100 w-56 rounded-box z-10 mt-1 space-y-2 text-center shadow"
+                >
+                  <li className="text-xs">Hi, {user.displayName}</li>
+                  <li className="text-xs">{userEmail}</li>
+                  <NavLink
+                    className="px-4 py-1 font-semibold rounded-full text-sm"
+                    to="/dashboard"
+                  >
+                    Dashboard
+                  </NavLink>
+                  <button
+                    onClick={handleLogout}
+                    className="btn btn-sm font-bold w-[50%] mx-auto btn-error"
+                  >
+                    Logout
+                  </button>
+                </ul>
               </div>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 w-56 rounded-box z-10 mt-1 space-y-2 text-center shadow"
-              >
-                <li className="text-xs">Hi, {user.displayName}</li>
-                <li className="text-xs">{userEmail}</li>
-                <NavLink
-                  className="px-4 py-1 font-semibold rounded-full text-sm"
-                  to="/dashboard"
-                >
-                  Dashboard
-                </NavLink>
-                <button
-                  onClick={handleLogout}
-                  className="btn btn-sm font-bold w-[50%] mx-auto btn-error"
-                >
-                  Logout
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <button className="btn bg-primary text-white border-2 border-primary hover:bg-transparent hover:text-primary">
+                  Login
                 </button>
-              </ul>
-            </div>
-          </>
-        ) : (
-          <>
-            <Link to="/login">
-              <button className="btn bg-primary text-white border-2 border-primary hover:bg-transparent hover:text-primary">
-                Login
-              </button>
-            </Link>
-            <Link to="/register" className="hidden md:inline -ml-4">
-              <button className="btn bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white">
-                Register
-              </button>
-            </Link>
-          </>
-        )}
-      </div>
-
-      {/* Mobile Dropdown */}
-      {isOpen && (
-        <div className="absolute top-full w-32 -mt-2 left-4 z-10 md:hidden bg-base-100 rounded-box p-2 place-items-center shadow">
-          <ul className="menu space-y-2 text-center">
-            {navLinks}
-            {!user && (
-              <Link to="/register">
+              </Link>
+              <Link to="/register" className="hidden md:inline -ml-4">
                 <button className="btn bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white">
                   Register
                 </button>
               </Link>
-            )}
-          </ul>
+            </>
+          )}
         </div>
-      )}
+
+        {/* Mobile Dropdown */}
+        {isOpen && (
+          <div className="absolute top-32 w-32 left-4 z-10 md:hidden bg-base-100 rounded-box p-2 place-items-center shadow">
+            <ul className="menu space-y-2 text-center">
+              {navLinks}
+              {!user && (
+                <Link to="/register">
+                  <button className="btn bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white">
+                    Register
+                  </button>
+                </Link>
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

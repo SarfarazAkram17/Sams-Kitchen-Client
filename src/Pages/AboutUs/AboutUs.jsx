@@ -4,7 +4,7 @@ import { FaGithub } from "react-icons/fa";
 const AboutUs = () => {
   return (
     <section className="py-16">
-      <div className="text-center max-w-4xl mx-auto">
+      <div className="text-center max-w-5xl mx-auto">
         {/* Header */}
         <h2 className="text-4xl font-bold text-primary mb-6">
           About the Developer
@@ -29,7 +29,7 @@ const AboutUs = () => {
 
         <div className="grid gap-8 md:grid-cols-2 text-left">
           {/* Portfolio */}
-          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:scale-[1.02] cursor-pointer">
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
             <div className="flex items-center gap-4 mb-4">
               <span className="text-4xl">👨‍💻</span>
               <h4 className="text-2xl font-bold text-primary">Portfolio</h4>
@@ -49,7 +49,7 @@ const AboutUs = () => {
           </div>
 
           {/* TourNest */}
-          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:scale-[1.02] cursor-pointer">
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
             <div className="flex items-center gap-4 mb-4">
               <img
                 src="https://i.ibb.co/WNFYmhRy/favicon.png"
@@ -84,7 +84,7 @@ const AboutUs = () => {
           </div>
 
           {/* Studify */}
-          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:scale-[1.02] cursor-pointer">
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
             <div className="flex items-center gap-4 mb-4">
               <img
                 src="https://i.ibb.co/XZt0GXVB/s-removebg-preview.png"
@@ -100,7 +100,7 @@ const AboutUs = () => {
             </p>
             <div className="flex justify-between items-center">
               <a
-                href="https://assignment-11-sarfaraz-akram.netlify.app"
+                href="https://studify-sarfaraz-akram.netlify.app"
                 className="text-blue-600 hover:underline font-medium"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -118,7 +118,7 @@ const AboutUs = () => {
           </div>
 
           {/* TaskWave */}
-          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:scale-[1.02] cursor-pointer">
+          <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
             <div className="flex items-center gap-4 mb-4">
               <img
                 src="https://i.ibb.co/XfF7mp1S/logo.png"
@@ -133,7 +133,7 @@ const AboutUs = () => {
             </p>
             <div className="flex justify-between items-center">
               <a
-                href="https://assignment-10-sarfaraz-akram.netlify.app"
+                href="https://taskwave-sarfaraz-akram.netlify.app"
                 className="text-blue-600 hover:underline font-medium"
                 target="_blank"
                 rel="noopener noreferrer"

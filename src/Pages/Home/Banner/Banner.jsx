@@ -1,26 +1,13 @@
-import './carousel.css'
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
-
 const Banner = () => {
   return (
-    <Carousel
-      autoPlay={true}
-      infiniteLoop={true}
-      showThumbs={false}
-      showStatus={false}
-      transitionTime={500}
-    >
-      {/* <div>
-        <img src={bannerImagel} />
-      </div>
-      <div>
-        <img src={bannerImage2} />
-      </div>
-      <div>
-        <img src={bannerImage3} />
-      </div> */}
-    </Carousel>
+    <section className="h-[400px] max-w-5xl mx-auto px-4">
+      {/* Background Image */}
+      <img
+        src="https://i.ibb.co.com/9kgdnqY6/Chat-GPT-Image-Aug-10-2025-05-36-36-AM.png"
+        alt="Delicious cooked food"
+        className="object-fit w-full h-full rounded-2xl"
+      />
+    </section>
   );
 };
 

@@ -18,7 +18,7 @@ const Offers = () => {
 
   // Fetch foods with pagination
   const { data, isLoading } = useQuery({
-    queryKey: ["allFoods", page],
+    queryKey: ["offerFoods", page],
     queryFn: async () => {
       const res = await axiosInstance.get("/foods/offer", {
         params: { page, limit: 12 },
@@ -44,7 +44,7 @@ const Offers = () => {
   };
 
   return (
-    <div className="py-6">
+    <div className="py-6 max-w-5xl mx-auto">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-2">
         Foods on sale
       </h2>

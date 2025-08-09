@@ -67,9 +67,9 @@ const Header = () => {
   };
 
   return (
-    <div className="relative">
-      <div className="flex justify-between bg-neutral py-2 px-4 sm:px-8">
-        <div className="w-[70%] relative">
+    <div className="relative bg-neutral">
+      <div className="flex max-w-5xl mx-auto py-2 px-4 justify-between">
+        <div className="w-[78%] sm:w-[70%] relative">
           <label className="input w-full">
             <svg
               className="h-[1.2em] opacity-50"
@@ -114,20 +114,25 @@ const Header = () => {
                       navigate(`/foods/${food._id}`);
                       setIsModalOpen(false);
                     }}
-                    className="cursor-pointer hover:bg-gray-100 px-4 py-3 rounded-md flex justify-between items-start gap-4"
+                    className="cursor-pointer hover:bg-gray-100 px-2 sm:px-4 py-3 rounded-md flex justify-between items-start gap-4"
                   >
                     <div className="flex gap-3 items-center">
                       <img
                         src={food.image}
                         alt={food.name}
-                        className="w-20 h-16 object-cover rounded"
+                        className="sm:w-20 sm:h-16 h-12 w-16 object-cover rounded"
                       />
                       <div className="space-y-2">
-                        <p className="font-medium">{food.name}</p>
+                        <p className="font-medium text-xs sm:text-[1rem]">
+                          {food.name}
+                        </p>
 
-                        <p className="text-sm text-gray-500">
-                          <strong>Status</strong>:{" "}
-                          <span className="text-green-600">
+                        <p className="text-xs sm:text-sm text-gray-500">
+                          <span
+                            className={`${
+                              food.available ? "text-green-500" : "text-red-500"
+                            }`}
+                          >
                             {food.available ? "Available" : "Unavailable"}
                           </span>
                         </p>
@@ -135,12 +140,20 @@ const Header = () => {
                     </div>
 
                     <div className="gap-1 flex flex-col items-end">
-                      <p className="text-gray-600 line-through text-sm">
-                        ৳ {food.price.toFixed(2)}
-                      </p>
-                      <p className="text-green-600 font-semibold">
-                        ৳ {calculateDiscountedPrice(food).toFixed(2)}
-                      </p>
+                      {food.discount ? (
+                        <>
+                          <p className="text-gray-600 whitespace-nowrap line-through text-xs sm:text-sm">
+                            ৳ {food.price.toFixed(2)}
+                          </p>
+                          <p className="text-green-600 text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
+                            ৳ {calculateDiscountedPrice(food).toFixed(2)}
+                          </p>{" "}
+                        </>
+                      ) : (
+                        <p className="text-green-600 text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
+                          ৳ {calculateDiscountedPrice(food).toFixed(2)}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))
@@ -153,7 +166,7 @@ const Header = () => {
           )}
         </div>
 
-        <div className="flex w-[30%] justify-end mt-2 items-center gap-6">
+        <div className="flex w-[22%] sm:w-[30%] justify-end mt-2 items-center gap-4 sm:gap-6">
           <Notification />
           <Cart />
         </div>

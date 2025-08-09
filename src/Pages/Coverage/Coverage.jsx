@@ -14,16 +14,16 @@ const Coverage = () => {
   };
 
   return (
-    <div className="px-4 md:px-8 py-16 bg-white rounded-2xl space-y-10">
+    <div className="py-16 bg-white max-w-5xl mx-auto rounded-2xl space-y-10">
       <h1 className="text-2xl md:text-3xl font-extrabold text-[#03373D]">
         We are available in 64 districts
       </h1>
 
       <div>
         <form onSubmit={handleSubmit} className="relative">
-          <label className="input rounded-full w-[50%] bg-[#F0F3F6]">
+          <label className="input rounded-full w-full sm:w-[50%] bg-[#F0F3F6]">
             <svg
-              className="h-[1em] opacity-50"
+              className="h-[1.15em] opacity-50"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -48,7 +48,7 @@ const Coverage = () => {
           </label>
           <button
             type="submit"
-            className="btn btn-primary absolute right-[50%] z-10 font-bold px-8 rounded-full text-white"
+            className="btn btn-primary absolute right-0 sm:right-[50%] z-10 font-bold px-8 rounded-full text-white"
           >
             Search
           </button>

@@ -169,16 +169,12 @@ const FoodDetails = () => {
     return floor + 0.5;
   };
 
-  const avgRating =
-    reviewData?.reviews?.length > 0
-      ? reviewData.reviews.reduce((sum, r) => sum + r.rating, 0) /
-        reviewData.reviews.length
-      : 0;
+  const avgRating = reviewData?.avgRating || 0;
 
   const displayRating = roundToHalf(avgRating);
 
   return (
-    <div className="py-10 max-w-5xl mx-auto">
+    <div className="py-10">
       {/* --- Food Section --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Food image */}
@@ -352,7 +348,7 @@ const FoodDetails = () => {
 
         {/* Review List */}
         {reviewData?.reviews?.length > 0 ? (
-          <div className="space-y-4 max-w-4xl mx-auto mt-10">
+          <div className="space-y-4 mt-10">
             {reviewData.reviews.map((review) => (
               <div
                 key={review._id}

@@ -11,7 +11,7 @@ const RootLayout = () => {
         <Header></Header>
       </div>
       <Navbar></Navbar>
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="my-8">
         <Outlet></Outlet>
       </div>
       <Footer></Footer>
