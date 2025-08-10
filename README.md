@@ -78,5 +78,5 @@ The platform features secure payments, role-based access, and real-time updates 
 
 ## ⚙️ Getting Started
 
-git clone https://github.com/SarfarazAkram17/Sams-Kitchen-Client.git
+git clone https://github.com/SarfarazAkram17/Sams-Kitchen-Client.git <br />
 cd Sams-Kitchen-Client
