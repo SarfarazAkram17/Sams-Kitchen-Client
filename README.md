@@ -1,4 +1,4 @@
-# Sam's Kitchen — Food Delivery & Restaurant Management System
+# Sam's Kitchen — Food Delivery & Kitchen Management System
 
 **Sam's Kitchen** is a modern full-stack food ordering and delivery platform that connects customers, riders, and admins in a seamless ecosystem. It provides smooth order placement, delivery tracking, and management features with a great user experience.
 
