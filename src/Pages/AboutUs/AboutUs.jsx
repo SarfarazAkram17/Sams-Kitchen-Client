@@ -4,7 +4,7 @@ import { FaGithub } from "react-icons/fa";
 const AboutUs = () => {
   return (
     <section className="py-16">
-      <div className="text-center max-w-5xl mx-auto">
+      <div className="text-center max-w-5xl px-4 mx-auto">
         {/* Header */}
         <h2 className="text-4xl font-bold text-primary mb-6">
           About the Developer

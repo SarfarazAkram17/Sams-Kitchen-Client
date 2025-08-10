@@ -18,7 +18,7 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cartQuantity, setCartQuantity] = useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const drawerRef = useRef(null); // 🔹 Ref for drawer
+  const drawerRef = useRef(null);
 
   useEffect(() => {
     const cart = getCart();
@@ -70,10 +70,13 @@ const Cart = () => {
 
   const total = calculateCartTotal();
 
-  // 🔹 Close drawer on outside click
   useEffect(() => {
     function handleClickOutside(e) {
-      if (isDrawerOpen && drawerRef.current && !drawerRef.current.contains(e.target)) {
+      if (
+        isDrawerOpen &&
+        drawerRef.current &&
+        !drawerRef.current.contains(e.target)
+      ) {
         setIsDrawerOpen(false);
       }
     }
@@ -121,7 +124,12 @@ const Cart = () => {
           {isLoading ? (
             <Loading />
           ) : cartItems.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full pt-6 pb-16 sm:py-6">
+            <div
+              style={{
+                height: "calc(100vh - 120px)",
+              }}
+              className="pt-6 pb-16 flex items-center justify-center flex-col sm:py-6"
+            >
               <div className="h-24 sm:h-32 w-24 sm:w-32 flex justify-center items-center rounded-full animate-pulse p-4 bg-red-200 shadow">
                 <PiShoppingCartBold className="text-red-600 text-4xl sm:text-5xl" />
               </div>

@@ -38,7 +38,7 @@ const AdminDashboard = () => {
           <h2 className="text-center text-primary font-bold text-3xl sm:text-4xl mb-8">
             Admin Dashboard
           </h2>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-10">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4">
             <div className="bg-pink-100 text-pink-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 flex items-center gap-4">
               <FaUserAlt size={35} />
               <div>

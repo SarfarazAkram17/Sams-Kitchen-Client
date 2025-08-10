@@ -78,9 +78,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 justify-start items-center md:justify-center">
-      <Lottie animationData={loginLottie} loop={true}></Lottie>
-      <div className="card w-full shadow-xl max-w-md mx-auto my-12">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
+      <Lottie className="flex-1" animationData={loginLottie} loop={true}></Lottie>
+      <div className="card w-full flex-1 shadow-xl">
         <div className="card-body">
           <h1 className="text-3xl font-extrabold">Welcome Back</h1>
           <p className="mb-4 text-sm font-semibold">Login with Sam's Kitchen</p>

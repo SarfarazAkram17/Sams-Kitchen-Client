@@ -116,13 +116,13 @@ const ManageProfile = () => {
     formData.name.trim() === user?.displayName && preview === user?.photoURL;
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
+    <div className="px-4">
       <h2 className="text-3xl font-bold mb-8 text-primary">
         Welcome back, {user?.displayName} 👋
       </h2>
 
-      <div className="shadow-lg p-6 bg-white rounded-lg">
-        <div className="flex flex-col md:flex-row gap-8 md:items-center">
+      <div className="shadow-lg w-fit p-6 bg-white rounded-lg">
+        <div className="flex flex-col sm:flex-row gap-8 md:items-center">
           <img
             src={user?.photoURL}
             alt="Profile"

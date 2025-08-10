@@ -24,7 +24,6 @@ import RiderRoutes from "../Routes/RiderRoutes";
 import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliveries";
 import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import Offers from "../Pages/Offers/Offers";
-import Coverage from "../Pages/Coverage/Coverage";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -73,12 +72,6 @@ export const router = createBrowserRouter([
       {
         path: "/offers",
         Component: Offers,
-      },
-      {
-        path: "/coverage",
-        loader: () => fetch("/outlets.json"),
-        Component: Coverage,
-        hydrateFallbackElement: <Loading></Loading>,
       },
       {
         path: "/allFoods",

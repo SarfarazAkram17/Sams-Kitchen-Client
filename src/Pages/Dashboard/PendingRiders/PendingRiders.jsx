@@ -82,7 +82,7 @@ const PendingRiders = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="px-4">
       {riders.length === 0 ? (
         <h1 className="text-3xl text-gray-600 font-extrabold mb-6 text-center">
           There is no Pending Rider Applications

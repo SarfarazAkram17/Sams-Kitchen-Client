@@ -218,7 +218,7 @@ const generateReceipt = (order) => {
 };
 
   return (
-    <div className="p-4">
+    <div className="px-4">
       {showConfetti && (
         <Confetti
           width={width}
@@ -251,7 +251,7 @@ const generateReceipt = (order) => {
       ) : (
         <>
           <div className="overflow-x-auto border border-base-content/10 rounded-lg">
-            <table className="table w-full text-center table-xs">
+            <table className="table w-full text-center table-sm">
               <thead>
                 <tr className="bg-base-200 text-sm">
                   <th>#</th>

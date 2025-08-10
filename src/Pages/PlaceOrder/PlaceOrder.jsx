@@ -70,7 +70,7 @@ const PlaceOrder = () => {
   const total = subtotal + deliveryCharge - discount;
   
   return (
-    <div className="flex flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8 py-10">
+    <div className="flex max-w-5xl mx-auto px-4 flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8 py-10">
       {/* Left Section: Personal & Delivery Details Form */}
       <div className="lg:w-[62%] w-full">
         <PlaceOrderForm cartItems={cartItems} foods={foods}></PlaceOrderForm>

@@ -29,10 +29,10 @@ const DashboardLayout = () => {
   };
 
   return (
-    <>
+    <div className="xl:container mx-auto">
       <Header></Header>
 
-      <div className="drawer lg:drawer-open h-screen xl:container mx-auto">
+      <div className="drawer lg:drawer-open h-screen">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
 
         {/* Main Content Area */}
@@ -221,7 +221,7 @@ const DashboardLayout = () => {
           </ul>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

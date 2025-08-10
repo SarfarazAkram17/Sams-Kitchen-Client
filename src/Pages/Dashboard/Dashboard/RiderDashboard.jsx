@@ -32,7 +32,7 @@ const RiderDashboard = () => {
           <h2 className="text-center text-primary font-bold text-3xl sm:text-4xl mb-8">
             Rider Dashboard
           </h2>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-10">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4">
             {/* Total Earnings */}
             <div className="bg-green-100 text-green-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 flex items-center gap-4">
               <FaMoneyBillWave size={35} />

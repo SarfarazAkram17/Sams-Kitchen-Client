@@ -26,7 +26,7 @@ const AssignRider = () => {
           payment_status: "paid",
           status: "not_assigned",
           page,
-          limit: 10,
+          limit: 1,
         },
       });
       return res.data;
@@ -92,7 +92,7 @@ const AssignRider = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="px-4">
       <h1 className="text-3xl text-gray-600 font-extrabold mb-6 text-center">
         Assign Rider to Orders
       </h1>
@@ -104,7 +104,7 @@ const AssignRider = () => {
         </p>
       ) : (
         <div className="overflow-x-auto rounded-box border-2 border-base-content/5">
-          <table className="table text-center table-xs w-full">
+          <table className="table text-center table-sm w-full">
             <thead className="bg-base-200 text-sm">
               <tr>
                 <th>#</th>
@@ -128,9 +128,9 @@ const AssignRider = () => {
                   <td>
                     <button
                       onClick={() => openAssignModal(order)}
-                      className="btn btn-xs btn-primary text-white"
+                      className="btn whitespace-nowrap btn-xs btn-primary text-white"
                     >
-                      <FaMotorcycle size={14} className="inline-block mr-1" />
+                      <FaMotorcycle size={16} className="inline-block mr-1" />
                       Assign Rider
                     </button>
                   </td>
@@ -147,9 +147,7 @@ const AssignRider = () => {
               </h1>
 
               {loadingRiders ? (
-             
-                  <Loading></Loading>
-               
+                <Loading></Loading>
               ) : riders.length === 0 ? (
                 <h1 className="text-lg text-error font-extrabold mb-6 text-center">
                   No available riders in this thana.
@@ -196,18 +194,6 @@ const AssignRider = () => {
                       ))}
                     </tbody>
                   </table>
-
-                        {/* Ant Design Pagination */}
-      <div className="flex justify-center mt-10">
-        <Pagination
-          current={page}
-          align="center"
-          total={total}
-          pageSize={10}
-          showSizeChanger={false}
-          onChange={(newPage) => setPage(newPage)}
-        />
-      </div>
                 </div>
               )}
 
@@ -226,6 +212,17 @@ const AssignRider = () => {
           </div>
         </div>
       )}
+      {/* Ant Design Pagination */}
+      <div className="flex justify-center mt-10">
+        <Pagination
+          current={page}
+          align="center"
+          total={total}
+          pageSize={10}
+          showSizeChanger={false}
+          onChange={(newPage) => setPage(newPage)}
+        />
+      </div>
     </div>
   );
 };

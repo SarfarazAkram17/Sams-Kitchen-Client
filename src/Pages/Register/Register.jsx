@@ -90,11 +90,11 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 justify-start items-center md:justify-center">
-      <Lottie animationData={registerLottie} loop={true}></Lottie>
-      <div className="card w-full shadow-xl max-w-md mx-auto my-10">
+    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
+      <Lottie className="flex-1" animationData={registerLottie} loop={true}></Lottie>
+      <div className="card w-full flex-1 shadow-xl">
         <div className="card-body">
-          <h1 className="text-3xl font-extrabold">Create Your Account</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold">Create Your Account</h1>
           <p className="mb-4 text-sm font-semibold">Join Sam's Kitchen today</p>
 
           <form onSubmit={handleSubmit(handleRegister)}>

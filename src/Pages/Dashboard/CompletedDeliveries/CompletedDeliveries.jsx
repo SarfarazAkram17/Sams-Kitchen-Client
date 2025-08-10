@@ -68,7 +68,7 @@ const CompletedDeliveries = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="px-4">
       {isLoading ? (
         <Loading></Loading>
       ) : orders.length === 0 ? (

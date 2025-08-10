@@ -6,6 +6,7 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
+import { FaGithub } from "react-icons/fa6";
 
 const Footer = () => {
   const normalClass =
@@ -25,14 +26,11 @@ const Footer = () => {
       <NavLink to="/offers" className={`${normalClass}`}>
         Offers
       </NavLink>
-      <NavLink to="/coverage" className={`${normalClass}`}>
-        Coverage
-      </NavLink>
     </>
   );
   return (
-    <footer className="bg-base-200 text-base-content mt-10 border-t border-gray-200">
-      <div className="max-w-5xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-6">
+    <footer className="bg-base-200 text-base-content px-4 mt-10 border-t border-gray-200">
+      <div className="max-w-5xl mx-auto py-10 grid md:grid-cols-3 gap-6">
         {/* Brand Section */}
         <div>
           <Link to="/" className="flex items-center gap-1">
@@ -84,7 +82,14 @@ const Footer = () => {
               <FaTwitter />
             </a>
             <a
-              href="https://www.linkedin.com"
+              href="https://www.github.com/SarfarazAkram17"
+              target="_blank"
+              className="p-2 bg-primary text-white rounded-full hover:bg-primary/80 transition"
+            >
+              <FaGithub />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/sarfarazakram"
               target="_blank"
               className="p-2 bg-primary text-white rounded-full hover:bg-primary/80 transition"
             >

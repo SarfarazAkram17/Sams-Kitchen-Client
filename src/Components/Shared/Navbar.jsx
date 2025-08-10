@@ -53,13 +53,6 @@ const Navbar = () => {
       >
         Offers
       </NavLink>
-      <NavLink
-        onClick={() => setIsOpen(false)}
-        className="px-3 py-0.5 text-xs lg:text-sm rounded-full font-bold hover:text-primary hover:bg-primary/10"
-        to="/coverage"
-      >
-        Coverage
-      </NavLink>
     </>
   );
 
@@ -84,9 +77,9 @@ const Navbar = () => {
 
   return (
     <div className="bg-base-100 p-0 shadow-sm top-0">
-      <div ref={menuRef} className="navbar px-4 max-w-5xl mx-auto">
+      <div ref={menuRef} className="navbar px-2 max-w-5xl mx-auto">
         <div className="navbar-start">
-          <div className="md:hidden mr-2">
+          <div className="md:hidden mr-1">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="btn btn-ghost"
@@ -96,8 +89,8 @@ const Navbar = () => {
           </div>
 
           <Link to="/" className="flex items-center gap-1">
-            <img src={logo} alt="Sam's Kitchen Logo" className="h-14 w-auto" />
-            <span className="text-[#392B12] font-bold sm:text-xl">
+            <img src={logo} alt="Sam's Kitchen Logo" className="h-11 md:h-14 w-auto" />
+            <span className="text-[#392B12] font-bold md:text-xl whitespace-nowrap">
               Sam's Kitchen
             </span>
           </Link>

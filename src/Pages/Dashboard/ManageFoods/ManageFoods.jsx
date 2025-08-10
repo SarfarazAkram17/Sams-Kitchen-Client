@@ -20,7 +20,7 @@ const ManageFoods = () => {
     queryKey: ["foods", page],
     queryFn: async () => {
       const res = await axiosInstance.get("/foods", {
-        params: { page, limit: 10 },
+        params: { page, limit: 12 },
       });
       return res.data;
     },
@@ -58,7 +58,7 @@ const ManageFoods = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="p-4">
+    <div className="px-4">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
         Manage Foods
       </h2>
@@ -70,7 +70,7 @@ const ManageFoods = () => {
       ) : (
         <>
           {/* Foods Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {foods.map((food) => (
               <div
                 key={food._id}

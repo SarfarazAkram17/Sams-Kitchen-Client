@@ -72,7 +72,7 @@ const PendingDeliveries = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="px-4">
       {isLoading ? (
         <Loading></Loading>
       ) : orders.length === 0 ? (
@@ -85,7 +85,7 @@ const PendingDeliveries = () => {
             Pending Deliveries
           </h1>
           <div className="overflow-x-auto rounded-box border-2 border-base-content/5">
-            <table className="table table-xs text-center">
+            <table className="table table-sm text-center">
               <thead>
                 <tr className="bg-base-200">
                   <th>#</th>
