@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PiShoppingCartBold } from "react-icons/pi";
 import { useState, useRef } from "react";
@@ -10,9 +10,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import ShareFood from "../../Components/Shared/ShareFood";
 
 const FoodDetails = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { foodId } = useParams();
   const axiosInstance = useAxios();
   const axiosSecure = useAxiosSecure();
@@ -51,7 +53,6 @@ const FoodDetails = () => {
           limit: 3,
         },
       });
-      console.log(res.data);
       return res.data;
     },
   });
@@ -144,7 +145,7 @@ const FoodDetails = () => {
   const handleReviewSubmit = () => {
     if (!user) {
       toast.info("Login first");
-      navigate("/login");
+      navigate("/login", { state: location.pathname });
       return;
     }
 
@@ -174,21 +175,32 @@ const FoodDetails = () => {
   const displayRating = roundToHalf(avgRating);
 
   return (
-    <div className="py-10">
+    <div className="py-10 max-w-5xl px-3 mx-auto">
       {/* --- Food Section --- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Food image */}
-        <div className="w-full h-80 border relative rounded-lg overflow-hidden">
-          <img
-            src={food.image}
-            alt={food.name}
-            className="w-full h-full object-cover"
-          />
-          {food.discount > 0 && (
-            <span className="absolute top-2 right-2 bg-secondary text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
-              {food.discount}% OFF
-            </span>
-          )}
+        <div>
+          <div className="w-full h-64 sm:h-80 border relative rounded-lg overflow-hidden">
+            <img
+              src={food.image}
+              alt={food.name}
+              className="w-full h-full object-cover"
+            />
+            {food.discount > 0 && (
+              <span className="absolute top-2 right-2 bg-secondary text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
+                {food.discount}% OFF
+              </span>
+            )}
+          </div>
+
+          <div className="mt-5">
+            <h2 className="font-bold text-xl mb-1">Like this Food?</h2>
+            <p className="text-sm text-gray-600 mb-3">
+              Share it with your peers!
+            </p>
+
+            <ShareFood food={food}></ShareFood>
+          </div>
         </div>
 
         {/* Food details */}
@@ -202,6 +214,7 @@ const FoodDetails = () => {
                   Rate: {
                     starBg: "#B5B7B750",
                     starSize: 15,
+                    marginXS: 2,
                   },
                 },
               }}
@@ -293,6 +306,7 @@ const FoodDetails = () => {
                 components: {
                   Rate: {
                     starBg: "#B5B7B750",
+                    marginXS: 2,
                   },
                 },
               }}
@@ -354,10 +368,10 @@ const FoodDetails = () => {
                 key={review._id}
                 className="p-4 rounded-xl shadow-xl border-2 border-sky-200"
               >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-6">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex items-center gap-4">
                     <img
-                      className="object-cover h-13 w-13 rounded-full"
+                      className="object-cover h-10 sm:h-13 w-10 sm:w-13 rounded-full"
                       src={review.userPhoto}
                       alt={review.userName}
                     />
@@ -372,6 +386,7 @@ const FoodDetails = () => {
                             Rate: {
                               starBg: "#B5B7B750",
                               starSize: 15,
+                              marginXS: 2,
                             },
                           },
                         }}
@@ -380,7 +395,7 @@ const FoodDetails = () => {
                       </ConfigProvider>
                     </div>
                   </div>
-                  <p>
+                  <p className="text-xs sm:text-sm font-semibold">
                     {new Date(review.postedAt).toLocaleDateString("en-US", {
                       hour: "numeric",
                       minute: "2-digit",
