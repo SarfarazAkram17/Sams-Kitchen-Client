@@ -78,7 +78,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col max-w-5xl mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
+    <div className="flex flex-col max-w-7xl mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
       <Lottie className="flex-1" animationData={loginLottie} loop={true}></Lottie>
       <div className="card w-full flex-1 shadow-xl">
         <div className="card-body">

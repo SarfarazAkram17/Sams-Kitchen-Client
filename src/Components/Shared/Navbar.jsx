@@ -76,8 +76,8 @@ const Navbar = () => {
   }, [isOpen]);
 
   return (
-    <div className="bg-base-100 p-0 shadow-sm top-0">
-      <div ref={menuRef} className="navbar px-2 max-w-5xl mx-auto">
+    <div className="bg-base-100 p-0 shadow-sm">
+      <div ref={menuRef} className="navbar px-2 max-w-7xl mx-auto">
         <div className="navbar-start">
           <div className="md:hidden mr-1">
             <button

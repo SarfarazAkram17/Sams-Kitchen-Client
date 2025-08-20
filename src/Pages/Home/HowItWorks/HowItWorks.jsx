@@ -28,7 +28,7 @@ const steps = [
 const HowItWorks = () => {
   return (
     <section className="px-4 py-12 bg-gray-50">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <motion.h2
           className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
           initial={{ opacity: 0, y: -40 }}

@@ -26,7 +26,7 @@ const AssignRider = () => {
           payment_status: "paid",
           status: "not_assigned",
           page,
-          limit: 1,
+          limit: 10,
         },
       });
       return res.data;

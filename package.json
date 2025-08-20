@@ -31,6 +31,7 @@
     "react-share": "^5.2.2",
     "react-toastify": "^11.0.5",
     "react-use": "^17.6.0",
+    "recharts": "^3.1.2",
     "sweetalert2": "^11.22.2",
     "tailwindcss": "^4.1.11"
   },

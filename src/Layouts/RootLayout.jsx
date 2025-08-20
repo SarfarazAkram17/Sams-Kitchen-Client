@@ -6,11 +6,11 @@ import Header from "../Components/Shared/Header";
 
 const RootLayout = () => {
   return (
-    <div className="xl:container mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="sticky z-50 top-0">
         <Header></Header>
-      </div>
       <Navbar></Navbar>
+      </div>
       <div className="my-8">
         <Outlet></Outlet>
       </div>

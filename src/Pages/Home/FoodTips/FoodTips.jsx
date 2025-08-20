@@ -32,7 +32,7 @@ const foodTips = [
 const FoodTips = () => {
   return (
     <section className="bg-gray-50 py-16 px-4">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <motion.h2
           className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
           initial={{ opacity: 0, y: -40 }}

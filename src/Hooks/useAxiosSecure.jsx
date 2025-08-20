@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 const axiosSecure = axios.create({
-  baseURL: "https://sams-kitchen.vercel.app",
+  baseURL: "http://localhost:3000",
   withCredentials: true,
 });
 
