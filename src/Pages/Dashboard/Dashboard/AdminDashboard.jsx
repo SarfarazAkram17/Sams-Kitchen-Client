@@ -157,7 +157,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Orders by Status */}
-        {orderStatusData.length > 0 && (
+        {orderStatusData.length > 0 ? (
           <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
             <h3 className="text-xl font-bold mb-4">Orders by Status</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -182,10 +182,14 @@ const AdminDashboard = () => {
               </PieChart>
             </ResponsiveContainer>
           </div>
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No orders placed yet.
+          </p>
         )}
 
         {/* Monthly Orders */}
-        {monthlyOrdersData.length > 0 && (
+        {monthlyOrdersData.length > 0 ? (
           <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
             <h3 className="text-xl font-bold mb-4">Monthly Orders Trend</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -204,10 +208,14 @@ const AdminDashboard = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No orders placed yet.
+          </p>
         )}
 
         {/* Payments */}
-        {monthlyPaymentsData.length > 0 && (
+        {monthlyPaymentsData.length > 0 ? (
           <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
             <h3 className="text-xl font-bold mb-4">Payments per Month</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -221,10 +229,14 @@ const AdminDashboard = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No payments yet.
+          </p>
         )}
 
         {/* Top Foods */}
-        {topFoodsData.length > 0 && (
+        {topFoodsData.length > 0 ? (
           <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
             <h3 className="text-xl font-bold mb-4">Top Foods Ordered</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -238,6 +250,10 @@ const AdminDashboard = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No foods saled yet.
+          </p>
         )}
       </div>
     </div>

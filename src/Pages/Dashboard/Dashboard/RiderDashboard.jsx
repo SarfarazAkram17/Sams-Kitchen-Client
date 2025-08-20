@@ -115,7 +115,7 @@ const RiderDashboard = () => {
 
       {/* Charts */}
       {/* Monthly Earnings Line Chart */}
-      {monthlyEarnings.length > 0 && (
+      {monthlyEarnings.length > 0 ? (
         <div className="bg-white rounded-xl shadow-xl p-5">
           <h3 className="text-lg font-semibold mb-4">Monthly Earnings</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -134,10 +134,10 @@ const RiderDashboard = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      )}
+      ): <p className="flex justify-center items-center font-lg font-semibold h-[200px]">No earnings yet.</p>}
 
       {/* Monthly Orders Bar Chart */}
-      {monthlyEarnings.length > 0 && (
+      {monthlyEarnings.length > 0 ? (
         <div className="bg-white rounded-xl shadow-xl p-5">
           <h3 className="text-lg font-semibold mb-4">Monthly Orders</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -151,7 +151,7 @@ const RiderDashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      )}
+      ): <p className="flex justify-center items-center font-lg font-semibold h-[200px]">No orders assigned yet.</p>}
     </div>
   );
 };

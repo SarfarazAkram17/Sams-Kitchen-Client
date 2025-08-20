@@ -106,7 +106,7 @@ const CustomerDashboard = () => {
       </div>
 
       {/* Charts */}
-      {monthlyOrders.length > 0 && (
+      {monthlyOrders.length > 0 ? (
         <div className="bg-white rounded-xl shadow-xl p-5">
           <h3 className="text-lg font-semibold mb-4">Monthly Orders</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -120,9 +120,13 @@ const CustomerDashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+      ) : (
+        <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+          No orders placed yet.
+        </p>
       )}
 
-      {monthlyPayments.length > 0 && (
+      {monthlyPayments.length > 0 ? (
         <div className="bg-white rounded-xl shadow-xl p-5">
           <h3 className="text-lg font-semibold mb-4">Monthly Payments</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -141,6 +145,10 @@ const CustomerDashboard = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
+      ) : (
+        <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+          No payments yet.
+        </p>
       )}
     </div>
   );
