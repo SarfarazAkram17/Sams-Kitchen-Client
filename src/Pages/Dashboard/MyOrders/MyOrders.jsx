@@ -26,7 +26,7 @@ const MyOrders = () => {
     queryKey: ["myOrders", page],
     queryFn: async () => {
       const res = await axiosSecure.get("/orders", {
-        params: { email: userEmail, page, limit: 12 },
+        params: { email: userEmail, page, limit: 10 },
       });
       return res.data;
     },

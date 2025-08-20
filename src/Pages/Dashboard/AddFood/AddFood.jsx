@@ -86,13 +86,13 @@ const AddFood = () => {
       toast.error("Please upload 1 image before submitting.");
       return;
     }
+    const price = Math.round(parseFloat(data.price) * 100) / 100;
+    const discount = Math.round(parseFloat(data.discount) * 100) / 100;
 
     const newFood = {
       name: data.name,
-      price: data.price ? Number(parseFloat(data.price).toFixed(2)) : 0,
-      discount: data.discount
-        ? Number(parseFloat(data.discount).toFixed(2))
-        : 0,
+      price,
+      discount,
       description: data.description,
       image: imageURL,
       available: data.available === "true",
@@ -108,8 +108,8 @@ const AddFood = () => {
         Add New Food
       </h2>
       <p className="text-center text-sm text-gray-600 mb-8 max-w-2xl mx-auto">
-        Add a new food item to the menu. Upload one image, set price
-        and details. Discount defaults to 0% but can be updated later by Admin.
+        Add a new food item to the menu. Upload one image, set price and
+        details. Discount defaults to 0% but can be updated later by Admin.
       </p>
 
       <form onSubmit={handleSubmit(handleAddFood)} className="space-y-4">

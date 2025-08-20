@@ -44,7 +44,7 @@ const AllFoods = () => {
   };
 
   return (
-    <div className="py-6 max-w-7xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-4">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
         All Foods
       </h2>
@@ -80,7 +80,7 @@ const AllFoods = () => {
               current={page}
               align="center"
               total={total}
-              pageSize={10}
+              pageSize={12}
               showSizeChanger={false}
               onChange={(newPage) => {
                 setPage(newPage);

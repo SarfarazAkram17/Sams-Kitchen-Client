@@ -126,7 +126,7 @@ const Cart = () => {
           ) : cartItems.length === 0 ? (
             <div
               style={{
-                height: "calc(100vh - 120px)",
+                height: "calc(100vh - 180px)",
               }}
               className="pt-6 pb-16 flex items-center justify-center flex-col sm:py-6"
             >

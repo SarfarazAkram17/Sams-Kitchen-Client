@@ -138,7 +138,7 @@ const ManageFoods = () => {
               current={page}
               align="center"
               total={total}
-              pageSize={10}
+              pageSize={12}
               showSizeChanger={false}
               onChange={(newPage) => {
                 setPage(newPage);

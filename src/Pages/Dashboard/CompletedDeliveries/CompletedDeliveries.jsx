@@ -114,7 +114,8 @@ const CompletedDeliveries = () => {
                       ৳{order.total}
                     </td>
                     <td className="font-semibold text-sm text-green-600">
-                      ৳{order.deliveryCharge}
+                      ৳
+                      {order.deliveryCharge || order.items.length > 0 ? 50 : 30}
                     </td>
                     <td>
                       {order.cashout_status === "cashed_out" ? (

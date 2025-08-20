@@ -112,13 +112,13 @@ const EditFood = () => {
       toast.error("Please upload 1 image.");
       return;
     }
+    const price = Math.round(parseFloat(data.price) * 100) / 100;
+    const discount = Math.round(parseFloat(data.discount) * 100) / 100;
 
     const payload = {
       name: data.name,
-      price: data.price ? Number(parseFloat(data.price).toFixed(2)) : 0,
-      discount: data.discount
-        ? Number(parseFloat(data.discount).toFixed(2))
-        : 0,
+      price,
+      discount,
       description: data.description,
       available: data.available === "true",
       image: newImageURL || existingImage,
