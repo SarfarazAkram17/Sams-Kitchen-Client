@@ -106,9 +106,9 @@ const CustomerDashboard = () => {
       </div>
 
       {/* Charts */}
-      {monthlyOrders.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-xl p-5">
-          <h3 className="text-lg font-semibold mb-4">Monthly Orders</h3>
+      <div className="bg-white rounded-xl shadow-xl p-5">
+        <h3 className="text-lg font-semibold mb-4">Monthly Orders</h3>
+        {monthlyOrders.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={monthlyOrders}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -119,16 +119,16 @@ const CustomerDashboard = () => {
               <Bar dataKey="orders" fill="#8884d8" />
             </BarChart>
           </ResponsiveContainer>
-        </div>
-      ) : (
-        <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
-          No orders placed yet.
-        </p>
-      )}
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No orders placed yet.
+          </p>
+        )}
+      </div>
 
-      {monthlyPayments.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-xl p-5">
-          <h3 className="text-lg font-semibold mb-4">Monthly Payments</h3>
+      <div className="bg-white rounded-xl shadow-xl p-5">
+        <h3 className="text-lg font-semibold mb-4">Monthly Payments</h3>
+        {monthlyPayments.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyPayments}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -144,12 +144,12 @@ const CustomerDashboard = () => {
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
-      ) : (
-        <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
-          No payments yet.
-        </p>
-      )}
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No payments yet.
+          </p>
+        )}
+      </div>
     </div>
   );
 };

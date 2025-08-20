@@ -115,9 +115,9 @@ const RiderDashboard = () => {
 
       {/* Charts */}
       {/* Monthly Earnings Line Chart */}
-      {monthlyEarnings.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-xl p-5">
-          <h3 className="text-lg font-semibold mb-4">Monthly Earnings</h3>
+      <div className="bg-white rounded-xl shadow-xl p-5">
+        <h3 className="text-lg font-semibold mb-4">Monthly Earnings</h3>
+        {monthlyEarnings.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyEarnings}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -133,13 +133,17 @@ const RiderDashboard = () => {
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
-      ): <p className="flex justify-center items-center font-lg font-semibold h-[200px]">No earnings yet.</p>}
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No earnings yet.
+          </p>
+        )}
+      </div>
 
       {/* Monthly Orders Bar Chart */}
-      {monthlyEarnings.length > 0 ? (
-        <div className="bg-white rounded-xl shadow-xl p-5">
-          <h3 className="text-lg font-semibold mb-4">Monthly Orders</h3>
+      <div className="bg-white rounded-xl shadow-xl p-5">
+        <h3 className="text-lg font-semibold mb-4">Monthly Orders</h3>
+        {monthlyEarnings.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={monthlyEarnings}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -150,8 +154,12 @@ const RiderDashboard = () => {
               <Bar dataKey="orders" fill="#8884d8" />
             </BarChart>
           </ResponsiveContainer>
-        </div>
-      ): <p className="flex justify-center items-center font-lg font-semibold h-[200px]">No orders assigned yet.</p>}
+        ) : (
+          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+            No orders assigned yet.
+          </p>
+        )}
+      </div>
     </div>
   );
 };

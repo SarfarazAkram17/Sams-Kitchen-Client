@@ -157,9 +157,9 @@ const AdminDashboard = () => {
         </div>
 
         {/* Orders by Status */}
-        {orderStatusData.length > 0 ? (
-          <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-4">Orders by Status</h3>
+        <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
+          <h3 className="text-xl font-bold mb-4">Orders by Status</h3>
+          {orderStatusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -181,17 +181,17 @@ const AdminDashboard = () => {
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
-          </div>
-        ) : (
-          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
-            No orders placed yet.
-          </p>
-        )}
+          ) : (
+            <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+              No orders placed yet.
+            </p>
+          )}
+        </div>
 
         {/* Monthly Orders */}
-        {monthlyOrdersData.length > 0 ? (
-          <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-4">Monthly Orders Trend</h3>
+        <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
+          <h3 className="text-xl font-bold mb-4">Monthly Orders Trend</h3>
+          {monthlyOrdersData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={monthlyOrdersData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -207,17 +207,17 @@ const AdminDashboard = () => {
                 />
               </LineChart>
             </ResponsiveContainer>
-          </div>
-        ) : (
-          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
-            No orders placed yet.
-          </p>
-        )}
+          ) : (
+            <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+              No orders placed yet.
+            </p>
+          )}
+        </div>
 
         {/* Payments */}
-        {monthlyPaymentsData.length > 0 ? (
-          <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-4">Payments per Month</h3>
+        <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
+          <h3 className="text-xl font-bold mb-4">Payments per Month</h3>
+          {monthlyPaymentsData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={monthlyPaymentsData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -228,17 +228,17 @@ const AdminDashboard = () => {
                 <Bar dataKey="payments" fill="#4CAF50" />
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        ) : (
-          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
-            No payments yet.
-          </p>
-        )}
+          ) : (
+            <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+              No payments yet.
+            </p>
+          )}
+        </div>
 
         {/* Top Foods */}
-        {topFoodsData.length > 0 ? (
-          <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
-            <h3 className="text-xl font-bold mb-4">Top Foods Ordered</h3>
+        <div className="bg-white shadow-xl mt-6 rounded-xl p-6">
+          <h3 className="text-xl font-bold mb-4">Top Foods Ordered</h3>
+          {topFoodsData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={topFoodsData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -249,12 +249,12 @@ const AdminDashboard = () => {
                 <Bar dataKey="quantity" fill="#9C27B0" />
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        ) : (
-          <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
-            No foods saled yet.
-          </p>
-        )}
+          ) : (
+            <p className="flex justify-center items-center font-lg font-semibold h-[200px]">
+              No foods saled yet.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
