@@ -77,7 +77,7 @@ const DashboardLayout = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="drawer-side z-40 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
+        <div className="drawer-side z-30 lg:fixed lg:top-0 lg:left-0 lg:h-screen">
           <label
             htmlFor="my-drawer-2"
             className="drawer-overlay lg:hidden"
