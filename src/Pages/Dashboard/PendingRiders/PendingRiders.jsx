@@ -9,7 +9,7 @@ import { Pagination } from "antd";
 
 const PendingRiders = () => {
   const { userEmail } = useAuth();
-  const [selectedRiders, setSelectedRiders] = useState(null);
+  const [selectedRider, setSelectedRider] = useState(null);
   const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
 
@@ -97,6 +97,7 @@ const PendingRiders = () => {
             <table className="table table-sm text-center">
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Region</th>
@@ -108,8 +109,9 @@ const PendingRiders = () => {
                 </tr>
               </thead>
               <tbody>
-                {riders.map((application) => (
+                {riders.map((application, i) => (
                   <tr key={application._id}>
+                    <td>{(page - 1) * 10 + i + 1}</td>
                     <td>{application.name}</td>
                     <td
                       className="truncate max-w-[100px]"
@@ -129,7 +131,7 @@ const PendingRiders = () => {
                     </td>
                     <td className="flex gap-1 justify-center">
                       <button
-                        onClick={() => setSelectedRiders(application)}
+                        onClick={() => setSelectedRider(application)}
                         className="btn btn-xs btn-info"
                       >
                         <FaEye />
@@ -170,42 +172,42 @@ const PendingRiders = () => {
       )}
 
       {/* Modal for viewing rider details */}
-      {selectedRiders && (
+      {selectedRider && (
         <dialog id="riderDetailsModal" className="modal modal-open">
           <div className="modal-box max-w-2xl">
             <h3 className="font-bold text-2xl mb-5">Rider requester Details</h3>
             <div className="space-y-2">
               <p>
-                <strong>Name:</strong> {selectedRiders.name}
+                <strong>Name:</strong> {selectedRider.name}
               </p>
               <p>
-                <strong>Email:</strong> {selectedRiders.email}
+                <strong>Email:</strong> {selectedRider.email}
               </p>
               <p>
-                <strong>Contact:</strong> {selectedRiders.phone}
+                <strong>Contact:</strong> {selectedRider.phone}
               </p>
               <p>
-                <strong>Age:</strong> {selectedRiders.age}
+                <strong>Age:</strong> {selectedRider.age}
               </p>
               <p>
-                <strong>Region:</strong> {selectedRiders.region}
+                <strong>Region:</strong> {selectedRider.region}
               </p>
               <p>
-                <strong>District:</strong> {selectedRiders.district}
+                <strong>District:</strong> {selectedRider.district}
               </p>
               <p>
-                <strong>Thana:</strong> {selectedRiders.thana}
+                <strong>Thana:</strong> {selectedRider.thana}
               </p>
               <p>
                 <strong>Applied At:</strong>{" "}
-                {new Date(selectedRiders.appliedAt).toLocaleString()}
+                {new Date(selectedRider.appliedAt).toLocaleString()}
               </p>
             </div>
 
             <div className="modal-action mt-6">
               <button
                 className="btn btn-outline"
-                onClick={() => setSelectedRiders(null)}
+                onClick={() => setSelectedRider(null)}
               >
                 Close
               </button>
