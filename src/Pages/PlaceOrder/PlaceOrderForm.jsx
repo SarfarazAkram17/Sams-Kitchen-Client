@@ -133,6 +133,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           return {
             foodId: item.foodId,
             name: food.name,
+            image: food.image,
             price,
             discount,
             quantity: item.quantity,

@@ -8,10 +8,19 @@ import { Link } from "react-router";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { Pagination } from "antd";
-
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import logo from "../../../assets/images/logo.png";
+import {
+  FiPackage,
+  FiCheckCircle,
+  FiXCircle,
+  FiClock,
+  FiMapPin,
+  FiCreditCard,
+  FiFileText,
+  FiUserCheck,
+} from "react-icons/fi";
+import { LuChefHat } from "react-icons/lu";
+import { MdDeliveryDining } from "react-icons/md";
+import { generateReceipt } from "../../../lib/generateReceipt";
 
 const MyOrders = () => {
   const { userEmail } = useAuth();
@@ -38,7 +47,7 @@ const MyOrders = () => {
 
   useEffect(() => {
     const paidCount = orders.filter((o) => o.payment_status === "paid").length;
-    if (paidCount >= 5) {
+    if (paidCount === 5 || paidCount === 10 || paidCount === 15) {
       setShowConfetti(true);
       setShowCongrats(true);
       const timer = setTimeout(() => {
@@ -72,153 +81,77 @@ const MyOrders = () => {
     }
   };
 
-const generateReceipt = (order) => {
-  const doc = new jsPDF();
-  const margin = 10;
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+  const getStatusIcon = (status) => {
+    const icons = {
+      pending: <FiClock className="text-orange-500" />,
+      cancelled: <FiXCircle className="text-red-500" />,
+      not_assigned: <FiPackage className="text-purple-500" />,
+      assigned: <FiUserCheck className="text-yellow-600" />,
+      picked: <MdDeliveryDining className="text-blue-500" />,
+      delivered: <FiCheckCircle className="text-green-500" />,
+    };
+    return icons[status] || <FiPackage className="text-gray-500" />;
+  };
 
-  // Header
-  const fixedLogoHeight = 20;
-  const logoAspectRatio = 3 / 2;
-  const logoHeight = fixedLogoHeight;
-  const logoWidth = logoHeight * logoAspectRatio;
-  const gap = 5;
+  const getStatusColor = (status) => {
+    const colors = {
+      pending: "bg-orange-100 text-orange-800 border-orange-200",
+      cancelled: "bg-red-100 text-red-800 border-red-200",
+      not_assigned: "bg-purple-100 text-purple-800 border-purple-200",
+      assigned: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      picked: "bg-blue-100 text-blue-800 border-blue-200",
+      delivered: "bg-green-100 text-green-800 border-green-200",
+    };
+    return colors[status] || "bg-gray-100 text-gray-800 border-gray-200";
+  };
 
-  const title = "Sam's Kitchen";
-  const fontSize = 18;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(fontSize);
-  doc.setTextColor(57, 43, 18);
+  const getStatusLabel = (status) => {
+    const labels = {
+      pending: "Pending Payment",
+      cancelled: "Cancelled",
+      not_assigned: "Preparing",
+      assigned: "Rider Assigned",
+      picked: "On the Way",
+      delivered: "Delivered",
+    };
+    return labels[status] || status;
+  };
 
-  const titleWidth = doc.getTextWidth(title);
-  const textHeight = fontSize * 0.3528;
-  const totalWidth = logoWidth + gap + titleWidth;
-  const startX = (pageWidth - totalWidth) / 2;
-  const centerY = margin + logoHeight / 2;
-  const textY = centerY + textHeight / 2 - 1;
+  const getPaymentColor = (status) => {
+    return status === "paid"
+      ? "bg-green-100 text-green-700"
+      : "bg-orange-100 text-orange-700";
+  };
 
-  doc.addImage(logo, "PNG", startX, margin, logoWidth, logoHeight);
-  doc.text(title, startX + logoWidth + gap, textY);
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-  // Divider
-  doc.setLineDash([2, 2], 0);
-  doc.line(margin, margin + logoHeight + 10, pageWidth - margin, margin + logoHeight + 10);
-  doc.setLineDash([]);
+  const formatCurrency = (amt) =>
+    `৳${Number(amt).toLocaleString("en-BD", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
 
-  let currentY = margin + logoHeight + 20;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
-  doc.setTextColor(0);
-
-  // Customer Info
-  doc.text(`Customer Name: ${order.customer.firstName} ${order.customer.lastName}`, margin, currentY);
-  currentY += 10;
-  doc.text(`Customer Email: ${order.customer.email}`, margin, currentY);
-  currentY += 10;
-  doc.text(`Phone: ${order.customer.phone}`, margin, currentY);
-  currentY += 10;
-
-  const address = order.customer.address || {};
-  const addressParts = [address.street, address.thana, address.district, address.region].filter(Boolean);
-  const addressStr = addressParts.join(", ");
-  doc.text(`Address: ${addressStr}`, margin, currentY, { maxWidth: pageWidth - 2 * margin });
-  currentY += 15;
-
-  // Order Summary Title
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(14);
-  doc.setTextColor(44, 62, 80);
-  doc.text("Order Summary", pageWidth / 2, currentY, { align: "center" });
-  currentY += 10;
-
-  // Table
-  const tableColumn = ["Item", "Qty × Price", "Subtotal"];
-  const tableRows = order.items.map(item => {
-    const unitPrice = item.discount > 0
-      ? (item.price - (item.price * item.discount) / 100).toFixed(2)
-      : Number(item.price).toFixed(2);
-    return [item.name, `${item.quantity} × ${unitPrice} TK`, `${item.subtotal.toFixed(2)} TK`];
-  });
-
-  autoTable(doc, {
-    startY: currentY,
-    head: [tableColumn],
-    body: tableRows,
-    theme: "grid",
-    headStyles: { fillColor: [34, 139, 34], textColor: 255 },
-    styles: { halign: "center", fontSize: 11, cellPadding: 2, valign: "middle" },
-    margin: { left: margin, right: margin }
-  });
-
-  currentY = doc.lastAutoTable.finalY + 10;
-
-  // If not enough space for totals, add new page
-  if (currentY + 50 > pageHeight - margin) {
-    doc.addPage();
-    currentY = margin;
-  }
-
-  const labelX = margin;
-  const valueX = pageWidth - margin;
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
-  doc.setTextColor(0);
-
-  // Subtotal
-  doc.text(`Subtotal:`, labelX, currentY);
-  doc.text(`${Number(order.subtotal).toFixed(2)} TK`, valueX, currentY, { align: "right" });
-  currentY += 8;
-
-  // Delivery Charge
-  doc.text(`Delivery Charge:`, labelX, currentY);
-  if (Number(order.deliveryCharge) === 0) {
-    doc.setTextColor(0, 128, 0);
-    doc.text("Free", valueX, currentY, { align: "right" });
-    doc.setTextColor(0);
-  } else {
-    doc.text(`${Number(order.deliveryCharge).toFixed(2)} TK`, valueX, currentY, { align: "right" });
-  }
-  currentY += 8;
-
-  // Discount
-  doc.setTextColor(255, 87, 34);
-  doc.text(`Discount:`, labelX, currentY);
-  doc.text(`- ${Number(order.discount).toFixed(2)} TK`, valueX, currentY, { align: "right" });
-  doc.setTextColor(0);
-  currentY += 10;
-
-  // Line before total
-  doc.setDrawColor(180);
-  doc.line(margin, currentY, pageWidth - margin, currentY);
-  currentY += 10;
-
-  // Total
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(13);
-  doc.setTextColor(0, 128, 0);
-  doc.text(`Total Amount:`, labelX, currentY);
-  doc.text(`${Number(order.total).toFixed(2)} TK`, valueX, currentY, { align: "right" });
-
-  // Footer
-  currentY += 15;
-  doc.setDrawColor(150);
-  doc.setLineDash([2, 2], 0);
-  doc.line(margin, currentY, pageWidth - margin, currentY);
-  doc.setLineDash([]);
-
-  currentY += 10;
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(60);
-  doc.text("Thank you for ordering with Sam's Kitchen", pageWidth / 2, currentY, { align: "center" });
-
-  doc.save(`receipt_${order._id}.pdf`);
-};
+  // Status order for stats display
+  const statusStats = [
+    { label: "All", key: "all" },
+    { label: "Pending", key: "pending" },
+    { label: "Preparing", key: "not_assigned" },
+    { label: "Assigned", key: "assigned" },
+    { label: "On Way", key: "picked" },
+    { label: "Delivered", key: "delivered" },
+    { label: "Cancelled", key: "cancelled" },
+  ];
 
   return (
-    <div className="px-4">
+    <div className="px-4 pb-10">
       {showConfetti && (
         <Confetti
           width={width}
@@ -233,124 +166,330 @@ const generateReceipt = (order) => {
             🎉 Congratulations! 🎉
           </h2>
           <p className="text-gray-700 lg">
-            You’ve completed 5 or more paid orders!
+            You've completed{" "}
+            {orders.filter((o) => o.payment_status === "paid").length} paid
+            orders!
           </p>
         </div>
       )}
 
-      <h2 className="text-3xl sm:text-4xl font-bold text-center text-primary mb-6">
-        My Orders
-      </h2>
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-primary mb-1">
+          My Orders
+        </h1>
+        <p className="text-gray-600">Track and manage your food orders</p>
+      </div>
 
       {isLoading ? (
         <Loading />
       ) : orders.length === 0 ? (
-        <p className="text-center text-gray-600 text-xl mt-10">
-          No orders yet.
-        </p>
+        <div className="bg-white rounded-xl shadow-sm p-12 text-center">
+          <FiPackage className="mx-auto text-gray-300 mb-4 text-6xl" />
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            No orders yet
+          </h3>
+          <p className="text-gray-500">Start ordering delicious food!</p>
+        </div>
       ) : (
         <>
-          <div className="overflow-x-auto border border-base-content/10 rounded-lg">
-            <table className="table w-full text-center table-sm">
-              <thead>
-                <tr className="bg-base-200 text-sm">
-                  <th>#</th>
-                  <th>Order time</th>
-                  <th>Total Price</th>
-                  <th>Status</th>
-                  <th>Payment Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((o, i) => (
-                  <tr key={o._id.$oid || o._id}>
-                    <td>{(page - 1) * 10 + i + 1}</td>
-                    <td>{new Date(o.placedAt).toLocaleString()}</td>
-                    <td className="text-green-600 font-semibold">
-                      ৳ {Number(o.total).toLocaleString("en-BD")}
-                    </td>
-                    <td className="capitalize">
-                      {o.status === "pending" && (
-                        <span className="text-purple-500 font-semibold">
-                          {o.status}
-                        </span>
-                      )}
-                      {o.status === "not_assigned" && (
-                        <span className="text-blue-500 font-semibold">
-                          not assigned to rider
-                        </span>
-                      )}
-                      {o.status === "assigned" && (
-                        <span className="text-yellow-600 font-semibold">
-                          assigned to rider
-                        </span>
-                      )}
-                      {o.status === "picked" && (
-                        <span className="text-orange-500 font-semibold">
-                          {o.status}
-                        </span>
-                      )}
-                      {o.status === "delivered" && (
-                        <span className="text-green-600 font-semibold">
-                          {o.status}
-                        </span>
-                      )}
-                      {o.status === "cancelled" && (
-                        <span className="text-red-500 font-semibold">
-                          {o.status}
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      {o.payment_status === "not_paid" ? (
-                        o.status === "cancelled" ? (
-                          " - "
-                        ) : (
-                          <span className="text-orange-500 font-medium">
-                            Not Paid
-                          </span>
-                        )
-                      ) : (
-                        <span className="text-green-600 font-semibold">
-                          Paid
-                        </span>
-                      )}
-                    </td>
-                    <td className="flex items-center justify-center gap-1">
-                      {o.status === "pending" && (
-                        <>
-                          <Link
-                            to={`/dashboard/payment/${o._id.$oid || o._id}`}
-                          >
-                            <button className="btn btn-xs btn-primary text-white">
-                              Pay
-                            </button>
-                          </Link>
-                          <button
-                            className="btn btn-xs btn-error text-white"
-                            onClick={() => handleCancel(o._id.$oid || o._id)}
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      )}
-                      {o.status === "cancelled" && "- -"}
-                      {o.status !== "cancelled" && o.status !== "pending" && (
-                        <button
-                          onClick={() => generateReceipt(o)}
-                          className="text-blue-600 font-semibold hover:underline cursor-pointer"
-                        >
-                          Download receipt
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Stats */}
+          <div className="bg-white rounded-xl shadow-sm p-4 mb-6 overflow-x-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2.5">
+              {statusStats.map(({ label, key }) => (
+                <div
+                  key={key}
+                  className="text-center p-2 rounded-lg bg-base-200 min-w-[70px]"
+                >
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">
+                    {key === "all"
+                      ? orders.length
+                      : orders.filter((o) => o.status === key).length}
+                  </p>
+                  <p className="text-xs text-gray-600">{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* Orders List */}
+          <div className="space-y-4">
+            {orders.map((order) => (
+              <div
+                key={order._id}
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+              >
+                {/* Order Header */}
+                <div className="p-4 border-b bg-gradient-to-r from-base-200 to-white">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div>
+                        <p className="text-xs text-gray-500">Order ID</p>
+                        <p className="font-mono text-sm font-semibold text-gray-900">
+                          {order._id.toUpperCase()}
+                        </p>
+                      </div>
+                      <div className="hidden sm:block w-px h-8 bg-gray-300" />
+                      <div>
+                        <p className="text-xs text-gray-500">Order Time</p>
+                        <p className="text-sm text-gray-700">
+                          {formatDate(order.placedAt)}
+                        </p>
+                      </div>
+                      <div className="hidden sm:block w-px h-8 bg-gray-300" />
+                      <div>
+                        <p className="text-xs text-gray-500">Total</p>
+                        <p className="text-sm font-bold text-green-600">
+                          {formatCurrency(order.total)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${getStatusColor(
+                          order.status
+                        )}`}
+                      >
+                        {getStatusIcon(order.status)}
+                        {getStatusLabel(order.status)}
+                      </span>
+                      {order.status !== "cancelled" && (
+                        <span
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium ${getPaymentColor(
+                            order.payment_status
+                          )}`}
+                        >
+                          {order.payment_status === "paid" ? "PAID" : "UNPAID"}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Items */}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <LuChefHat className="text-primary text-lg" />
+                    <h3 className="font-semibold text-gray-900">Order Items</h3>
+                    <span className="text-xs text-gray-500">
+                      (
+                      {order.items.reduce((totalQuantity, item) => {
+                        return item.quantity + totalQuantity;
+                      }, 0)}{" "}
+                      {order.items.reduce((totalQuantity, item) => {
+                        return item.quantity + totalQuantity;
+                      }, 0) === 1
+                        ? "item"
+                        : "items"}
+                      )
+                    </span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {order.items.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3 p-3 bg-base-200 rounded-lg hover:bg-base-300 transition-colors"
+                      >
+                        {item.image && (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-14 h-14 md:w-16 md:h-16 object-cover rounded-lg flex-shrink-0"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-gray-900 text-sm truncate">
+                            {item.name}
+                          </h4>
+                          <div className="flex items-center gap-2 text-xs text-gray-600 mt-1 flex-wrap">
+                            <span>
+                              {formatCurrency(item.price)} × {item.quantity}
+                            </span>
+                            {item.discount > 0 && (
+                              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px]">
+                                {item.discount}% OFF
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <p className="font-semibold text-gray-900 flex-shrink-0 text-sm">
+                          {formatCurrency(item.subtotal)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Order Summary */}
+                  <div className="mt-4 pt-3 border-t border-dashed space-y-1 text-sm">
+                    <div className="flex justify-between text-gray-600">
+                      <span>Subtotal</span>
+                      <span>{formatCurrency(order.subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Delivery</span>
+                      <span
+                        className={
+                          Number(order.deliveryCharge) === 0
+                            ? "text-green-600 font-medium"
+                            : ""
+                        }
+                      >
+                        {Number(order.deliveryCharge) === 0
+                          ? "Free"
+                          : formatCurrency(order.deliveryCharge)}
+                      </span>
+                    </div>
+                    {Number(order.discount) > 0 && (
+                      <div className="flex justify-between text-orange-600">
+                        <span>Discount</span>
+                        <span>-{formatCurrency(order.discount)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between font-bold text-gray-900 pt-2 border-t">
+                      <span>Total</span>
+                      <span className="text-green-600">
+                        {formatCurrency(order.total)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Info */}
+                <div className="p-4 pt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {/* Delivery Address */}
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <FiMapPin className="text-blue-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-xs font-semibold text-blue-900 mb-1">
+                            Delivery Address
+                          </p>
+                          <p className="text-sm text-gray-700 font-medium">
+                            {order.customer.firstName} {order.customer.lastName}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {order.customer.phone}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {[
+                              order.customer.address?.street,
+                              order.customer.address?.thana,
+                              order.customer.address?.district,
+                              order.customer.address?.region,
+                            ]
+                              .filter(Boolean)
+                              .join(", ")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Rider/Payment Info */}
+                    <div
+                      className={`p-3 rounded-lg ${
+                        order.assigned_rider_name
+                          ? "bg-amber-50"
+                          : "bg-green-50"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        {order.assigned_rider_name ? (
+                          <>
+                            <MdDeliveryDining className="text-amber-600 mt-0.5 flex-shrink-0 text-lg" />
+                            <div>
+                              <p className="text-xs font-semibold text-amber-900 mb-1">
+                                Delivery Rider
+                              </p>
+                              <p className="text-sm text-gray-700 font-medium">
+                                {order.assigned_rider_name}
+                              </p>
+                              {order.assignedAt && (
+                                <p className="text-xs text-gray-600">
+                                  Assigned: {formatDate(order.assignedAt)}
+                                </p>
+                              )}
+                              {order.pickedAt && (
+                                <p className="text-xs text-gray-600">
+                                  Picked: {formatDate(order.pickedAt)}
+                                </p>
+                              )}
+                              {order.deliveredAt && (
+                                <p className="text-xs text-green-600 font-medium">
+                                  Delivered: {formatDate(order.deliveredAt)}
+                                </p>
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <FiCreditCard className="text-green-600 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-xs font-semibold text-green-900 mb-1">
+                                Payment Info
+                              </p>
+                              <p className="text-sm text-gray-700 font-medium">
+                                {order.payment_status === "paid"
+                                  ? "Payment Completed"
+                                  : "Payment Pending"}
+                              </p>
+                              {order.paidAt && (
+                                <p className="text-xs text-gray-600">
+                                  Paid: {formatDate(order.paidAt)}
+                                </p>
+                              )}
+                              {order.status === "not_assigned" && (
+                                <p className="text-xs text-purple-600 mt-1">
+                                  Your order is being prepared
+                                </p>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {order.status === "pending" && (
+                      <>
+                        <Link to={`/dashboard/payment/${order._id}`}>
+                          <button className="btn btn-sm btn-primary text-white">
+                            Pay Now
+                          </button>
+                        </Link>
+                        <button
+                          className="btn btn-sm btn-error text-white"
+                          onClick={() => handleCancel(order._id)}
+                        >
+                          Cancel Order
+                        </button>
+                      </>
+                    )}
+                    {order.status === "cancelled" && (
+                      <span className="text-sm text-red-500 font-medium">
+                        This order was cancelled
+                      </span>
+                    )}
+                    {order.status !== "cancelled" &&
+                      order.status !== "pending" && (
+                        <button
+                          onClick={() => generateReceipt(order)}
+                          className="btn btn-sm btn-info text-white"
+                        >
+                          <FiFileText className="mr-1" />
+                          Download Receipt
+                        </button>
+                      )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
           <div className="flex justify-center mt-10">
             <Pagination
               current={page}

@@ -94,7 +94,7 @@ const PlaceOrder = () => {
         </div>
 
         <div className="px-4 mb-6">
-          <div className="space-y-4">
+          <div className="space-y-2">
             {cartItems.length > 0 ? (
               cartItems.map((item) => {
                 const foodItem = foods?.find(

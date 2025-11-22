@@ -63,7 +63,6 @@ The platform features secure payments, role-based access, and real-time updates 
 | `recharts`                | ^3.1.2    | Show user stats in charts       |
 | `sweetalert2`             | ^11.22.2  | Confirmation modals             |
 | `jspdf`                   | ^3.0.1    | PDF reciept generation          |
-| `jspdf-autotable`         | ^5.0.2    | PDF table creation              |
 
 ---
 
