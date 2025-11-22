@@ -21,6 +21,7 @@ import {
 import { LuChefHat } from "react-icons/lu";
 import { MdDeliveryDining } from "react-icons/md";
 import { generateReceipt } from "../../../lib/generateReceipt";
+import { FaMotorcycle } from "react-icons/fa";
 
 const MyOrders = () => {
   const { userEmail } = useAuth();
@@ -83,12 +84,12 @@ const MyOrders = () => {
 
   const getStatusIcon = (status) => {
     const icons = {
-      pending: <FiClock className="text-orange-500" />,
-      cancelled: <FiXCircle className="text-red-500" />,
-      not_assigned: <FiPackage className="text-purple-500" />,
-      assigned: <FiUserCheck className="text-yellow-600" />,
-      picked: <MdDeliveryDining className="text-blue-500" />,
-      delivered: <FiCheckCircle className="text-green-500" />,
+      pending: <FiClock size={15} className="text-orange-500" />,
+      cancelled: <FiXCircle size={15} className="text-red-500" />,
+      not_assigned: <FiPackage size={15} className="text-purple-500" />,
+      assigned: <FiUserCheck size={15} className="text-yellow-600" />,
+      picked: <FaMotorcycle size={15} className="text-blue-500" />,
+      delivered: <FiCheckCircle size={15} className="text-green-500" />,
     };
     return icons[status] || <FiPackage className="text-gray-500" />;
   };
@@ -145,7 +146,7 @@ const MyOrders = () => {
     { label: "Pending", key: "pending" },
     { label: "Preparing", key: "not_assigned" },
     { label: "Assigned", key: "assigned" },
-    { label: "On Way", key: "picked" },
+    { label: "On The Way", key: "picked" },
     { label: "Delivered", key: "delivered" },
     { label: "Cancelled", key: "cancelled" },
   ];
@@ -194,7 +195,7 @@ const MyOrders = () => {
       ) : (
         <>
           {/* Stats */}
-          <div className="bg-white rounded-xl shadow-sm p-4 mb-6 overflow-x-auto">
+          <div className="bg-white rounded-xl shadow-md p-4 mb-6 overflow-x-auto">
             <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2.5">
               {statusStats.map(({ label, key }) => (
                 <div
@@ -217,10 +218,10 @@ const MyOrders = () => {
             {orders.map((order) => (
               <div
                 key={order._id}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
               >
                 {/* Order Header */}
-                <div className="p-4 border-b bg-gradient-to-r from-base-200 to-white">
+                <div className="p-4 border-b bg-base-200">
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                     <div className="flex flex-wrap items-center gap-4">
                       <div>
@@ -397,7 +398,7 @@ const MyOrders = () => {
                       <div className="flex items-start gap-2">
                         {order.assigned_rider_name ? (
                           <>
-                            <MdDeliveryDining className="text-amber-600 mt-0.5 flex-shrink-0 text-lg" />
+                            <FaMotorcycle className="text-amber-600 mt-0.5 flex-shrink-0 text-lg" />
                             <div>
                               <p className="text-xs font-semibold text-amber-900 mb-1">
                                 Delivery Rider

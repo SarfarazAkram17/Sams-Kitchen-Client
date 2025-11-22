@@ -114,8 +114,8 @@ export const generateReceipt = (order) => {
     }
 
     const rowHeight = 22;
-    const imgHeight = 18;
-    const imgWidth = 22; // Width greater than height
+    const imgHeight = 20;
+    const imgWidth = 25;
 
     // Item image
     if (item.image) {
