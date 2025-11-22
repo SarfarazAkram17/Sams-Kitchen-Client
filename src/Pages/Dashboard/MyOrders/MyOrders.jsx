@@ -296,7 +296,7 @@ const MyOrders = () => {
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-14 h-14 md:w-16 md:h-16 object-cover rounded-lg flex-shrink-0"
+                            className="w-18 h-14 md:w-20 md:h-16 object-cover rounded-lg flex-shrink-0"
                           />
                         )}
                         <div className="flex-1 min-w-0">
