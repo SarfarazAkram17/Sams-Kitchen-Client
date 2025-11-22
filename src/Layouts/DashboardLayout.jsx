@@ -84,7 +84,7 @@ const DashboardLayout = () => {
           ></label>
 
           {/* ✅ Keep sidebar scrollable and single-column */}
-          <ul className="menu bg-base-200 text-base-content w-60 lg:w-64 p-4 h-full overflow-y-auto flex flex-col flex-nowrap hide-scrollbar">
+          <ul className="menu bg-base-200 text-base-content w-60 p-4 h-full overflow-y-auto flex flex-col flex-nowrap hide-scrollbar">
             {/* Logo */}
             <Link
               to="/"
@@ -94,7 +94,7 @@ const DashboardLayout = () => {
               <img
                 src={logo}
                 alt="Sam's Kitchen Logo"
-                className="h-12 lg:h-14 w-auto"
+                className="h-11 lg:h-13 w-auto"
               />
               <span className="text-[#392B12] font-bold text-lg">
                 Sam's Kitchen

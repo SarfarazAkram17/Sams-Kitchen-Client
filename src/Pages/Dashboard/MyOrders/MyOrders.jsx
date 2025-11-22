@@ -308,7 +308,7 @@ const MyOrders = () => {
                               {formatCurrency(item.price)} × {item.quantity}
                             </span>
                             {item.discount > 0 && (
-                              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px]">
+                              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full text-[10px]">
                                 {item.discount}% OFF
                               </span>
                             )}
@@ -342,9 +342,9 @@ const MyOrders = () => {
                       </span>
                     </div>
                     {Number(order.discount) > 0 && (
-                      <div className="flex justify-between text-orange-600">
-                        <span>Discount</span>
-                        <span>-{formatCurrency(order.discount)}</span>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Discount</span>
+                        <span className="text-orange-600">-{formatCurrency(order.discount)}</span>
                       </div>
                     )}
                     <div className="flex justify-between font-bold text-gray-900 pt-2 border-t">

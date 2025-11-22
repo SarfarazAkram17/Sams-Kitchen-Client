@@ -164,6 +164,7 @@ export const generateReceipt = (order) => {
           imgWidth,
           imgHeight
         );
+        // eslint-disable-next-line no-unused-vars
       } catch (e) {
         doc.setFillColor(240, 240, 240);
         doc.rect(margin, currentY, imgWidth, imgHeight, "F");
