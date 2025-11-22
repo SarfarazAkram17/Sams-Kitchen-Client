@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { FaCheck, FaMoneyBillWave } from "react-icons/fa";
+import { FaCheck, FaMoneyBillWave, FaMotorcycle } from "react-icons/fa";
 import { PiShoppingCartBold } from "react-icons/pi";
-import { BsTruck } from "react-icons/bs";
 import { MdOutlinePendingActions } from "react-icons/md";
 import Loading from "../../../Components/Loading/Loading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
@@ -97,7 +96,7 @@ const RiderDashboard = () => {
         </div>
 
         <div className="bg-yellow-100 text-yellow-800 rounded-xl p-5 shadow-sm flex items-center gap-4">
-          <BsTruck size={35} />
+          <FaMotorcycle size={35} />
           <div>
             <p className="text-lg font-bold">{pickedOrders || 0}</p>
             <p className="text-sm font-medium">Picked Orders</p>

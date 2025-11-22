@@ -29,7 +29,7 @@ const reasons = [
 
 const WhyChooseUs = () => {
   return (
-    <section className="max-w-7xl mx-auto px-4">
+    <section className="max-w-[1500px] mx-auto px-4">
       <motion.h2
         className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
         initial={{ opacity: 0, y: -40 }}

@@ -63,14 +63,14 @@ const PlaceOrder = () => {
   let deliveryCharge =
     cartItems.length > 1 ? 50 : cartItems.length === 1 ? 30 : 0;
 
-    if (subtotal + deliveryCharge - discount >= 1000) {
-      deliveryCharge = 0;
-    }
+  if (subtotal + deliveryCharge - discount >= 1000) {
+    deliveryCharge = 0;
+  }
 
   const total = subtotal + deliveryCharge - discount;
-  
+
   return (
-    <div className="flex max-w-7xl mx-auto px-4 flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8">
+    <div className="flex max-w-[1500px] mx-auto px-4 flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8">
       {/* Left Section: Personal & Delivery Details Form */}
       <div className="lg:w-[62%] w-full">
         <PlaceOrderForm cartItems={cartItems} foods={foods}></PlaceOrderForm>
@@ -146,7 +146,7 @@ const PlaceOrder = () => {
                           </div>
                         ) : (
                           <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
-                            ৳ {foodItem.price * item.quantity.toFixed(2)}
+                            ৳ {(foodItem.price * item.quantity).toFixed(2)}
                           </span>
                         )}
                       </div>
@@ -187,7 +187,11 @@ const PlaceOrder = () => {
           <div className="mt-4 flex justify-between items-center">
             <span className="text-[13px] text-gray-500">Delivery Charge</span>
             <span className="text-[12px] font-semibold text-primary">
-             {deliveryCharge ?  <>৳ {deliveryCharge.toFixed(2)}</> : <span className="text-green-600">Free</span>}
+              {deliveryCharge ? (
+                <>৳ {deliveryCharge.toFixed(2)}</>
+              ) : (
+                <span className="text-green-600">Free</span>
+              )}
             </span>
           </div>
 

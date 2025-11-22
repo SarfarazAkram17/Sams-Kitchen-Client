@@ -211,7 +211,7 @@ const Cart = () => {
                           </div>
                         ) : (
                           <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
-                            ৳ {foodItem.price * item.quantity.toFixed(2)}
+                            ৳ {(foodItem.price * item.quantity).toFixed(2)}
                           </span>
                         )}
                       </div>

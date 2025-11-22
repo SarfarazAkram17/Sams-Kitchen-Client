@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { FaCheck, FaMoneyBillWave } from "react-icons/fa";
+import { FaCheck, FaMoneyBillWave, FaMotorcycle } from "react-icons/fa";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { PiShoppingCartBold } from "react-icons/pi";
-import { BsTruck } from "react-icons/bs";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import useUserRole from "../../../Hooks/useUserRole";
@@ -89,7 +88,7 @@ const CustomerDashboard = () => {
         </div>
 
         <div className="bg-blue-100 text-blue-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 flex items-center gap-4">
-          <BsTruck size={35} />
+          <FaMotorcycle size={35} />
           <div>
             <p className="text-lg font-bold">{dispatchedOrders || 0}</p>
             <p className="text-sm font-medium">Dispatched Orders</p>

@@ -175,7 +175,7 @@ const FoodDetails = () => {
   const displayRating = roundToHalf(avgRating);
 
   return (
-    <div className="max-w-7xl px-3 mx-auto">
+    <div className="max-w-[1500px] px-3 mx-auto">
       {/* --- Food Section --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Food image */}

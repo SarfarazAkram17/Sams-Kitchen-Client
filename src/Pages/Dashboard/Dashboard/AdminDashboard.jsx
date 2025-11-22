@@ -10,7 +10,6 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import useUserRole from "../../../Hooks/useUserRole";
 import Loading from "../../../Components/Loading/Loading";
-import { BsTruck } from "react-icons/bs";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { IoFastFoodOutline } from "react-icons/io5";
 
@@ -140,7 +139,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="bg-yellow-100 text-yellow-800 rounded-xl p-5 shadow-sm hover:shadow-lg transition-shadow duration-300 flex items-center gap-4">
-            <BsTruck size={35} />
+            <FaMotorcycle size={35} />
             <div>
               <p className="text-lg font-bold">{stats.dispatchedOrders || 0}</p>
               <p className="text-sm font-medium">Dispatched Orders</p>

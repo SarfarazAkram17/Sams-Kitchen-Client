@@ -300,7 +300,7 @@ const MyOrders = () => {
                           />
                         )}
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-gray-900 text-sm truncate">
+                          <h4 title={item.name} className="font-medium text-gray-900 text-sm truncate">
                             {item.name}
                           </h4>
                           <div className="flex items-center gap-2 text-xs text-gray-600 mt-1 flex-wrap">

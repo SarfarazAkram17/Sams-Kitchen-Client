@@ -68,7 +68,7 @@ const Header = () => {
 
   return (
     <div className="relative bg-neutral">
-      <div className="flex max-w-7xl mx-auto py-2 px-3 justify-between gap-4">
+      <div className="flex max-w-[1500px] mx-auto py-2 px-3 justify-between gap-4">
         <div className="w-[78%] sm:w-[70%] relative">
           <label className="input w-full">
             <svg

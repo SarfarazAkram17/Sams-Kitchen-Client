@@ -29,8 +29,8 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-        <Header></Header>
+    <div className="max-w-[1700px] mx-auto">
+      <Header></Header>
 
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />

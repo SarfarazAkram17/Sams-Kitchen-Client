@@ -44,7 +44,7 @@ const AllFoods = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="max-w-[1500px] mx-auto px-4">
       <h2 className="text-3xl md:text-4xl font-bold text-center text-primary mb-10">
         All Foods
       </h2>
@@ -56,7 +56,7 @@ const AllFoods = () => {
       ) : (
         <>
           {/* Foods Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {foods.map((food) => {
               const discountedPrice =
                 food.discount > 0

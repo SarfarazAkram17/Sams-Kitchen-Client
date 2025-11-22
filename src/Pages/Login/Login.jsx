@@ -7,7 +7,7 @@ import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import SocialLogin from "../../Components/Shared/SocialLogin";
 import Lottie from "lottie-react";
-import loginLottie from '../../assets/animations/login.json'
+import loginLottie from "../../assets/animations/login.json";
 const Login = () => {
   const axiosInstance = useAxios();
   const [showPassword, setShowPassword] = useState(false);
@@ -78,8 +78,12 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col max-w-7xl mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
-      <Lottie className="flex-1" animationData={loginLottie} loop={true}></Lottie>
+    <div className="flex flex-col max-w-[1500px] mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
+      <Lottie
+        className="flex-1"
+        animationData={loginLottie}
+        loop={true}
+      ></Lottie>
       <div className="card w-full flex-1 shadow-xl">
         <div className="card-body">
           <h1 className="text-3xl font-extrabold">Welcome Back</h1>

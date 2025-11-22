@@ -48,7 +48,7 @@ const Payment = () => {
   }
 
   return (
-    <div className="px-4 pb-10">
+    <div className="px-4">
       {/* Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
@@ -101,7 +101,7 @@ const Payment = () => {
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-12 h-12 object-cover rounded-lg flex-shrink-0"
+                        className="w-16 h-12 object-cover rounded-lg flex-shrink-0"
                       />
                     )}
                     <div className="flex-1 min-w-0">
@@ -209,7 +209,7 @@ const Payment = () => {
 
             <div className="p-4">
               {/* Method Tabs */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 <button
                   onClick={() => setMethod("stripe")}
                   className={`p-4 rounded-xl border-2 transition-all ${

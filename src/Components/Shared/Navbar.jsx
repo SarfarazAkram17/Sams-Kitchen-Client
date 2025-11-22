@@ -77,7 +77,7 @@ const Navbar = () => {
 
   return (
     <div className="bg-base-100 p-0 shadow-sm">
-      <div ref={menuRef} className="navbar px-2 max-w-7xl mx-auto">
+      <div ref={menuRef} className="navbar px-2 max-w-[1500px] mx-auto">
         <div className="navbar-start">
           <div className="md:hidden mr-1">
             <button
@@ -89,7 +89,11 @@ const Navbar = () => {
           </div>
 
           <Link to="/" className="flex items-center gap-1">
-            <img src={logo} alt="Sam's Kitchen Logo" className="h-11 md:h-14 w-auto" />
+            <img
+              src={logo}
+              alt="Sam's Kitchen Logo"
+              className="h-11 md:h-14 w-auto"
+            />
             <span className="text-[#392B12] font-bold md:text-xl whitespace-nowrap">
               Sam's Kitchen
             </span>
