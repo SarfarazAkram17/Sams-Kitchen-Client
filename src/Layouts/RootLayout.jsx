@@ -6,7 +6,7 @@ import Header from "../Components/Shared/Header";
 
 const RootLayout = () => {
   return (
-    <div className="max-w-[1500px] mx-auto">
+    <div className="max-w-[1700px] mx-auto">
       <div className="sticky z-50 top-0">
         <Header></Header>
         <Navbar></Navbar>
