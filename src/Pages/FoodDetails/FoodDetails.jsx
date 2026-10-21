@@ -83,7 +83,7 @@ const FoodDetails = () => {
 
         const res = await axios.post(
           `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          formData
+          formData,
         );
         uploadedImages.push(res.data.secure_url);
       }
@@ -116,7 +116,7 @@ const FoodDetails = () => {
 
       const { data } = await axiosSecure.post(
         `/reviews?email=${userEmail}`,
-        review
+        review,
       );
       return data;
     },
@@ -137,7 +137,13 @@ const FoodDetails = () => {
       ? food.price - (food.price * food.discount) / 100
       : food.price;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (food) => {
+    if (!user) {
+      navigate("/login", { state: location.pathname });
+      toast.info("Login first");
+      return;
+    }
+
     addToCart(food._id, quantity);
     setQuantity(1);
   };
@@ -274,6 +280,7 @@ const FoodDetails = () => {
               </div>
               <button
                 onClick={handleAddToCart}
+                disabled={!food.available}
                 className="btn btn-primary text-white flex items-center"
               >
                 <PiShoppingCartBold size={20} className="mr-2" /> Add to Cart
