@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://sams-kitchen.vercel.app",
+  baseURL: import.meta.env.VITE_Api_Url,
   withCredentials: true
 });
 
