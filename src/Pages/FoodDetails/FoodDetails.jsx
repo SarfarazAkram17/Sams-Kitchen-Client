@@ -279,7 +279,7 @@ const FoodDetails = () => {
                 </button>
               </div>
               <button
-                onClick={handleAddToCart}
+                onClick={()=>handleAddToCart(food)}
                 disabled={!food.available}
                 className="btn btn-primary text-white flex items-center"
               >
