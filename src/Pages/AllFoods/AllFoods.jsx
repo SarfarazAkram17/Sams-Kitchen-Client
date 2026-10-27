@@ -49,7 +49,7 @@ const AllFoods = () => {
         All Foods
       </h2>
 
-      {foods.length === 0 ? (
+      {foods?.length === 0 ? (
         <p className="text-center text-lg text-gray-600">
           No foods available yet.
         </p>
@@ -57,15 +57,15 @@ const AllFoods = () => {
         <>
           {/* Foods Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {foods.map((food) => {
+            {foods?.map((food) => {
               const discountedPrice =
-                food.discount > 0
-                  ? food.price - (food.price * food.discount) / 100
-                  : food.price;
+                food?.discount > 0
+                  ? food?.price - (food?.price * food?.discount) / 100
+                  : food?.price;
 
               return (
                 <FoodCard
-                  key={food._id}
+                  key={food?._id}
                   food={food}
                   discountedPrice={discountedPrice}
                   handleAddToCart={handleAddToCart}

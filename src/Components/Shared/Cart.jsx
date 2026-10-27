@@ -51,18 +51,18 @@ const Cart = () => {
 
   const calculateCartTotal = () => {
     if (isLoading) return 0;
-    if (!foods || !Array.isArray(foods) || foods.length === 0) return 0;
+    if (!foods || !Array.isArray(foods) || foods?.length === 0) return 0;
 
     let total = 0;
-    for (let i = 0; i < foods.length; i++) {
+    for (let i = 0; i < foods?.length; i++) {
       const food = foods[i];
-      const cartItem = cartItems.find((item) => item.foodId === food._id);
+      const cartItem = cartItems?.find((item) => item?.foodId === food?._id);
 
-      if (food.discount > 0) {
-        const price = food.price - (food.price * food.discount) / 100;
-        total += price * cartItem.quantity;
+      if (food?.discount > 0) {
+        const price = food?.price - (food?.price * food?.discount) / 100;
+        total += price * cartItem?.quantity;
       } else {
-        total += food.price * cartItem.quantity;
+        total += food?.price * cartItem?.quantity;
       }
     }
     return total.toFixed(2);
@@ -146,11 +146,11 @@ const Cart = () => {
             <div className="space-y-4 pt-6 mb-16">
               {cartItems.map((item) => {
                 const foodItem = foods?.find(
-                  (food) => food._id === item.foodId
+                  (food) => food._id === item.foodId,
                 );
                 return (
                   <div
-                    key={item.foodId}
+                    key={item?.foodId}
                     className="flex justify-between items-center bg-base-200 rounded-lg p-2 pr-3"
                   >
                     <div className="flex items-center">
@@ -166,25 +166,31 @@ const Cart = () => {
                         <div className="flex w-fit items-center h-5 sm:h-6 border border-gray-400 rounded-md">
                           <button
                             onClick={() =>
-                              updateCartQuantity(item.foodId, item.quantity - 1)
+                              updateCartQuantity(
+                                item?.foodId,
+                                item?.quantity - 1,
+                              )
                             }
-                            disabled={item.quantity === 1}
+                            disabled={item?.quantity === 1}
                             className="cursor-pointer hover:text-red-500 disabled:text-black/60 px-1 sm:px-2 disabled:cursor-no-drop text-sm sm:text-lg font-bold disabled:opacity-40"
                           >
                             -
                           </button>
                           <span className="text-[8px] sm:text-xs font-semibold">
-                            {item.quantity} x ৳
-                            {foodItem.discount > 0
+                            {item?.quantity} x ৳
+                            {foodItem?.discount > 0
                               ? (
-                                  foodItem.price -
-                                  (foodItem.price * foodItem.discount) / 100
+                                  foodItem?.price -
+                                  (foodItem?.price * foodItem?.discount) / 100
                                 ).toFixed(2)
-                              : foodItem.price}
+                              : foodItem?.price}
                           </span>
                           <button
                             onClick={() =>
-                              updateCartQuantity(item.foodId, item.quantity + 1)
+                              updateCartQuantity(
+                                item?.foodId,
+                                item?.quantity + 1,
+                              )
                             }
                             className="cursor-pointer hover:text-red-500 sm:px-2 px-1 text-sm sm:text-lg font-bold"
                           >
@@ -195,29 +201,30 @@ const Cart = () => {
                     </div>
                     <div className="flex flex-col items-end gap-1 sm:gap-3">
                       <div>
-                        {foodItem.discount > 0 ? (
+                        {foodItem?.discount > 0 ? (
                           <div>
                             <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
-                              ৳ {(foodItem.price * item.quantity).toFixed(2)}
+                              ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
                             </span>
                             <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
                               {(
-                                (foodItem.price -
-                                  (foodItem.price * foodItem.discount) / 100) *
+                                (foodItem?.price -
+                                  (foodItem?.price * foodItem?.discount) /
+                                    100) *
                                 item.quantity
                               ).toFixed(2)}
                             </span>
                           </div>
                         ) : (
                           <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
-                            ৳ {(foodItem.price * item.quantity).toFixed(2)}
+                            ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
                           </span>
                         )}
                       </div>
                       <FaRegTrashCan
                         className="hover:text-red-500 cursor-pointer"
-                        onClick={() => removeFromCart(item.foodId)}
+                        onClick={() => removeFromCart(item?.foodId)}
                       />
                     </div>
                   </div>
@@ -233,7 +240,7 @@ const Cart = () => {
             <span className="text-lg font-semibold text-gray-700">Total:</span>
             <span className="text-xl font-bold text-green-600">৳ {total}</span>
           </div>
-          {cartItems.length === 0 ? (
+          {cartItems?.length === 0 ? (
             <button
               onClick={() => setIsDrawerOpen(false)}
               className="btn bg-red-600 text-white w-full mt-2"

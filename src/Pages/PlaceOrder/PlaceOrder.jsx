@@ -54,14 +54,14 @@ const PlaceOrder = () => {
 
   const discount = cartItems.reduce((sum, item) => {
     const foodItem = foods?.find((food) => food._id === item.foodId);
-    if (!foodItem || foodItem.discount <= 0) return sum;
+    if (!foodItem || foodItem?.discount <= 0) return sum;
     const discountAmount =
-      ((foodItem.price * foodItem.discount) / 100) * item.quantity;
+      ((foodItem?.price * foodItem?.discount) / 100) * item.quantity;
     return sum + discountAmount;
   }, 0);
 
   let deliveryCharge =
-    cartItems.length > 1 ? 50 : cartItems.length === 1 ? 30 : 0;
+    cartItems?.length > 1 ? 50 : cartItems?.length === 1 ? 30 : 0;
 
   if (subtotal + deliveryCharge - discount >= 1000) {
     deliveryCharge = 0;
@@ -95,8 +95,8 @@ const PlaceOrder = () => {
 
         <div className="px-4 mb-6">
           <div className="space-y-2">
-            {cartItems.length > 0 ? (
-              cartItems.map((item) => {
+            {cartItems?.length > 0 ? (
+              cartItems?.map((item) => {
                 const foodItem = foods?.find(
                   (food) => food._id === item.foodId
                 );
@@ -118,35 +118,35 @@ const PlaceOrder = () => {
                         <div className="flex w-fit items-center h-4 sm:h-6 border border-gray-400 rounded-lg">
                           <span className="text-[8px] sm:text-xs font-semibold px-2.5">
                             {item.quantity} x ৳
-                            {foodItem.discount > 0
+                            {foodItem?.discount > 0
                               ? (
-                                  foodItem.price -
-                                  (foodItem.price * foodItem.discount) / 100
+                                  foodItem?.price -
+                                  (foodItem?.price * foodItem?.discount) / 100
                                 ).toFixed(2)
-                              : foodItem.price}
+                              : foodItem?.price}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-1 sm:gap-3">
                       <div>
-                        {foodItem.discount > 0 ? (
+                        {foodItem?.discount > 0 ? (
                           <div>
                             <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
-                              ৳ {(foodItem.price * item.quantity).toFixed(2)}
+                              ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
                             </span>
                             <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
                               {(
-                                (foodItem.price -
-                                  (foodItem.price * foodItem.discount) / 100) *
+                                (foodItem?.price -
+                                  (foodItem?.price * foodItem?.discount) / 100) *
                                 item.quantity
                               ).toFixed(2)}
                             </span>
                           </div>
                         ) : (
                           <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
-                            ৳ {(foodItem.price * item.quantity).toFixed(2)}
+                            ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
                           </span>
                         )}
                       </div>
