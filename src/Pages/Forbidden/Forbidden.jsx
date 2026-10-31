@@ -14,16 +14,16 @@ const Forbidden = () => {
       </h1>
 
       {/* Subtitle */}
-      <p className="mt-3 text-gray-600 text-lg max-w-md">
+      <p className="mt-3 text-base-content/80 text-lg max-w-md">
         Sorry, you don’t have permission to access this page.
       </p>
 
       {/* Actions */}
       <div className="space-y-6 flex flex-col mt-6">
-        <Link to="/" className="btn btn-primary text-white">
+        <Link to="/" className="btn btn-primary">
           Go to Home
         </Link>
-        <Link to="/dashboard" className="btn btn-primary text-white">
+        <Link to="/dashboard" className="btn btn-primary">
           Go to Dashboard
         </Link>
       </div>

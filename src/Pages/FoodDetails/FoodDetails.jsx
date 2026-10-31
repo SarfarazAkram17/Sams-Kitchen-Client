@@ -196,7 +196,7 @@ const FoodDetails = () => {
               className="w-full h-full object-cover"
             />
             {food.discount > 0 && (
-              <span className="absolute top-2 right-2 bg-secondary text-white text-xs font-semibold px-2 py-1 rounded-full shadow">
+              <span className="absolute top-2 right-2 bg-secondary text-secondary-content text-xs font-semibold px-2 py-1 rounded-full shadow">
                 {food.discount}% OFF
               </span>
             )}
@@ -204,7 +204,7 @@ const FoodDetails = () => {
 
           <div className="mt-5">
             <h2 className="font-bold text-xl mb-1">Like this Food?</h2>
-            <p className="text-sm text-gray-600 mb-3">
+            <p className="text-sm text-base-content/80 mb-3">
               Share it with your peers!
             </p>
 
@@ -233,22 +233,22 @@ const FoodDetails = () => {
             ( {reviewData.total} {reviewData.total > 1 ? "reviews" : "review"} )
           </div>
 
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="text-base-content/80 text-sm leading-relaxed">
             {food.description}
           </p>
           {/* Price */}
           <div className="text-xl">
             {food.discount > 0 ? (
               <div className="space-x-2">
-                <span className="text-green-600 font-semibold">
+                <span className="text-success font-semibold">
                   ৳ {discountedPrice.toFixed(2)}
                 </span>
-                <span className="line-through text-lg text-gray-400">
+                <span className="line-through text-lg text-base-content/60">
                   ৳ {food.price.toFixed(2)}
                 </span>
               </div>
             ) : (
-              <span className="text-green-600 font-semibold">
+              <span className="text-success font-semibold">
                 ৳ {food.price.toFixed(2)}
               </span>
             )}
@@ -257,15 +257,15 @@ const FoodDetails = () => {
           <p className="text-md">
             <strong>Status:</strong>{" "}
             {food.available ? (
-              <span className="text-green-600 font-semibold">Available</span>
+              <span className="text-success font-semibold">Available</span>
             ) : (
-              <span className="text-red-600 font-semibold">Unavailable</span>
+              <span className="text-error font-semibold">Unavailable</span>
             )}
           </p>
           {/* Quantity + Add to Cart */}
           {food.available && canOrder && (
             <div className="mt-6 flex items-center gap-4">
-              <div className="flex items-center border border-gray-400 rounded-lg">
+              <div className="flex items-center border border-base-300 rounded-lg">
                 <button
                   onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
                   disabled={quantity === 1}
@@ -284,7 +284,7 @@ const FoodDetails = () => {
               <button
                 onClick={()=>handleAddToCart(food)}
                 disabled={!food.available}
-                className="btn btn-primary text-white flex items-center"
+                className="btn btn-primary flex items-center"
               >
                 <PiShoppingCartBold size={20} className="mr-2" /> Add to Cart
               </button>
@@ -311,7 +311,7 @@ const FoodDetails = () => {
               setComment(e.target.value);
               setReviewErrors((previous) => ({ ...previous, comment: "" }));
             }}
-            className="resize-none w-full border-2 p-2 rounded-md border-gray-200"
+            className="resize-none w-full border-2 p-2 rounded-md border-base-300"
           />
           {reviewErrors.comment && <p className="mt-1 text-sm font-semibold text-error" role="alert">{reviewErrors.comment}</p>}
 
@@ -360,7 +360,7 @@ const FoodDetails = () => {
                 <button
                   type="button"
                   onClick={() => handleImageRemove(url)}
-                  className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
+                  className="absolute top-1 right-1 bg-error text-error-content text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
                 >
                   <FiX aria-hidden="true" />
                 </button>
@@ -369,7 +369,7 @@ const FoodDetails = () => {
           </div>
 
           <button
-            className="mt-4 btn btn-primary disabled:text-black/50 text-white"
+            className="mt-4 btn btn-primary disabled:text-base-content/50"
             onClick={handleReviewSubmit}
           >
             {isPending ? (
@@ -389,7 +389,7 @@ const FoodDetails = () => {
             {reviewData.reviews.map((review) => (
               <div
                 key={review._id}
-                className="p-4 rounded-xl shadow-xl border-2 border-sky-200"
+                className="p-4 rounded-xl shadow-xl border-2 border-base-300"
               >
                 <div className="flex justify-between items-start gap-2">
                   <div className="flex items-center gap-4">
@@ -430,7 +430,7 @@ const FoodDetails = () => {
                   </p>
                 </div>
 
-                <p className="text-sm leading-relaxed my-6 text-gray-600">
+                <p className="text-sm leading-relaxed my-6 text-base-content/80">
                   {review.comment}
                 </p>
                 {review.images?.length > 0 && (
@@ -461,7 +461,7 @@ const FoodDetails = () => {
             </div>
           </div>
         ) : (
-          <p className="text-gray-600 text-center text-2xl mt-16 font-bold">
+          <p className="text-base-content/80 text-center text-2xl mt-16 font-bold">
             No reviews yet.
           </p>
         )}

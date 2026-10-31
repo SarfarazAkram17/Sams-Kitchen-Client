@@ -76,13 +76,13 @@ const PlaceOrder = () => {
         <PlaceOrderForm cartItems={cartItems} foods={foods}></PlaceOrderForm>
       </div>
       {/* Right Section: Order Summary */}
-      <div className="bg-white shadow-lg w-full rounded-xl overflow-hidden lg:w-[38%]">
-        <div className="bg-primary p-4 rounded-t-xl mb-4 text-white flex gap-1 items-center justify-between">
+      <div className="bg-base-100 shadow-lg w-full rounded-xl overflow-hidden lg:w-[38%]">
+        <div className="bg-primary p-4 rounded-t-xl mb-4 text-primary-content flex gap-1 items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Order Summary</h2>{" "}
             <p className="text-[11px]">Review your items before place order</p>
           </div>
-          <div className="bg-white/25 whitespace-nowrap border-white/50 border rounded-full py-1 px-3 sm:px-4 text-sm">
+          <div className="bg-base-100/25 whitespace-nowrap border-primary-content/40 border rounded-full py-1 px-3 sm:px-4 text-sm">
             {cartQuantity > 1 ? (
               <>{cartQuantity} items</>
             ) : cartQuantity === 1 ? (
@@ -115,7 +115,7 @@ const PlaceOrder = () => {
                         <h4 className="font-bold text-xs sm:text-[0.9rem] px-1">
                           {foodItem?.name}
                         </h4>
-                        <div className="flex w-fit items-center h-4 sm:h-6 border border-gray-400 rounded-lg">
+                        <div className="flex w-fit items-center h-4 sm:h-6 border border-base-300 rounded-lg">
                           <span className="text-[8px] sm:text-xs font-semibold px-2.5">
                             {item.quantity} x ৳
                             {foodItem?.discount > 0
@@ -132,10 +132,10 @@ const PlaceOrder = () => {
                       <div>
                         {foodItem?.discount > 0 ? (
                           <div>
-                            <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
+                            <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-base-content/60">
                               ৳ {(foodItem?.price * item.quantity).toFixed(2)}
                             </span>
-                            <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
+                            <span className="text-success whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
                               {(
                                 (foodItem?.price -
@@ -145,7 +145,7 @@ const PlaceOrder = () => {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
+                          <span className="text-success whitespace-nowrap text-xs sm:text-sm font-semibold">
                             ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
                           </span>
                         )}
@@ -155,9 +155,9 @@ const PlaceOrder = () => {
                 );
               })
             ) : (
-              <div className="flex bg-sky-50 rounded-lg flex-col items-center justify-center h-full pt-6 pb-16 sm:py-6">
-                <div className="lg:h-24 h-32 lg:w-24 w-32 flex justify-center items-center rounded-full animate-pulse p-4 bg-red-200 shadow">
-                  <PiShoppingCartBold className="text-red-600 sm:text-4xl text-5xl" />
+              <div className="flex bg-info/10 rounded-lg flex-col items-center justify-center h-full pt-6 pb-16 sm:py-6">
+                <div className="lg:h-24 h-32 lg:w-24 w-32 flex justify-center items-center rounded-full animate-pulse p-4 bg-error/20 shadow">
+                  <PiShoppingCartBold className="text-error sm:text-4xl text-5xl" />
                 </div>
                 <h4 className="font-semibold text-lg sm:text-[1rem] mt-6 mb-3">
                   Your Cart is empty.
@@ -169,7 +169,7 @@ const PlaceOrder = () => {
 
                 <button
                   onClick={() => navigate("/allFoods")}
-                  className="btn btn-primary text-white mt-6"
+                  className="btn btn-primary mt-6"
                 >
                   Start Ordering
                 </button>
@@ -178,25 +178,25 @@ const PlaceOrder = () => {
           </div>
 
           <div className="mt-4 flex justify-between items-center">
-            <span className="text-[13px] text-gray-500">Subtotal</span>
-            <span className="text-[12px] text-green-600 font-semibold">
+            <span className="text-[13px] text-base-content/60">Subtotal</span>
+            <span className="text-[12px] text-success font-semibold">
               ৳ {subtotal.toFixed(2)}
             </span>
           </div>
 
           <div className="mt-4 flex justify-between items-center">
-            <span className="text-[13px] text-gray-500">Delivery Charge</span>
+            <span className="text-[13px] text-base-content/60">Delivery Charge</span>
             <span className="text-[12px] font-semibold text-primary">
               {deliveryCharge ? (
                 <>৳ {deliveryCharge.toFixed(2)}</>
               ) : (
-                <span className="text-green-600">Free</span>
+                <span className="text-success">Free</span>
               )}
             </span>
           </div>
 
           <div className="mt-4 flex justify-between items-center">
-            <span className="text-[13px] text-gray-500">Discount</span>
+            <span className="text-[13px] text-base-content/60">Discount</span>
             <span className="text-[12px] text-warning font-semibold">
               -৳ {discount.toFixed(2)}
             </span>
@@ -204,7 +204,7 @@ const PlaceOrder = () => {
           <div className="divider"></div>
           <div className="flex justify-between items-center font-semibold text-lg">
             <span>Total Amount:</span>
-            <span className="text-green-600">৳ {total.toFixed(2)}</span>
+            <span className="text-success">৳ {total.toFixed(2)}</span>
           </div>
         </div>
       </div>

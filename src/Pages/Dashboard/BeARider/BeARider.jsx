@@ -168,11 +168,11 @@ const BeARider = () => {
           {/* Name */}
           <div>
             <label className="text-xs font-semibold">
-              Name <span className="text-red-500">*</span>
+              Name <span className="text-error">*</span>
             </label>
             <input
               type="text"
-              className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+              className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
               value={user.displayName}
               readOnly
               {...register("name", {
@@ -180,7 +180,7 @@ const BeARider = () => {
               })}
             />
             {errors.name && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.name.message}
               </span>
             )}
@@ -189,11 +189,11 @@ const BeARider = () => {
           {/* Email Address (Read-only) */}
           <div>
             <label className="text-xs font-semibold">
-              Email Address <span className="text-red-500">*</span>
+              Email Address <span className="text-error">*</span>
             </label>
             <input
               type="email"
-              className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+              className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
               value={userEmail}
               readOnly
               {...register("email", {
@@ -201,7 +201,7 @@ const BeARider = () => {
               })}
             />
             {errors.email && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.email.message}
               </span>
             )}
@@ -210,11 +210,11 @@ const BeARider = () => {
           {/* Age */}
           <div>
             <label className="text-xs font-semibold">
-              Age <span className="text-red-500">*</span>
+              Age <span className="text-error">*</span>
             </label>
             <input
               type="number"
-              className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+              className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
               {...register("age", {
                 required: "Age is required",
                 min: {
@@ -224,7 +224,7 @@ const BeARider = () => {
               })}
             />
             {errors.age && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.age.message}
               </span>
             )}
@@ -233,18 +233,18 @@ const BeARider = () => {
           {/* Experience */}
           <div>
             <label className="text-xs font-semibold">
-              Experience in years <span className="text-red-500">*</span>
+              Experience in years <span className="text-error">*</span>
             </label>
             <input
               type="number"
-              className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+              className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
               {...register("experience", {
                 required: "Experience is required",
                 min: { value: 0, message: "Experience cannot be negative" },
               })}
             />
             {errors.experience && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.experience.message}
               </span>
             )}
@@ -253,11 +253,11 @@ const BeARider = () => {
           {/* Phone Number */}
           <div>
             <label className="text-xs font-semibold">
-              Phone Number <span className="text-red-500">*</span>
+              Phone Number <span className="text-error">*</span>
             </label>
             <input
               type="tel"
-              className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+              className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
               {...register("phone", {
                 required: "Phone number is required",
                 pattern: {
@@ -267,7 +267,7 @@ const BeARider = () => {
               })}
             />
             {errors.phone && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.phone.message}
               </span>
             )}
@@ -276,7 +276,7 @@ const BeARider = () => {
           {/* Region Select */}
           <div>
             <label className="text-xs font-semibold">
-              Region <span className="text-red-500">*</span>
+              Region <span className="text-error">*</span>
             </label>
             <Select
               aria-label="Region"
@@ -289,7 +289,7 @@ const BeARider = () => {
               classNamePrefix="select"
             />
             {errors.region && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.region.message}
               </span>
             )}
@@ -298,7 +298,7 @@ const BeARider = () => {
           {/* District Select */}
           <div>
             <label className="text-xs font-semibold">
-              District <span className="text-red-500">*</span>
+              District <span className="text-error">*</span>
             </label>
             <Select
               aria-label="District"
@@ -312,7 +312,7 @@ const BeARider = () => {
               classNamePrefix="select"
             />
             {errors.district && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.district.message}
               </span>
             )}
@@ -321,7 +321,7 @@ const BeARider = () => {
           {/* Thana Select */}
           <div>
             <label className="text-xs font-semibold">
-              Thana <span className="text-red-500">*</span>
+              Thana <span className="text-error">*</span>
             </label>
             <Select
               aria-label="Thana"
@@ -335,7 +335,7 @@ const BeARider = () => {
               classNamePrefix="select"
             />
             {errors.thana && (
-              <span className="text-red-500 text-xs mt-1 font-semibold">
+              <span className="text-error text-xs mt-1 font-semibold">
                 {errors.thana.message}
               </span>
             )}
@@ -344,7 +344,7 @@ const BeARider = () => {
 
         <button
           type="submit"
-          className="btn mt-10 btn-primary w-full text-white disabled:text-black/50"
+          className="btn mt-10 btn-primary w-full disabled:text-base-content/50"
         >
           {submitting ? (
             <>

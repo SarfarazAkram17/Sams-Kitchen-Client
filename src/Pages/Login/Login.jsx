@@ -135,7 +135,7 @@ const Login = () => {
               </button>
             </div>
             <button
-              className="btn btn-primary text-white mt-6"
+              className="btn btn-primary mt-6"
             >
               {" "}
               {loading ? (

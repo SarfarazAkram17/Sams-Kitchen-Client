@@ -84,13 +84,13 @@ const PendingRiders = () => {
   return (
     <div className="px-4">
       {riders.length === 0 ? (
-        <h1 className="text-3xl text-gray-600 font-extrabold mb-6 text-center">
+        <h1 className="text-3xl text-base-content/80 font-extrabold mb-6 text-center">
           There is no Pending Rider Applications
         </h1>
       ) : (
         <>
           {" "}
-          <h1 className="text-3xl text-gray-600 font-extrabold mb-6 text-center">
+          <h1 className="text-3xl text-base-content/80 font-extrabold mb-6 text-center">
             Pending Rider Applications
           </h1>
           <div className="overflow-x-auto rounded-box border-2 border-base-content/5 bg-base-200">

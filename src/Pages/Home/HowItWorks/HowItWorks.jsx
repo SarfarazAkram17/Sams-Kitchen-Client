@@ -1,78 +1,50 @@
-import { FaSearch, FaMotorcycle, FaSmile } from "react-icons/fa";
+import { Link } from "react-router";
+import { FiArrowUpRight } from "react-icons/fi";
+import { FaMotorcycle, FaSearch, FaSmile } from "react-icons/fa";
 import { PiShoppingCartBold } from "react-icons/pi";
-import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
+import Reveal from "../../../Components/Shared/Reveal";
+import SectionHeading from "../../../Components/Shared/SectionHeading";
 
 const steps = [
-  {
-    icon: <FaSearch size={40} className="text-primary" />,
-    title: "Browse Foods",
-    description: "Explore our delicious foods and choose your favorites.",
-  },
-  {
-    icon: <PiShoppingCartBold size={40} className="text-primary" />,
-    title: "Place Order",
-    description: "Add your desired items to the cart and checkout easily.",
-  },
-  {
-    icon: <FaMotorcycle size={40} className="text-primary" />,
-    title: "Fast Delivery",
-    description: "Our riders deliver your food quickly and safely.",
-  },
-  {
-    icon: <FaSmile size={40} className="text-primary" />,
-    title: "Enjoy Meal",
-    description: "Savor your tasty meal right at your doorstep.",
-  },
+  { icon: FaSearch, title: "Browse the menu", description: "Explore our dishes, read reviews and pick your favorites." },
+  { icon: PiShoppingCartBold, title: "Place your order", description: "Add items to your cart and check out in a few taps." },
+  { icon: FaMotorcycle, title: "We deliver", description: "A rider collects your meal fresh from the kitchen and brings it over." },
+  { icon: FaSmile, title: "Enjoy", description: "Sit back and enjoy a hot meal right at your doorstep." },
 ];
 
-const HowItWorks = () => {
-  return (
-    <section className="max-w-7xl mx-auto px-4">
-      <div className="max-w-full mx-auto">
-        <motion.h2
-          className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
-          initial={{ opacity: 0, y: -40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.7 }}
-        >
-          How It Works
-        </motion.h2>
+const HowItWorks = () => (
+  <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:py-24" aria-labelledby="how-it-works-title">
+    <SectionHeading
+      id="how-it-works-title"
+      align="center"
+      eyebrow="Simple by design"
+      title="From our kitchen to your table"
+      description="Ordering from Sam’s Kitchen takes four easy steps—and a few minutes."
+    />
 
-        <motion.p
-          className="text-center text-base-content/70 max-w-3xl mx-auto mb-10 text-sm leading-6"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-        >
-          The How It Works section visually guides you through the simple
-          process of ordering from Sam’s Kitchen. It highlights four key
-          steps—browsing delicious foods, placing an order, fast delivery by
-          trusted riders, and enjoying the meal at home. This section uses
-          engaging icons, smooth animations, and clear text to help visitors
-          quickly understand how easy and reliable the service is.
-        </motion.p>
+    <ol className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      {steps.map(({ icon: Icon, title, description }, index) => (
+        <Reveal as="li" key={title} delay={index * 0.1} className="relative">
+          <div className="card-lift h-full rounded-3xl border border-base-300 bg-base-100 p-6 text-center">
+            <div className="relative mx-auto grid size-[4.5rem] place-items-center rounded-full border border-base-300 bg-base-200 text-primary">
+              <Icon size={26} aria-hidden="true" />
+              <span className="absolute -right-1 -top-1 grid size-7 place-items-center rounded-full bg-primary text-xs font-bold text-primary-content">
+                {index + 1}
+              </span>
+            </div>
+            <h3 className="font-display mt-5 text-2xl text-base-content">{title}</h3>
+            <p className="mt-2 text-sm leading-6 text-base-content/70">{description}</p>
+          </div>
+        </Reveal>
+      ))}
+    </ol>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-5 text-center hover:border-secondary hover:shadow-xl transition-shadow transform-border duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-            >
-              <div className="mb-4 flex justify-center">{step.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-              <p className="text-base-content/70">{step.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+    <Reveal className="mt-10 text-center">
+      <Link to="/allFoods" className="btn btn-primary min-h-12 px-7">
+        Start your order <FiArrowUpRight aria-hidden="true" />
+      </Link>
+    </Reveal>
+  </section>
+);
 
 export default HowItWorks;

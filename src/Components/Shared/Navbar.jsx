@@ -26,6 +26,9 @@ const Navbar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null); // Ref for mobile menu
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null); // Wraps the profile button + panel
+  const profileButtonRef = useRef(null);
 
   const displayName =
     user?.displayName?.trim() || userEmail?.split("@")[0] || "Your account";
@@ -113,18 +116,13 @@ const Navbar = () => {
 
   const dashboardLinks = [...commonLinks, ...roleLinks];
 
-  // Close the daisyUI dropdown by removing focus from it
-  const closeProfileMenu = () => {
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-  };
+  const closeProfileMenu = () => setProfileOpen(false);
 
   // Logout
   const handleLogout = async () => {
     try {
-      await logOutUser();
       closeProfileMenu();
+      await logOutUser();
       toast.warn("You Logout from Sam's Kitchen");
     } catch (error) {
       toast.error(error.message || "Could not complete sign out.");
@@ -187,8 +185,35 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
+  // Close the profile menu on outside click or Escape. The panel is only
+  // rendered while open, so it can never swallow clicks on the page beneath it.
+  useEffect(() => {
+    if (!profileOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setProfileOpen(false);
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setProfileOpen(false);
+        profileButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [profileOpen]);
+
   // Shared avatar renderer (photo or initial fallback)
-  const Avatar = () =>
+  const renderAvatar = () =>
     user?.photoURL ? (
       <img
         src={user.photoURL}
@@ -241,72 +266,77 @@ const Navbar = () => {
         <div className="flex navbar-end items-center gap-2 sm:gap-3 relative">
           {/* Auth Section */}
           {user ? (
-            <div className="dropdown dropdown-bottom dropdown-end">
+            <div ref={profileRef} className="relative">
               {/* Trigger: avatar only */}
               <button
+                ref={profileButtonRef}
                 type="button"
-                tabIndex={0}
+                onClick={() => setProfileOpen((open) => !open)}
                 aria-label={`Open account menu for ${displayName}`}
                 aria-haspopup="menu"
+                aria-expanded={profileOpen}
                 className="inline-flex items-center justify-center rounded-full border border-base-300 bg-base-100 p-[3px] leading-none transition-colors hover:border-primary hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
-                <Avatar />
+                {renderAvatar()}
               </button>
 
-              {/* Dropdown panel */}
-              <div
-                tabIndex={0}
-                role="menu"
-                className="dropdown-content z-[80] mt-3 flex max-h-[calc(100dvh-6rem)] w-72 max-w-[calc(100vw-1.5rem)] flex-col rounded-2xl border border-base-300 bg-base-100 p-2.5 text-left text-base-content shadow-xl"
-              >
-                {/* Fixed: user info */}
-                <div className="mb-1.5 flex shrink-0 items-center gap-3 border-b border-base-300 px-2 pb-3 pt-2">
-                  <Avatar />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-bold">{displayName}</p>
-                    <p className="break-all text-xs text-base-content/60">
-                      {userEmail || "Signed-in account"}
-                    </p>
-                    <span className="mt-1 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
-                      {roleLabel}
-                    </span>
+              {/* Dropdown panel: mounted only while open */}
+              {profileOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full z-[80] mt-3 flex max-h-[calc(100dvh-6rem)] w-72 max-w-[calc(100vw-1.5rem)] flex-col rounded-2xl border border-base-300 bg-base-100 p-2.5 text-left text-base-content shadow-xl"
+                >
+                  {/* Fixed: user info */}
+                  <div className="mb-1.5 flex shrink-0 items-center gap-3 border-b border-base-300 px-2 pb-3 pt-2">
+                    {renderAvatar()}
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-bold">
+                        {displayName}
+                      </p>
+                      <p className="break-all text-xs text-base-content/60">
+                        {userEmail || "Signed-in account"}
+                      </p>
+                      <span className="mt-1 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">
+                        {roleLabel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Scrollable (scrollbar hidden): role-based dashboard links */}
+                  <div className="min-h-0 flex-1 space-y-0.5 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    {dashboardLinks.map(({ to, label, icon: Icon, end }) => (
+                      <NavLink
+                        key={to}
+                        to={to}
+                        end={end}
+                        role="menuitem"
+                        onClick={closeProfileMenu}
+                        className={({ isActive }) =>
+                          `flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-primary/10 ${
+                            isActive ? "bg-primary/10 text-primary" : ""
+                          }`
+                        }
+                      >
+                        <Icon aria-hidden="true" size={17} />
+                        <span>{label}</span>
+                      </NavLink>
+                    ))}
+                  </div>
+
+                  {/* Fixed: sign out */}
+                  <div className="mt-1.5 shrink-0 border-t border-base-300 pt-1.5">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+                    >
+                      <FiLogOut aria-hidden="true" size={17} />
+                      <span>Sign out</span>
+                    </button>
                   </div>
                 </div>
-
-                {/* Scrollable (scrollbar hidden): role-based dashboard links */}
-                <div className="min-h-0 flex-1 space-y-0.5 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  {dashboardLinks.map(({ to, label, icon: Icon, end }) => (
-                    <NavLink
-                      key={to}
-                      to={to}
-                      end={end}
-                      role="menuitem"
-                      onClick={closeProfileMenu}
-                      className={({ isActive }) =>
-                        `flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-primary/10 ${
-                          isActive ? "bg-primary/10 text-primary" : ""
-                        }`
-                      }
-                    >
-                      <Icon aria-hidden="true" size={17} />
-                      <span>{label}</span>
-                    </NavLink>
-                  ))}
-                </div>
-
-                {/* Fixed: sign out */}
-                <div className="mt-1.5 shrink-0 border-t border-base-300 pt-1.5">
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
-                  >
-                    <FiLogOut aria-hidden="true" size={17} />
-                    <span>Sign out</span>
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           ) : (
             <div className="hidden items-center gap-2 lg:flex">

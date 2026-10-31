@@ -1,40 +1,26 @@
 import Banner from "../Banner/Banner";
+import CtaBanner from "../CtaBanner/CtaBanner";
 import Faq from "../Faq/Faq";
 import FeaturedFoods from "../FeaturedFoods/FeaturedFoods";
 import FoodsOnSale from "../FoodsOnSale/FoodsOnSale";
 import FoodTips from "../FoodTips/FoodTips";
 import HowItWorks from "../HowItWorks/HowItWorks";
+import TrustStrip from "../TrustStrip/TrustStrip";
 import WhyChooseUs from "../WhyChooseUs/WhyChooseUs";
 
-const Home = () => {
-  return (
-    <main>
-      <div className="mt-8 mb-8">
-        {" "}
-        <Banner />
-      </div>
-      <div className="mt-8 mb-8">
-        <FeaturedFoods />
-      </div>
-      <div className="mt-8 mb-8">
-        <FoodsOnSale />
-      </div>
-      <div className="mt-8 mb-8">
-        {" "}
-        <HowItWorks />
-      </div>
-      <div className="mt-8 mb-8">
-        {" "}
-        <WhyChooseUs />
-      </div>
-      <div className="mt-8 mb-8">
-        <FoodTips />
-      </div>
-      <div className="mt-8">
-        <Faq />
-      </div>
-    </main>
-  );
-};
+// RootLayout already provides <main>, so the page is just a stack of sections.
+const Home = () => (
+  <>
+    <Banner />
+    <TrustStrip />
+    <FeaturedFoods />
+    <FoodsOnSale />
+    <HowItWorks />
+    <WhyChooseUs />
+    <FoodTips />
+    <Faq />
+    <CtaBanner />
+  </>
+);
 
 export default Home;

@@ -163,14 +163,14 @@ const PaymentForm = ({ orderInfo }) => {
       {/* Error Message */}
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-error">{error}</p>
         </div>
       )}
 
       {/* Pay Button */}
       <button
         type="submit"
-        className="btn btn-primary text-white w-full disabled:text-black/60"
+        className="btn btn-primary w-full disabled:text-base-content/50"
       >
         {loading ? (
           <span className="flex items-center gap-2">

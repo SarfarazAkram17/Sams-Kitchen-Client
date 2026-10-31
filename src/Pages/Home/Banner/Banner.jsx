@@ -2,18 +2,15 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import {
-  FiArrowUpRight,
-  FiClock,
-  FiMapPin,
-  FiRefreshCw,
-  FiShoppingBag,
-  FiStar,
-} from "react-icons/fi";
+import { motion, useReducedMotion } from "framer-motion"; // eslint-disable-line no-unused-vars
+import { FiArrowUpRight, FiMapPin, FiRefreshCw } from "react-icons/fi";
 import { addToCart } from "../../../CartUtils/cartUtils";
 import useAuth from "../../../Hooks/useAuth";
 import useCanOrder from "../../../Hooks/useCanOrder";
 import useAxios from "../../../Hooks/useAxios";
+import { PiShoppingCartBold } from "react-icons/pi";
+
+const SLIDE_MS = 6000;
 
 const Banner = () => {
   const axiosInstance = useAxios();
@@ -21,7 +18,9 @@ const Banner = () => {
   const canOrder = useCanOrder();
   const navigate = useNavigate();
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   const {
     data: foods = [],
@@ -33,28 +32,26 @@ const Banner = () => {
     queryFn: async () => {
       const response = await axiosInstance.get("/foods/random");
       const items = Array.isArray(response.data) ? response.data : [];
-      return items.filter((food) => food?._id && food.available !== false);
+      return items
+        .filter((item) => item?._id && item.available !== false)
+        .slice(0, 5);
     },
     staleTime: 60_000,
   });
 
-  const productCount = foods.length;
+  const count = foods.length;
+  const autoplay = count > 1 && !paused && !reduceMotion;
+
   useEffect(() => {
-    if (!productCount) return undefined;
+    if (!autoplay) return undefined;
+    const timer = window.setTimeout(
+      () => setActiveIndex((current) => (current + 1) % count),
+      SLIDE_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [autoplay, count, activeIndex]);
 
-    setActiveIndex(Math.floor(Math.random() * productCount));
-    const rotation = window.setInterval(() => {
-      setActiveIndex((current) => {
-        if (productCount < 2) return 0;
-        const next = Math.floor(Math.random() * (productCount - 1));
-        return next >= current ? next + 1 : next;
-      });
-    }, 5000);
-
-    return () => window.clearInterval(rotation);
-  }, [productCount]);
-
-  const food = foods[activeIndex];
+  const food = foods[activeIndex % Math.max(count, 1)];
   const price = Number(food?.price || 0);
   const discount = Number(food?.discount || 0);
   const discountedPrice = price - (price * discount) / 100;
@@ -70,71 +67,113 @@ const Banner = () => {
       navigate("/login", { state: location.pathname });
       return;
     }
-
     addToCart(food._id);
     navigate("/placeOrder");
   };
 
+  const actionLabel = !canOrder
+    ? "View dish"
+    : user
+      ? "Order now"
+      : "Sign in to order";
+
   return (
     <section className="px-3 sm:px-4" aria-label="Sam’s Kitchen featured dish">
-      <div className="relative isolate mx-auto max-w-[1500px] overflow-hidden rounded-[1.75rem] border border-base-300 bg-base-200 text-base-content sm:rounded-[2rem]">
-        <div className="pointer-events-none absolute -left-24 -top-24 size-72 rounded-full bg-secondary/15 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-1/3 size-72 rounded-full bg-primary/15 blur-3xl" />
-        <div className="relative grid items-center gap-9 px-5 py-10 sm:px-9 sm:py-12 lg:min-h-[560px] lg:grid-cols-[1fr_.9fr] lg:gap-12 lg:px-14 lg:py-14">
-          <div className="relative z-10 max-w-2xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-base-300 bg-base-100/80 px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-primary shadow-sm">
-              <span className="size-2 rounded-full bg-primary" />
-              A little taste of home
-            </span>
-            <h1 className="font-display mt-5 text-[2.6rem] font-bold leading-[1.04] tracking-[-.045em] sm:text-6xl lg:text-[4.35rem]">
+      <div className="hero-surface relative isolate mx-auto max-w-[1500px] overflow-hidden rounded-[2rem] border border-base-300 text-base-content sm:rounded-[2.5rem]">
+        <div className="relative z-10 grid items-center gap-12 px-5 pb-24 pt-10 sm:px-10 sm:pt-14 lg:min-h-[600px] lg:grid-cols-[1.05fr_.95fr] lg:gap-14 lg:px-16 lg:pb-24">
+          {/* Copy */}
+          <div className="max-w-2xl">
+            <motion.span
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2.5 rounded-full border border-base-300 bg-base-100/80 py-1.5 pl-2 pr-4 text-[11px] font-bold uppercase tracking-[.16em] text-base-content/80 shadow-sm backdrop-blur"
+            >
+              <span className="grid size-6 place-items-center rounded-full bg-primary text-primary-content">
+                <FiMapPin size={12} aria-hidden="true" />
+              </span>
+              Fresh home-style cooking
+            </motion.span>
+
+            <motion.h1
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.7,
+                delay: 0.08,
+                ease: [0.2, 0.75, 0.25, 1],
+              }}
+              className="mt-6 text-balance text-[2.9rem] leading-[1] sm:text-7xl lg:text-[4.9rem]"
+            >
               Bangladesh on a plate.
-              <span className="mt-2 block text-primary">Made fresh, with heart.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-sm leading-6 text-base-content/70 sm:text-base sm:leading-7">
+              <span className="mt-1 block italic text-primary">
+                Made fresh, with heart.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.18 }}
+              className="mt-6 max-w-xl text-base leading-7 text-base-content/75 sm:text-lg sm:leading-8"
+            >
               Family favorites, honest ingredients, and the comfort of a meal
               made to order—delivered from our kitchen to yours.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            </motion.p>
+
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.28 }}
+              className="mt-8 flex flex-wrap gap-3"
+            >
               <Link
                 to="/allFoods"
-                className="btn min-h-12 rounded-full border-0 bg-primary px-6 text-primary-content shadow-lg shadow-primary/20 hover:bg-primary/90"
+                className="btn btn-primary min-h-13 px-7 text-base shadow-lg shadow-primary/25"
               >
-                Explore the menu <FiArrowUpRight size={18} />
+                Explore the menu <FiArrowUpRight size={18} aria-hidden="true" />
               </Link>
               <Link
                 to="/offers"
-                className="btn min-h-12 rounded-full border border-base-300 bg-base-100/70 px-6 text-base-content hover:border-primary/40 hover:bg-base-100"
+                className="btn min-h-13 border-base-300 bg-base-100/70 px-7 text-base text-base-content backdrop-blur hover:border-primary/50 hover:bg-base-100"
               >
                 Today’s specials
               </Link>
-            </div>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-semibold text-base-content/70 sm:text-sm">
-              <span className="inline-flex items-center gap-2">
-                <FiClock className="text-primary" aria-hidden="true" /> Freshly prepared
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <FiMapPin className="text-primary" aria-hidden="true" /> Across Bangladesh
-              </span>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[580px] lg:ml-auto">
-            <div className="absolute -right-2 -top-4 z-10 hidden rounded-2xl border border-base-300 bg-base-100 px-4 py-3 shadow-xl sm:block">
-              <div className="flex items-center gap-2 text-sm font-bold text-base-content">
-                <FiStar className="fill-amber-400 text-amber-400" aria-hidden="true" />
-                Made with care
-              </div>
-              <p className="mt-1 text-xs text-base-content/60">Fresh from our kitchen</p>
-            </div>
+          {/* Featured dish */}
+          <div
+            className="relative mx-auto w-full max-w-[560px] lg:ml-auto"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onFocus={() => setPaused(true)}
+            onBlur={() => setPaused(false)}
+          >
+            <div
+              className="absolute -inset-6 -z-10 rounded-[3rem] bg-gradient-to-br from-primary/20 via-transparent to-secondary/25 blur-2xl"
+              aria-hidden="true"
+            />
 
             {isLoading ? (
-              <div className="aspect-[1.08/1] animate-pulse rounded-[1.6rem] border border-base-300 bg-base-100 sm:rounded-[2rem]" aria-label="Loading featured dish" />
+              <div
+                className="aspect-[4/4.6] animate-pulse rounded-[2rem] border border-base-300 bg-base-100"
+                role="status"
+                aria-label="Loading featured dish"
+              />
             ) : isError ? (
-              <div className="grid aspect-[1.08/1] place-items-center rounded-[1.6rem] border border-base-300 bg-base-100 p-6 text-center sm:rounded-[2rem]">
+              <div className="grid aspect-[4/4.6] place-items-center rounded-[2rem] border border-base-300 bg-base-100 p-8 text-center">
                 <div>
-                  <p className="font-display text-2xl font-bold">The menu is taking a moment.</p>
-                  <p className="mt-2 text-sm text-base-content/65">Please try again or browse all dishes.</p>
-                  <button type="button" onClick={() => refetch()} className="btn btn-sm mt-4 rounded-full border-base-300 bg-base-200 text-base-content">
+                  <p className="font-display text-3xl">
+                    The menu is taking a moment.
+                  </p>
+                  <p className="mt-2 text-sm text-base-content/70">
+                    Please try again or browse all dishes.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => refetch()}
+                    className="btn btn-sm mt-5 border-base-300 bg-base-200 text-base-content"
+                  >
                     <FiRefreshCw aria-hidden="true" /> Try again
                   </button>
                 </div>
@@ -160,9 +199,17 @@ const Banner = () => {
                   </div>
                   <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 text-white sm:inset-x-6 sm:bottom-6">
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-[.16em] text-white/70">Made for your table</p>
-                      <h2 className="font-display mt-1 truncate text-2xl font-bold sm:text-3xl">{food.name}</h2>
-                      {food.description && <p className="mt-1 line-clamp-2 max-w-md text-xs leading-5 text-white/75 sm:text-sm">{food.description}</p>}
+                      <p className="text-[10px] font-bold uppercase tracking-[.16em] text-white/70">
+                        Made for your table
+                      </p>
+                      <h2 className="font-display mt-1 truncate text-2xl font-bold sm:text-3xl">
+                        {food.name}
+                      </h2>
+                      {food.description && (
+                        <p className="mt-1 line-clamp-2 max-w-md text-xs leading-5 text-white/75 sm:text-sm">
+                          {food.description}
+                        </p>
+                      )}
                     </div>
                     <span className="shrink-0 rounded-full bg-white/15 px-3 py-2 text-sm font-bold backdrop-blur-md sm:px-4 sm:text-base">
                       ৳{discountedPrice.toFixed(0)}
@@ -175,16 +222,12 @@ const Banner = () => {
                       {canOrder ? "Order this dish" : "View this dish"}
                     </p>
                     <p className="mt-0.5 truncate text-[11px] text-base-content/60 sm:text-xs">
-                      {!canOrder
-                        ? "See details and reviews"
-                        : user
-                          ? "Add to order and continue to checkout"
-                          : "Sign in to continue"}
+                      {actionLabel}
                     </p>
                   </div>
                   <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-primary-content transition group-hover:translate-x-1">
                     {canOrder ? (
-                      <FiShoppingBag aria-hidden="true" />
+                      <PiShoppingCartBold aria-hidden="true" />
                     ) : (
                       <FiArrowUpRight aria-hidden="true" />
                     )}
@@ -192,11 +235,17 @@ const Banner = () => {
                 </div>
               </button>
             ) : (
-              <div className="grid aspect-[1.08/1] place-items-center rounded-[1.6rem] border border-base-300 bg-base-100 p-6 text-center sm:rounded-[2rem]">
+              <div className="grid aspect-[4/4.6] place-items-center rounded-[2rem] border border-base-300 bg-base-100 p-8 text-center">
                 <div>
-                  <p className="font-display text-2xl font-bold">A fresh menu is coming soon.</p>
-                  <p className="mt-2 text-sm text-base-content/65">Browse the menu to see what’s cooking today.</p>
-                  <Link to="/allFoods" className="btn btn-sm mt-4 rounded-full bg-primary text-primary-content">Browse dishes</Link>
+                  <p className="font-display text-3xl">
+                    A fresh menu is coming soon.
+                  </p>
+                  <p className="mt-2 text-sm text-base-content/70">
+                    Browse the menu to see what’s cooking today.
+                  </p>
+                  <Link to="/allFoods" className="btn btn-primary btn-sm mt-5">
+                    Browse dishes
+                  </Link>
                 </div>
               </div>
             )}

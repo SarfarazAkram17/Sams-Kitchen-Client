@@ -188,7 +188,7 @@ const Cart = () => {
                         <h4 className="font-bold text-xs sm:text-[1rem]">
                           {foodItem?.name}
                         </h4>
-                        <div className="flex w-fit items-center h-5 sm:h-6 border border-gray-400 rounded-md">
+                        <div className="flex w-fit items-center h-5 sm:h-6 border border-base-300 rounded-md">
                           <button
                             type="button"
                             aria-label={`Decrease ${foodItem.name} quantity`}
@@ -226,10 +226,10 @@ const Cart = () => {
                       <div>
                         {foodItem.discount > 0 ? (
                           <div>
-                            <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
+                            <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-base-content/60">
                               ৳ {(foodItem.price * item.quantity).toFixed(2)}
                             </span>
-                            <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
+                            <span className="text-success whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
                               {(
                                 (foodItem.price -
@@ -239,7 +239,7 @@ const Cart = () => {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm font-semibold">
+                          <span className="text-success whitespace-nowrap text-xs sm:text-sm font-semibold">
                             ৳ {(foodItem.price * item.quantity).toFixed(2)}
                           </span>
                         )}

@@ -209,7 +209,7 @@ const Register = () => {
 
             <button
               type="submit"
-              className="btn btn-primary w-full text-white mt-6"
+              className="btn btn-primary w-full mt-6"
             >
               {loading ? (
                 <span className="loading loading-spinner text-primary loading-md"></span>

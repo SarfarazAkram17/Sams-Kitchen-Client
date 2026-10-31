@@ -13,15 +13,18 @@ const ErrorPage = () => {
       </h1>
 
       {/* Subtitle */}
-      <p className="mt-3 text-gray-600 text-lg max-w-md">
+      <p className="mt-3 text-base-content/80 text-lg max-w-md">
         The page you’re looking for doesn’t exist or has been moved. Let’s get
         you back on track.
       </p>
 
       {/* Actions */}
-      <div className="mt-6">
-        <Link to="/" className="btn btn-primary text-white">
+      <div className="space-y-6 flex flex-col mt-6">
+        <Link to="/" className="btn btn-primary">
           Go to Home
+        </Link>
+        <Link to="/dashboard" className="btn btn-primary">
+          Go to Dashboard
         </Link>
       </div>
     </div>

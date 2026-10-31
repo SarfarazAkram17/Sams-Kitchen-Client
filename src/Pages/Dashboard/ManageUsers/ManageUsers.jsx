@@ -103,7 +103,7 @@ const ManageUsers = () => {
           <button type="button" onClick={() => refetch()} className="btn btn-sm btn-primary mt-4">Try again</button>
         </div>
       ) : users.length === 0 ? (
-        <p className="text-center mt-10 text-gray-600 text-lg font-medium">
+        <p className="text-center mt-10 text-base-content/80 text-lg font-medium">
           No users found.
         </p>
       ) : (

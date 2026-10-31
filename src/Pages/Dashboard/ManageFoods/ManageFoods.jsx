@@ -69,7 +69,7 @@ const ManageFoods = () => {
           <button type="button" onClick={() => refetch()} className="btn btn-sm btn-primary mt-4">Try again</button>
         </div>
       ) : foods.length === 0 ? (
-        <p className="text-center text-lg text-gray-600">
+        <p className="text-center text-lg text-base-content/80">
           No foods available yet.
         </p>
       ) : (
@@ -90,11 +90,11 @@ const ManageFoods = () => {
                   <h3 className="text-xl font-semibold text-primary">
                     {food.name}
                   </h3>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-base-content/60">
                     <strong>Added On:</strong>{" "}
                     {new Date(food.addedAt).toLocaleString("en-BD")}
                   </p>
-                  <p className="text-sm text-gray-600">{food.description}</p>
+                  <p className="text-sm text-base-content/80">{food.description}</p>
 
                   <p className="text-sm">
                     <strong>Price:</strong> ৳ {food.price.toFixed(2)}
@@ -107,11 +107,11 @@ const ManageFoods = () => {
                   <p className="text-sm">
                     <strong>Status:</strong>{" "}
                     {food.available ? (
-                      <span className="text-green-600 font-medium">
+                      <span className="text-success font-medium">
                         Available
                       </span>
                     ) : (
-                      <span className="text-red-600 font-medium">
+                      <span className="text-error font-medium">
                         Unavailable
                       </span>
                     )}

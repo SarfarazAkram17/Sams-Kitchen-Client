@@ -150,7 +150,7 @@ const EditFood = () => {
             {...register("name", { required: true })}
           />
           {errors.name && (
-            <p className="text-red-500 text-xs">Food name is required.</p>
+            <p className="text-error text-xs">Food name is required.</p>
           )}
         </div>
 
@@ -168,7 +168,7 @@ const EditFood = () => {
             })}
           />
           {errors.price && (
-            <p className="text-red-500 text-xs">{errors.price.message}</p>
+            <p className="text-error text-xs">{errors.price.message}</p>
           )}
         </div>
 
@@ -182,7 +182,7 @@ const EditFood = () => {
             className="input input-bordered w-full"
             {...register("discount", { min: 0, max: 100 })}
           />
-          <p className="text-xs text-gray-500 mt-1">0–100, default is 0%</p>
+          <p className="text-xs text-base-content/60 mt-1">0–100, default is 0%</p>
         </div>
 
         {/* Description */}
@@ -195,7 +195,7 @@ const EditFood = () => {
             {...register("description", { required: true })}
           />
           {errors.description && (
-            <p className="text-red-500 text-xs">
+            <p className="text-error text-xs">
               Food Description is required.
             </p>
           )}
@@ -214,13 +214,13 @@ const EditFood = () => {
               <button
                 type="button"
                 onClick={handleRemoveExistingImage}
-                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
+                className="absolute top-1 right-1 bg-error text-error-content text-xs px-2 py-0.5 rounded"
               >
                 <FiX aria-hidden="true" />
               </button>
             </div>
           ) : (
-            <p className="text-xs text-gray-500 mt-1">No existing image yet.</p>
+            <p className="text-xs text-base-content/60 mt-1">No existing image yet.</p>
           )}
         </div>
 
@@ -248,7 +248,7 @@ const EditFood = () => {
               <button
                 type="button"
                 onClick={handleRemoveNewImage}
-                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
+                className="absolute top-1 right-1 bg-error text-error-content text-xs px-2 py-0.5 rounded"
               >
                 <FiX aria-hidden="true" />
               </button>
@@ -271,7 +271,7 @@ const EditFood = () => {
         {/* Submit */}
         <div className="flex justify-end">
           <button
-            className="btn w-full mt-8 btn-primary disabled:text-black/50 text-white"
+            className="btn w-full mt-8 btn-primary disabled:text-base-content/50"
             type="submit"
           >
             {uploading || isPending ? (

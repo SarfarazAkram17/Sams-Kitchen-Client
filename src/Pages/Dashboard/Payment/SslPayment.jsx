@@ -67,7 +67,7 @@ const SslPayment = ({ orderInfo }) => {
 
       {/* Supported Methods */}
       <div>
-        <p className="text-xs text-gray-500 mb-2">Supported payment methods:</p>
+        <p className="text-xs text-base-content/60 mb-2">Supported payment methods:</p>
         <div className="flex flex-wrap gap-2">
           {[
             "bKash",
@@ -81,7 +81,7 @@ const SslPayment = ({ orderInfo }) => {
           ].map((method) => (
             <span
               key={method}
-              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-lg"
+              className="px-2 py-1 bg-gray-100 text-base-content/80 text-xs rounded-lg"
             >
               {method}
             </span>
@@ -92,7 +92,7 @@ const SslPayment = ({ orderInfo }) => {
       {/* Pay Button */}
       <button
         type="submit"
-        className="btn btn-primary text-white w-full disabled:text-black/60"
+        className="btn btn-primary w-full disabled:text-base-content/50"
       >
         {loading ? (
           <span className="flex items-center gap-2">

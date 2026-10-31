@@ -111,7 +111,7 @@ const AddFood = () => {
       <h2 className="text-3xl md:text-4xl text-center font-bold mb-4 text-primary">
         Add New Food
       </h2>
-      <p className="text-center text-sm text-gray-600 mb-8 max-w-2xl mx-auto">
+      <p className="text-center text-sm text-base-content/80 mb-8 max-w-2xl mx-auto">
         Add a new food item to the menu. Upload one image, set price and
         details. Discount defaults to 0% but can be updated later by Admin.
       </p>
@@ -127,7 +127,7 @@ const AddFood = () => {
             {...register("name", { required: true })}
           />
           {errors.name && (
-            <p className="text-red-500 text-xs font-semibold mt-1">
+            <p className="text-error text-xs font-semibold mt-1">
               Food name is required.
             </p>
           )}
@@ -147,7 +147,7 @@ const AddFood = () => {
             })}
           />
           {errors.price && (
-            <p className="text-red-500 text-xs font-semibold mt-1">
+            <p className="text-error text-xs font-semibold mt-1">
               {errors.price.message}
             </p>
           )}
@@ -164,7 +164,7 @@ const AddFood = () => {
             defaultValue={0}
             {...register("discount", { min: 0, max: 100 })}
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-base-content/60 mt-1">
             Default 0%. Can be updated later up to 100%.
           </p>
         </div>
@@ -179,7 +179,7 @@ const AddFood = () => {
             {...register("description", { required: true })}
           />
           {errors.description && (
-            <p className="text-red-500 text-xs font-semibold mt-1">
+            <p className="text-error text-xs font-semibold mt-1">
               Food description is required.
             </p>
           )}
@@ -208,14 +208,14 @@ const AddFood = () => {
               <button
                 type="button"
                 onClick={() => handleImageRemove()}
-                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
+                className="absolute top-1 right-1 bg-error text-error-content text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
               >
                 <FiX aria-hidden="true" />
               </button>
             </div>
           )}
 
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-base-content/80 mt-1">
             {imageURL
               ? "You have uploaded 1 image."
               : `Uploaded: ${imageURL.length} / 1`}
@@ -237,7 +237,7 @@ const AddFood = () => {
         {/* Submit */}
         <div className="flex justify-end">
           <button
-            className="btn w-full mt-8 btn-primary disabled:text-black/50 text-white"
+            className="btn w-full mt-8 btn-primary disabled:text-base-content/50"
             type="submit"
           >
             {uploading || isPending ? (

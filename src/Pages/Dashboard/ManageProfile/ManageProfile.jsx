@@ -167,7 +167,7 @@ const ManageProfile = () => {
               <div role="dialog" aria-modal="true" aria-labelledby="profile-edit-title" className="surface-panel relative max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl p-5 shadow-xl sm:p-8">
                 <button
                   onClick={() => !loading && setIsModalOpen(false)}
-                  className="absolute top-4 right-4 hover:text-red-500 cursor-pointer text-gray-500 transition"
+                  className="absolute top-4 right-4 hover:text-error cursor-pointer text-base-content/60 transition"
                   aria-label="Close modal"
                   disabled={loading}
                 >
@@ -206,7 +206,7 @@ const ManageProfile = () => {
                     onChange={handleImageChange}
                   />
                   {!preview && (
-                    <p className="text-red-500 text-center font-semibold mb-4">
+                    <p className="text-error text-center font-semibold mb-4">
                       Profile image is required.
                     </p>
                   )}
@@ -222,7 +222,7 @@ const ManageProfile = () => {
                   }
                 />
                 {!formData.name.trim() && (
-                  <p className="text-red-500 text-sm font-semibold mt-2">
+                  <p className="text-error text-sm font-semibold mt-2">
                     Name is required.
                   </p>
                 )}
@@ -237,7 +237,7 @@ const ManageProfile = () => {
                   </button>
                   <button
                     onClick={handleUpdate}
-                    className="btn btn-primary text-white"
+                    className="btn btn-primary"
                   >
                     {loading ? (
                       <span className="loading loading-spinner text-primary"></span>

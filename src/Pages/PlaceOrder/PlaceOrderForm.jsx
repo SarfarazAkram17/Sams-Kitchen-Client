@@ -200,11 +200,11 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg w-full">
+    <div className="bg-base-100 rounded-lg w-full">
       <form onSubmit={handleSubmit(handlePlaceOrder)}>
         <div>
           {/* Personal Details */}
-          <div className="p-6 shadow-xl rounded-xl border border-sky-300">
+          <div className="p-6 shadow-xl rounded-xl border border-base-300">
             <div className="flex gap-4 items-center mb-8">
               <div className="rounded-lg bg-primary p-3.5 text-primary-content">
                 <FaUser size={23} />
@@ -217,36 +217,36 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-4">
               <div>
                 <label className="text-xs font-semibold">
-                  First Name <span className="text-red-500">*</span>
+                  First Name <span className="text-error">*</span>
                 </label>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
                   {...register("firstName", {
                     required: "First name is required",
                     minLength: { value: 2, message: "Please enter at least 2 characters" },
                   })}
                 />
                 {errors.firstName && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.firstName.message}
                   </span>
                 )}
               </div>
               <div>
                 <label className="text-xs font-semibold">
-                  Last Name <span className="text-red-500">*</span>
+                  Last Name <span className="text-error">*</span>
                 </label>
                 <input
                   type="text"
-                  className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
                   {...register("lastName", {
                     required: "Last name is required",
                     minLength: { value: 2, message: "Please enter at least 2 characters" },
                   })}
                 />
                 {errors.lastName && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.lastName.message}
                   </span>
                 )}
@@ -255,11 +255,11 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               {/* Email Field (Read-only) */}
               <div>
                 <label className="text-xs font-semibold">
-                  Email Address <span className="text-red-500">*</span>
+                  Email Address <span className="text-error">*</span>
                 </label>
                 <input
                   type="email"
-                  className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
                   value={userEmail}
                   readOnly
                   {...register("email", {
@@ -268,7 +268,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   })}
                 />
                 {errors.email && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.email.message}
                   </span>
                 )}
@@ -277,11 +277,11 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               {/* Phone Number */}
               <div>
                 <label className="text-xs font-semibold">
-                  Phone Number <span className="text-red-500">*</span>
+                  Phone Number <span className="text-error">*</span>
                 </label>
                 <input
                   type="tel"
-                  className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
+                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
                     pattern: {
@@ -291,7 +291,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   })}
                 />
                 {errors.phone && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.phone.message}
                   </span>
                 )}
@@ -300,7 +300,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           </div>
 
           {/* Delivery Details */}
-          <div className="p-6 shadow-xl mt-8 rounded-xl border border-sky-300">
+          <div className="p-6 shadow-xl mt-8 rounded-xl border border-base-300">
             <div className="flex gap-4 items-center mb-8">
               <div className="rounded-lg bg-secondary p-3 text-secondary-content">
                 <HiTruck size={30} />
@@ -315,17 +315,17 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 items-start gap-4">
               <div className="md:col-span-3">
                 <label className="text-xs font-semibold">
-                  Street Address <span className="text-red-500">*</span>
+                  Street Address <span className="text-error">*</span>
                 </label>
                 <input
                   type="text"
-                  className="w-full p-2 mt-1 border border-gray-400 rounded-md text-xs xl:text-sm"
+                  className="w-full p-2 mt-1 border border-base-300 rounded-md text-xs xl:text-sm"
                   {...register("street", {
                     required: "Street address is required",
                   })}
                 />
                 {errors.street && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.street.message}
                   </span>
                 )}
@@ -334,7 +334,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               {/* Region Select */}
               <div>
                 <label className="text-xs font-semibold">
-                  Region <span className="text-red-500">*</span>
+                  Region <span className="text-error">*</span>
                 </label>
                 <Select
                   aria-label="Region"
@@ -347,7 +347,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   classNamePrefix="select"
                 />
                 {errors.region && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.region.message}
                   </span>
                 )}
@@ -356,7 +356,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               {/* District Select */}
               <div>
                 <label className="text-xs font-semibold">
-                  District <span className="text-red-500">*</span>
+                  District <span className="text-error">*</span>
                 </label>
                 <Select
                   aria-label="District"
@@ -370,7 +370,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   classNamePrefix="select"
                 />
                 {errors.district && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.district.message}
                   </span>
                 )}
@@ -379,7 +379,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               {/* Thana Select */}
               <div>
                 <label className="text-xs font-semibold">
-                  Thana <span className="text-red-500">*</span>
+                  Thana <span className="text-error">*</span>
                 </label>
                 <Select
                   aria-label="Thana"
@@ -392,7 +392,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   classNamePrefix="select"
                 />
                 {errors.thana && (
-                  <span className="text-red-500 text-xs mt-1 font-semibold">
+                  <span className="text-error text-xs mt-1 font-semibold">
                     {errors.thana.message}
                   </span>
                 )}
@@ -401,7 +401,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           </div>
 
           {/* Buttons */}
-          <div className="p-6 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 shadow-xl mt-8 rounded-xl border border-sky-300">
+          <div className="p-6 flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 shadow-xl mt-8 rounded-xl border border-base-300">
             <button
               type="button"
               onClick={() => navigate("/allFoods")}
@@ -411,7 +411,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
             </button>
             <button
               type="submit"
-              className="btn flex whitespace-nowrap w-full items-center gap-2 btn-primary sm:w-[49%] text-white disabled:text-black/50"
+              className="btn flex whitespace-nowrap w-full items-center gap-2 btn-primary sm:w-[49%] disabled:text-base-content/50"
             >
               {isProcessing ? (
                 <>

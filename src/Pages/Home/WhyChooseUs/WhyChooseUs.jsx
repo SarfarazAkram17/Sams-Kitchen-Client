@@ -1,82 +1,58 @@
-import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
-import { FaLeaf, FaClock, FaShieldAlt, FaThumbsUp } from "react-icons/fa";
+import { FaClock, FaLeaf, FaShieldAlt, FaStar } from "react-icons/fa";
+import Reveal from "../../../Components/Shared/Reveal";
+import SectionHeading from "../../../Components/Shared/SectionHeading";
 
-const reasons = [
-  {
-    icon: <FaLeaf size={36} className="text-success" />,
-    title: "Fresh Ingredients",
-    description:
-      "We use only the freshest and highest quality ingredients in every dish.",
-  },
-  {
-    icon: <FaClock size={36} className="text-secondary" />,
-    title: "Fast Delivery",
-    description:
-      "Quick and reliable delivery ensures your food arrives hot and on time.",
-  },
-  {
-    icon: <FaShieldAlt size={36} className="text-info" />,
-    title: "Safe & Hygienic",
-    description: "Strict hygiene protocols to keep your food safe and healthy.",
-  },
-  {
-    icon: <FaThumbsUp size={36} className="text-primary" />,
-    title: "Trusted Quality",
-    description:
-      "Thousands of happy customers trust us for great taste and service.",
-  },
+const secondary = [
+  { icon: FaClock, title: "Delivered hot", description: "Reliable riders bring your meal straight from our kitchen, on time.", tone: "bg-secondary/15 text-secondary" },
+  { icon: FaShieldAlt, title: "Safe & hygienic", description: "Strict hygiene routines keep every meal clean and safe.", tone: "bg-info/15 text-info" },
+  { icon: FaStar, title: "Honest reviews", description: "Read real reviews on every dish before you order.", tone: "bg-primary/12 text-primary" },
 ];
 
-const WhyChooseUs = () => {
-  return (
-    <section className="px-4 py-12 bg-base-200/70">
-      <div className="max-w-7xl mx-auto">
-        <motion.h2
-          className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
-          initial={{ opacity: 0, y: -40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.7 }}
-        >
-          Why Choose Us
-        </motion.h2>
+const WhyChooseUs = () => (
+  <section className="band-warm border-y border-base-300 px-4 py-16 sm:py-24" aria-labelledby="why-title">
+    <div className="mx-auto max-w-7xl">
+      <SectionHeading
+        id="why-title"
+        eyebrow="Why Sam’s Kitchen"
+        title="Good food takes care"
+        description="Fresh ingredients, careful hands and a team that treats every order like a family meal."
+      />
 
-        <motion.p
-          className="text-center text-base-content/70 max-w-3xl mx-auto mb-10 text-sm leading-6"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-        >
-          Sam’s Kitchen delivers fresh, high-quality meals straight to your door
-          with fast, reliable, and hygienic service. We use only the best
-          ingredients and have a trusted team of riders committed to ensuring
-          your food arrives hot and on time. With thousands of happy customers,
-          we provide a seamless ordering experience focused on great taste,
-          safety, and customer satisfaction.
-        </motion.p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {reasons.map((reason, index) => (
-            <motion.div
-              key={index}
-              className="bg-base-100 rounded-2xl border border-base-300 p-5 text-center hover:border-secondary shadow-sm hover:shadow-xl transition-shadow transform-border duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-            >
-              <div className="mb-4 flex justify-center">{reason.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{reason.title}</h3>
-              <p className="text-base-content/70 leading-6">
-                {reason.description}
+      <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
+        <Reveal>
+          <article className="relative flex h-full min-h-[22rem] flex-col justify-between overflow-hidden rounded-[2rem] border border-base-300 bg-base-100 p-8 sm:p-10">
+            <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-success/15 blur-3xl" aria-hidden="true" />
+            <span className="relative grid size-14 place-items-center rounded-2xl bg-success/15 text-success">
+              <FaLeaf size={24} aria-hidden="true" />
+            </span>
+            <div className="relative mt-16">
+              <h3 className="font-display text-4xl leading-tight text-base-content sm:text-5xl">Fresh ingredients, every single dish.</h3>
+              <p className="mt-4 max-w-md text-sm leading-7 text-base-content/70 sm:text-base">
+                We cook with fresh, high-quality ingredients and prepare each meal
+                only when you order it—so what reaches your door tastes the way it should.
               </p>
-            </motion.div>
+            </div>
+          </article>
+        </Reveal>
+
+        <div className="grid gap-5">
+          {secondary.map(({ icon: Icon, title, description, tone }, index) => (
+            <Reveal key={title} delay={0.1 * (index + 1)}>
+              <article className="card-lift flex h-full items-start gap-5 rounded-3xl border border-base-300 bg-base-100 p-6">
+                <span className={`grid size-12 shrink-0 place-items-center rounded-2xl ${tone}`}>
+                  <Icon size={20} aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="text-lg font-bold text-base-content">{title}</h3>
+                  <p className="mt-1.5 text-sm leading-6 text-base-content/70">{description}</p>
+                </div>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default WhyChooseUs;
