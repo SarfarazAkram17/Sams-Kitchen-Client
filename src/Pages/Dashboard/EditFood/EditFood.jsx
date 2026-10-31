@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import useAuth from "../../../Hooks/useAuth";
 import Loading from "../../../Components/Loading/Loading";
+import { FiX } from "react-icons/fi";
 
 const EditFood = () => {
   const { foodId } = useParams();
@@ -21,6 +22,7 @@ const EditFood = () => {
   const [existingImage, setExistingImage] = useState(null);
   const [newImageURL, setNewImageURL] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [imageError, setImageError] = useState("");
 
   const cloudName = import.meta.env.VITE_cloudinary_cloud_name;
   const uploadPreset = import.meta.env.VITE_cloudinary_preset_name;
@@ -72,6 +74,7 @@ const EditFood = () => {
         formData
       );
       setNewImageURL(res.data.secure_url);
+      setImageError("");
 
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
@@ -99,7 +102,7 @@ const EditFood = () => {
       return data;
     },
     onSuccess: () => {
-      Swal.fire("Success", "🎉 Food updated successfully!", "success");
+      Swal.fire("Success", "Food updated successfully.", "success");
       navigate("/dashboard/manageFoods");
     },
     onError: (err) => {
@@ -108,8 +111,9 @@ const EditFood = () => {
   });
 
   const handleFoodUpdate = async (data) => {
+    if (uploading || isPending) return;
     if (!existingImage && !newImageURL) {
-      toast.error("Please upload 1 image.");
+      setImageError("A food image is required.");
       return;
     }
     const price = Math.round(parseFloat(data.price) * 100) / 100;
@@ -212,7 +216,7 @@ const EditFood = () => {
                 onClick={handleRemoveExistingImage}
                 className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
               >
-                ✕
+                <FiX aria-hidden="true" />
               </button>
             </div>
           ) : (
@@ -231,6 +235,7 @@ const EditFood = () => {
             className="file-input file-input-bordered w-full"
             disabled={uploading || existingImage}
           />
+          {imageError && <p className="mt-2 text-sm font-semibold text-error" role="alert">{imageError}</p>}
         </div>
         <div>
           {newImageURL && (
@@ -245,7 +250,7 @@ const EditFood = () => {
                 onClick={handleRemoveNewImage}
                 className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded"
               >
-                ✕
+                <FiX aria-hidden="true" />
               </button>
             </div>
           )}
@@ -267,7 +272,6 @@ const EditFood = () => {
         <div className="flex justify-end">
           <button
             className="btn w-full mt-8 btn-primary disabled:text-black/50 text-white"
-            disabled={uploading || isPending}
             type="submit"
           >
             {uploading || isPending ? (

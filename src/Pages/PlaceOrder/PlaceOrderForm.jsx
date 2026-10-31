@@ -39,7 +39,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
 
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // 🔹 State for regions, districts, thanas
+  // State for regions, districts, and thanas.
   const [regions, setRegions] = useState([]);
   const [outlets, setOutlets] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState(null);
@@ -47,7 +47,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [thanas, setThanas] = useState([]);
 
-  // 🔹 Fetch data from public folder
+  // Fetch location data from the public folder.
   useEffect(() => {
     fetch("/regions.json")
       .then((res) => res.json())
@@ -58,7 +58,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
       .then((data) => setOutlets(data));
   }, []);
 
-  // 🔹 Handle Region Change
+  // Handle region changes.
   const handleRegionChange = (selected) => {
     setSelectedRegion(selected);
     setValue("region", selected ? selected.value : "");
@@ -82,7 +82,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
     trigger("thana");
   };
 
-  // 🔹 Handle District Change
+  // Handle district changes.
   const handleDistrictChange = (selected) => {
     setSelectedDistrict(selected);
     setValue("district", selected ? selected.value : "");
@@ -103,7 +103,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
     trigger("thana");
   };
 
-  // 🔹 Handle Thana Change
+  // Handle thana changes.
   const handleThanaChange = (selected) => {
     setValue("thana", selected ? selected.value : "");
     trigger("thana");
@@ -118,7 +118,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
     setIsProcessing(true);
 
     try {
-      // 🔹 Calculate items with food details
+      // Calculate items with their food details.
       const items = cartItems
         .map((item) => {
           const food = foods.find((f) => f._id === item.foodId);
@@ -142,7 +142,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
         })
         .filter(Boolean);
 
-      // 🔹 Totals
+      // Calculate totals.
       const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
       const discount = items.reduce(
         (sum, i) => sum + i.price * (i.discount / 100) * i.quantity,
@@ -156,7 +156,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
 
       const total = subtotal + deliveryCharge - discount;
 
-      // 🔹 Build payload
+      // Build the order payload.
       const orderPayload = {
         customer: {
           firstName: data.firstName,
@@ -180,7 +180,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
         placedAt: new Date().toISOString(),
       };
 
-      // 🔹 Send to server
+      // Send the order to the server.
       const res = await axiosSecure.post(
         `/orders?email=${userEmail}`,
         orderPayload
@@ -206,7 +206,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           {/* Personal Details */}
           <div className="p-6 shadow-xl rounded-xl border border-sky-300">
             <div className="flex gap-4 items-center mb-8">
-              <div className="rounded-lg shadow-lg p-3.5 bg-red-500 text-white">
+              <div className="rounded-lg bg-primary p-3.5 text-primary-content">
                 <FaUser size={23} />
               </div>
               <div>
@@ -224,6 +224,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
                   {...register("firstName", {
                     required: "First name is required",
+                    minLength: { value: 2, message: "Please enter at least 2 characters" },
                   })}
                 />
                 {errors.firstName && (
@@ -241,6 +242,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
                   {...register("lastName", {
                     required: "Last name is required",
+                    minLength: { value: 2, message: "Please enter at least 2 characters" },
                   })}
                 />
                 {errors.lastName && (
@@ -262,6 +264,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   readOnly
                   {...register("email", {
                     required: "Email is required",
+                    pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address" },
                   })}
                 />
                 {errors.email && (
@@ -281,6 +284,10 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
                   {...register("phone", {
                     required: "Phone number is required",
+                    pattern: {
+                      value: /^(?:\+?88)?01[3-9]\d{8}$/,
+                      message: "Enter a valid Bangladesh mobile number",
+                    },
                   })}
                 />
                 {errors.phone && (
@@ -295,7 +302,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           {/* Delivery Details */}
           <div className="p-6 shadow-xl mt-8 rounded-xl border border-sky-300">
             <div className="flex gap-4 items-center mb-8">
-              <div className="rounded-lg shadow-lg p-3 bg-blue-500 text-white">
+              <div className="rounded-lg bg-secondary p-3 text-secondary-content">
                 <HiTruck size={30} />
               </div>
               <div>
@@ -330,11 +337,14 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   Region <span className="text-red-500">*</span>
                 </label>
                 <Select
+                  aria-label="Region"
+                  aria-invalid={Boolean(errors.region)}
                   options={regions.map((r) => ({ value: r, label: r }))}
                   value={selectedRegion}
                   onChange={handleRegionChange}
                   placeholder="Select Region"
                   className="text-xs xl:text-sm mt-1"
+                  classNamePrefix="select"
                 />
                 {errors.region && (
                   <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -349,12 +359,15 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   District <span className="text-red-500">*</span>
                 </label>
                 <Select
+                  aria-label="District"
+                  aria-invalid={Boolean(errors.district)}
                   options={districts.map((d) => ({ value: d, label: d }))}
                   value={selectedDistrict}
                   onChange={handleDistrictChange}
                   isDisabled={!selectedRegion}
                   placeholder="Select District"
                   className="text-xs xl:text-sm mt-1"
+                  classNamePrefix="select"
                 />
                 {errors.district && (
                   <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -369,11 +382,14 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
                   Thana <span className="text-red-500">*</span>
                 </label>
                 <Select
+                  aria-label="Thana"
+                  aria-invalid={Boolean(errors.thana)}
                   options={thanas.map((t) => ({ value: t, label: t }))}
                   onChange={handleThanaChange}
                   isDisabled={!selectedRegion || !selectedDistrict}
                   placeholder="Select Thana"
                   className="text-xs xl:text-sm mt-1"
+                  classNamePrefix="select"
                 />
                 {errors.thana && (
                   <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -396,7 +412,6 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
             <button
               type="submit"
               className="btn flex whitespace-nowrap w-full items-center gap-2 btn-primary sm:w-[49%] text-white disabled:text-black/50"
-              disabled={isProcessing || cartItems.length <= 0}
             >
               {isProcessing ? (
                 <>

@@ -5,7 +5,6 @@ import errorAnimation from "../../assets/animations/error.json";
 const ErrorPage = () => {
   return (
     <div className="pb-8 flex flex-col items-center justify-center text-center bg-base-100 px-4">
-      {/* 🔝 Lottie Animation */}
       <Lottie animationData={errorAnimation} loop={true} className="w-[28%]" />
 
       {/* Error Title */}

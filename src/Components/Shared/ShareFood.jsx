@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import useAuth from "../../Hooks/useAuth";

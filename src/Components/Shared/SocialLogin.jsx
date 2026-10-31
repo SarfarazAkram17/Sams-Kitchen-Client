@@ -23,7 +23,7 @@ const SocialLogin = ({ state, message }) => {
           last_log_in: Date.now().toString(),
         };
 
-       await axiosInstance.post("/users", userInfo);
+        await axiosInstance.post("/users", userInfo);
 
         navigate(state || "/");
         toast.success(message);
@@ -54,7 +54,7 @@ const SocialLogin = ({ state, message }) => {
       .catch((error) => toast.error(error.message));
   };
   return (
-    <>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
       {/* Google */}
       <button onClick={handleGoogleLogin} className="btn">
         <svg
@@ -102,7 +102,7 @@ const SocialLogin = ({ state, message }) => {
         </svg>
         Continue with Facebook
       </button>
-    </>
+    </div>
   );
 };
 

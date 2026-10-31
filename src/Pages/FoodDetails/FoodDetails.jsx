@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PiShoppingCartBold } from "react-icons/pi";
+import { FiX } from "react-icons/fi";
 import { useState, useRef } from "react";
 import useAxios from "../../Hooks/useAxios";
 import Loading from "../../Components/Loading/Loading";
@@ -9,6 +10,7 @@ import { Pagination, Rate, ConfigProvider } from "antd";
 import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../Hooks/useAuth";
+import useCanOrder from "../../Hooks/useCanOrder";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import ShareFood from "../../Components/Shared/ShareFood";
 
@@ -19,6 +21,7 @@ const FoodDetails = () => {
   const axiosInstance = useAxios();
   const axiosSecure = useAxiosSecure();
   const { user, userEmail } = useAuth();
+  const canOrder = useCanOrder();
   const [quantity, setQuantity] = useState(1);
 
   // Pagination
@@ -62,6 +65,7 @@ const FoodDetails = () => {
   // Review form state
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [reviewErrors, setReviewErrors] = useState({});
 
   // Upload multiple images to Cloudinary
   const handleImageUpload = async (files) => {
@@ -126,6 +130,7 @@ const FoodDetails = () => {
       setRating(0);
       setComment("");
       setImageURLs([]);
+      setReviewErrors({});
     },
     onError: (err) => toast.error(`Failed: ${err.message}`),
   });
@@ -149,21 +154,19 @@ const FoodDetails = () => {
   };
 
   const handleReviewSubmit = () => {
+    if (isPending || uploading) return;
     if (!user) {
       toast.info("Login first");
       navigate("/login", { state: location.pathname });
       return;
     }
 
-    if (!comment) {
-      toast.error("Please add comment comment.");
-      return;
-    }
-
-    if (!rating) {
-      toast.error("Please add rating comment.");
-      return;
-    }
+    const nextErrors = {
+      comment: comment.trim() ? "" : "Write a review before submitting.",
+      rating: rating ? "" : "Choose a rating before submitting.",
+    };
+    setReviewErrors(nextErrors);
+    if (nextErrors.comment || nextErrors.rating) return;
 
     postReview();
   };
@@ -260,7 +263,7 @@ const FoodDetails = () => {
             )}
           </p>
           {/* Quantity + Add to Cart */}
-          {food.available && (
+          {food.available && canOrder && (
             <div className="mt-6 flex items-center gap-4">
               <div className="flex items-center border border-gray-400 rounded-lg">
                 <button
@@ -303,11 +306,17 @@ const FoodDetails = () => {
             rows={4}
             value={comment}
             placeholder="Write your review..."
-            onChange={(e) => setComment(e.target.value)}
+            aria-invalid={Boolean(reviewErrors.comment)}
+            onChange={(e) => {
+              setComment(e.target.value);
+              setReviewErrors((previous) => ({ ...previous, comment: "" }));
+            }}
             className="resize-none w-full border-2 p-2 rounded-md border-gray-200"
           />
+          {reviewErrors.comment && <p className="mt-1 text-sm font-semibold text-error" role="alert">{reviewErrors.comment}</p>}
 
           <div className="my-4">
+            <p className="mb-2 text-sm font-semibold">Rating</p>
             <ConfigProvider
               theme={{
                 components: {
@@ -318,8 +327,16 @@ const FoodDetails = () => {
                 },
               }}
             >
-              <Rate allowHalf onChange={setRating} value={rating} />
+              <Rate
+                allowHalf
+                onChange={(value) => {
+                  setRating(value);
+                  setReviewErrors((previous) => ({ ...previous, rating: "" }));
+                }}
+                value={rating}
+              />
             </ConfigProvider>
+            {reviewErrors.rating && <p className="mt-1 text-sm font-semibold text-error" role="alert">{reviewErrors.rating}</p>}
           </div>
 
           {/* Image upload */}
@@ -345,7 +362,7 @@ const FoodDetails = () => {
                   onClick={() => handleImageRemove(url)}
                   className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
                 >
-                  ✕
+                  <FiX aria-hidden="true" />
                 </button>
               </div>
             ))}
@@ -353,7 +370,6 @@ const FoodDetails = () => {
 
           <button
             className="mt-4 btn btn-primary disabled:text-black/50 text-white"
-            disabled={isPending || uploading}
             onClick={handleReviewSubmit}
           >
             {isPending ? (

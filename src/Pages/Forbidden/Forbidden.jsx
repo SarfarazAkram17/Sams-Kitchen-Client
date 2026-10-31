@@ -4,7 +4,6 @@ import { MdBlock } from "react-icons/md";
 const Forbidden = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center bg-base-100 px-4">
-      {/* 🚫 Icon */}
       <div className="bg-primary/10 p-6 rounded-full">
         <MdBlock className="text-primary" size={85} />
       </div>
@@ -20,9 +19,12 @@ const Forbidden = () => {
       </p>
 
       {/* Actions */}
-      <div className="mt-6">
+      <div className="space-y-6 flex flex-col mt-6">
         <Link to="/" className="btn btn-primary text-white">
           Go to Home
+        </Link>
+        <Link to="/dashboard" className="btn btn-primary text-white">
+          Go to Dashboard
         </Link>
       </div>
     </div>

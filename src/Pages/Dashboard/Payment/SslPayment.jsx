@@ -20,13 +20,14 @@ const SslPayment = ({ orderInfo }) => {
 
   const handlePay = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (loading) return;
 
     if (orderInfo.payment_status === "paid") {
       toast.info("Order is already paid");
       navigate("/dashboard/myOrders");
       return;
     }
+    setLoading(true);
 
     try {
       const paymentData = {
@@ -92,7 +93,6 @@ const SslPayment = ({ orderInfo }) => {
       <button
         type="submit"
         className="btn btn-primary text-white w-full disabled:text-black/60"
-        disabled={loading}
       >
         {loading ? (
           <span className="flex items-center gap-2">

@@ -8,142 +8,194 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import { FaRegBell } from "react-icons/fa6";
+import { FiCheck, FiInbox } from "react-icons/fi";
 
 const Notification = () => {
   const { userEmail } = useAuth();
   const axiosSecure = useAxiosSecure();
   const axiosInstance = useAxios();
   const queryClient = useQueryClient();
-
   const [showNotifications, setShowNotifications] = useState(false);
-  const dropdownRef = useRef(null); // 🔹 Ref for dropdown container
+  const dropdownRef = useRef(null);
 
-  // 🔹 Fetch Notifications (Infinite Query)
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ["notifications", userEmail],
-    queryFn: async ({ pageParam = 1 }) => {
-      const res = await axiosInstance.get(
-        `/notifications?email=${userEmail}&page=${pageParam}&limit=7`
-      );
-      return res.data;
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      if (allPages.length * 7 < lastPage.total) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    enabled: !!userEmail,
-    retry: 3,
-    refetchInterval: 1000,
-  });
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
+    useInfiniteQuery({
+      queryKey: ["notifications", userEmail],
+      queryFn: async ({ pageParam = 1 }) => {
+        const res = await axiosInstance.get(
+          `/notifications?email=${encodeURIComponent(userEmail)}&page=${pageParam}&limit=7`,
+        );
+        return res.data;
+      },
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) =>
+        allPages.length * 7 < lastPage.total ? allPages.length + 1 : undefined,
+      enabled: !!userEmail,
+      refetchInterval: 30000,
+    });
 
-  // 🔹 Mark all as read (direct → isRead, broadcast → readBy array update)
+  useEffect(() => {
+    if (!userEmail) return undefined;
+    const streamUrl = new URL(
+      import.meta.env.DEV
+        ? "/api/notifications/stream"
+        : "/notifications/stream",
+      import.meta.env.DEV
+        ? window.location.origin
+        : import.meta.env.VITE_Api_Url,
+    );
+    streamUrl.searchParams.set("email", userEmail);
+    const stream = new EventSource(streamUrl.toString(), {
+      withCredentials: true,
+    });
+    const refreshNotifications = () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications", userEmail] });
+      queryClient.invalidateQueries({ queryKey: ["riderOffers", userEmail] });
+    };
+    stream.onmessage = refreshNotifications;
+    return () => stream.close();
+  }, [queryClient, userEmail]);
+
   const markAllAsReadMutation = useMutation({
     mutationFn: async () => {
-      await axiosSecure.patch(`/notifications/readAll?email=${userEmail}`);
+      await axiosSecure.patch(
+        `/notifications/readAll?email=${encodeURIComponent(userEmail)}`,
+      );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["notifications", userEmail]);
+      queryClient.invalidateQueries({ queryKey: ["notifications", userEmail] });
     },
   });
 
-  // 🔹 Unread count
-  const unreadCount =
-    data?.pages?.reduce(
-      (acc, page) =>
-        acc +
-        page.notifications.filter(
-          (n) =>
-            (n.type === "direct" && !n.isRead) ||
-            (n.type === "broadcast" && !n.isRead)
-        ).length,
-      0
-    ) || 0;
+  const notifications =
+    data?.pages?.flatMap((page) => page.notifications || []) || [];
+  const unreadCount = notifications.filter((item) =>
+    item.type === "direct" || item.type === "broadcast" ? !item.isRead : false,
+  ).length;
 
   const handleShowNotifications = () => {
-    const toggle = !showNotifications;
-    setShowNotifications(toggle);
-
-    // 📌 When opening → mark as read
-    if (toggle && unreadCount > 0) {
-      markAllAsReadMutation.mutate();
+    const opening = !showNotifications;
+    setShowNotifications(opening);
+    if (opening) {
+      refetch();
+      if (unreadCount > 0) markAllAsReadMutation.mutate();
     }
   };
 
-  // 🔹 Close dropdown when clicking outside
   useEffect(() => {
-    function handleClickOutside(event) {
+    if (!showNotifications) return undefined;
+    const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowNotifications(false);
       }
-    }
-
-    if (showNotifications) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showNotifications]);
+
+  if (!userEmail) return null;
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* 🔔 Bell Icon */}
-      <div
-        className="indicator cursor-pointer"
+      <button
+        type="button"
+        className="grid size-10 place-items-center rounded-full text-primary-content cursor-pointer transition hover:bg-primary-content/10 focus-visible:outline-primary-content"
         onClick={handleShowNotifications}
+        aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
+        aria-expanded={showNotifications}
       >
-        <FaRegBell size={23} className={`text-white transition-all duration-300 ${showNotifications ? 'rotate-[20deg]' : ''}`} />
-        {unreadCount > 0 && (
-          <span className="text-xs bg-[#C5102C] text-white flex justify-center items-center rounded-full h-4.5 w-4.5 indicator-item">
-            {unreadCount}
-          </span>
-        )}
-      </div>
-
-      {/* 🔔 Dropdown */}
-      {showNotifications && (
-        <div className="absolute top-12 hide-scrollbar -right-10 sm:-right-14 bg-white border shadow-md rounded-md w-44 sm:w-56 md:w-64 lg:w-72 max-h-44 sm:max-h-56 md:max-h-64 lg:max-h-72 overflow-y-auto z-50">
-          {isLoading ? (
-            <p className="p-3 text-sm animate-pulse text-center">Loading...</p>
-          ) : data?.pages?.length && data?.pages?.[0].notifications.length ? (
-            data.pages.map((page, i) => (
-              <div key={i}>
-                {page.notifications.map((n) => (
-                  <div
-                    key={n._id}
-                    className={`p-3 space-y-2 text-sm font-semibold ${
-                      n.isRead ? "bg-white" : "bg-gray-50"
-                    } hover:bg-gray-100`}
-                  >
-                    <p>🔔 {n.message}</p>
-                    <span className="text-[10px] text-gray-400 block">
-                      {new Date(n.createdAt).toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ))
-          ) : (
-            <p className="p-3 text-gray-500 h-full flex justify-center items-center">
-              No notifications
-            </p>
+        <span className="indicator">
+          <FaRegBell size={19} />
+          {unreadCount > 0 && (
+            <span className="indicator-item min-w-5 rounded-full bg-secondary px-1 text-center text-[10px] font-bold leading-5 text-secondary-content">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
           )}
+        </span>
+      </button>
 
-          {/* Load more */}
+      {showNotifications && (
+        <section
+          className="absolute right-0 top-full z-[100] mt-3 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-base-300 bg-base-100 text-base-content shadow-2xl"
+          aria-label="Notifications"
+        >
+          <div className="flex items-center justify-between border-b border-base-300 px-4 py-3">
+            <div>
+              <h2 className="font-bold">Kitchen notes</h2>
+              <p className="text-xs text-base-content/55">
+                Updates for your account
+              </p>
+            </div>
+            <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+              {unreadCount} new
+            </span>
+          </div>
+          <div className="max-h-[min(60vh,24rem)] overflow-y-auto">
+            {isLoading ? (
+              <div className="space-y-3 p-4" aria-label="Loading notifications">
+                <div className="h-14 animate-pulse rounded-xl bg-base-200" />
+                <div className="h-14 animate-pulse rounded-xl bg-base-200" />
+              </div>
+            ) : isError ? (
+              <div className="p-5 text-center">
+                <p className="text-sm text-base-content/65">
+                  Updates could not be loaded.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => refetch()}
+                  className="btn btn-sm btn-ghost mt-2 text-primary"
+                >
+                  Try again
+                </button>
+              </div>
+            ) : notifications.length ? (
+              notifications.map((notification) => (
+                <article
+                  key={notification._id}
+                  className={`border-b border-base-300/70 px-4 py-3 last:border-0 ${notification.isRead ? "" : "bg-primary/[0.06]"}`}
+                >
+                  <div className="flex gap-3">
+                    <span
+                      className={`mt-1 grid size-7 shrink-0 place-items-center rounded-full ${notification.isRead ? "bg-base-200 text-base-content/55" : "bg-primary/15 text-primary"}`}
+                    >
+                      {notification.isRead ? (
+                        <FiCheck size={14} />
+                      ) : (
+                        <FaRegBell size={12} />
+                      )}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm leading-5">
+                        {notification.message}
+                      </p>
+                      <time className="mt-1 block text-[11px] text-base-content/50">
+                        {new Date(notification.createdAt).toLocaleString()}
+                      </time>
+                    </div>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="px-5 py-9 text-center">
+                <FiInbox className="mx-auto mb-2 text-2xl text-base-content/35" />
+                <p className="text-sm font-semibold">Nothing new yet</p>
+                <p className="mt-1 text-xs text-base-content/55">
+                  We’ll keep your order updates here.
+                </p>
+              </div>
+            )}
+          </div>
           {hasNextPage && (
             <button
-              className="w-full text-xs py-1 bg-gray-100 hover:bg-gray-200"
+              type="button"
+              className="w-full border-t border-base-300 py-3 text-xs font-bold text-primary hover:bg-base-200"
               onClick={() => fetchNextPage()}
             >
-              Load More
+              Load earlier updates
             </button>
           )}
-        </div>
+        </section>
       )}
     </div>
   );

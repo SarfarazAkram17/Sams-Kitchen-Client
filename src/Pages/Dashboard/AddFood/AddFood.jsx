@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useAuth from "../../../Hooks/useAuth";
+import { FiX } from "react-icons/fi";
 
 const AddFood = () => {
   const axiosSecure = useAxiosSecure();
@@ -21,6 +22,7 @@ const AddFood = () => {
 
   const [uploading, setUploading] = useState(false);
   const [imageURL, setImageURL] = useState("");
+  const [imageError, setImageError] = useState("");
 
   const cloudName = import.meta.env.VITE_cloudinary_cloud_name;
   const uploadPreset = import.meta.env.VITE_cloudinary_preset_name;
@@ -47,6 +49,7 @@ const AddFood = () => {
       );
 
       setImageURL(res.data.secure_url);
+      setImageError("");
 
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
@@ -71,7 +74,7 @@ const AddFood = () => {
     },
     onSuccess: (data) => {
       if (data.foodId) {
-        Swal.fire("Success", "🎉 Food added successfully!", "success");
+        Swal.fire("Success", "Food added successfully.", "success");
         setImageURL("");
         reset();
       }
@@ -82,8 +85,9 @@ const AddFood = () => {
   });
 
   const handleAddFood = async (data) => {
+    if (uploading || isPending) return;
     if (!imageURL) {
-      toast.error("Please upload 1 image before submitting.");
+      setImageError("A food image is required.");
       return;
     }
     const price = Math.round(parseFloat(data.price) * 100) / 100;
@@ -192,6 +196,7 @@ const AddFood = () => {
             className="file-input file-input-bordered w-full"
             disabled={uploading || imageURL}
           />
+          {imageError && <p className="mt-2 text-sm font-semibold text-error" role="alert">{imageError}</p>}
 
           {imageURL && (
             <div className="relative my-1 w-fit">
@@ -205,7 +210,7 @@ const AddFood = () => {
                 onClick={() => handleImageRemove()}
                 className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
               >
-                ✕
+                <FiX aria-hidden="true" />
               </button>
             </div>
           )}
@@ -233,7 +238,6 @@ const AddFood = () => {
         <div className="flex justify-end">
           <button
             className="btn w-full mt-8 btn-primary disabled:text-black/50 text-white"
-            disabled={uploading || isPending}
             type="submit"
           >
             {uploading || isPending ? (

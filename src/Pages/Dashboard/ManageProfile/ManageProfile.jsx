@@ -51,15 +51,12 @@ const ManageProfile = () => {
   };
 
   const handleUpdate = async () => {
+    if (loading) return;
     const trimmedName = formData.name.trim();
 
-    if (!trimmedName) {
-      toast.error("Name cannot be empty");
-      return;
-    }
-
-    if (!preview) {
-      toast.error("Please select a profile image");
+    if (!trimmedName || !preview) return;
+    if (isSaveDisabled) {
+      toast.info("There are no profile changes to save.");
       return;
     }
 
@@ -118,10 +115,10 @@ const ManageProfile = () => {
   return (
     <div className="px-4">
       <h2 className="text-3xl font-bold mb-8 text-primary">
-        Welcome back, {user?.displayName} 👋
+        Welcome back, {user?.displayName}
       </h2>
 
-      <div className="shadow-lg w-fit p-6 bg-white rounded-lg">
+      <div className="surface-panel w-full max-w-3xl p-4 sm:p-6 rounded-2xl">
         <div className="flex flex-col sm:flex-row gap-8 md:items-center">
           <img
             src={user?.photoURL}
@@ -151,23 +148,23 @@ const ManageProfile = () => {
 
         {!roleLoading && role === "customer" && (
           <div className="mt-10">
-            <Link to="/dashboard/beARider">
-              <button className="text-white btn btn-primary">
-                Be a Rider
-              </button>
-            </Link>{" "}
+            <Link to="/dashboard/beARider" className="btn btn-primary text-primary-content">
+              Be a Rider
+            </Link>
           </div>
         )}
 
         {isModalOpen && (
           <>
-            <div
-              className="fixed inset-0 z-40 backdrop-blur-md"
+            <button
+              type="button"
+              aria-label="Close edit profile dialog"
+              className="fixed inset-0 z-40 cursor-default backdrop-blur-md"
               onClick={() => !loading && setIsModalOpen(false)}
-            ></div>
+            />
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-              <div className="bg-white border rounded-lg max-w-md w-full p-8 relative shadow-xl">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+              <div role="dialog" aria-modal="true" aria-labelledby="profile-edit-title" className="surface-panel relative max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl p-5 shadow-xl sm:p-8">
                 <button
                   onClick={() => !loading && setIsModalOpen(false)}
                   className="absolute top-4 right-4 hover:text-red-500 cursor-pointer text-gray-500 transition"
@@ -177,7 +174,7 @@ const ManageProfile = () => {
                   <FiX size={26} />
                 </button>
 
-                <h3 className="text-2xl font-semibold mb-6 text-center">
+                <h3 id="profile-edit-title" className="text-2xl font-semibold mb-6 text-center">
                   Edit Profile
                 </h3>
 
@@ -197,7 +194,7 @@ const ManageProfile = () => {
                     onClick={() =>
                       document.getElementById("profileImage").click()
                     }
-                    className="btn bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white"
+                    className="btn border border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-content"
                   >
                     Change Profile Photo
                   </button>
@@ -241,12 +238,6 @@ const ManageProfile = () => {
                   <button
                     onClick={handleUpdate}
                     className="btn btn-primary text-white"
-                    disabled={
-                      loading ||
-                      !formData.name.trim() ||
-                      !preview ||
-                      isSaveDisabled
-                    }
                   >
                     {loading ? (
                       <span className="loading loading-spinner text-primary"></span>

@@ -19,11 +19,14 @@ import Payment from "../Pages/Dashboard/Payment/Payment";
 import BeARider from "../Pages/Dashboard/BeARider/BeARider";
 import CustomerRoutes from "../Routes/CustomerRoutes";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
-import AssignRider from "../Pages/Dashboard/AssignRider/AssignRider";
 import RiderRoutes from "../Routes/RiderRoutes";
 import PendingDeliveries from "../Pages/Dashboard/PendingDeliveries/PendingDeliveries";
 import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
 import Offers from "../Pages/Offers/Offers";
+import OrderTracking from "../Pages/Dashboard/OrderTracking/OrderTracking";
+import KitchenOrders from "../Pages/Dashboard/KitchenOrders/KitchenOrders";
+import CashoutRequests from "../Pages/Dashboard/CashoutRequests/CashoutRequests";
+import RiderCashouts from "../Pages/Dashboard/RiderCashouts/RiderCashouts";
 
 const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
@@ -83,7 +86,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "/placeOrder",
-        Component: PlaceOrder,
+        element: (
+          <PrivateRoutes>
+            <CustomerRoutes>
+              <PlaceOrder></PlaceOrder>
+            </CustomerRoutes>
+          </PrivateRoutes>
+        ),
       },
     ],
   },
@@ -105,11 +114,27 @@ export const router = createBrowserRouter([
       },
       {
         path: "myOrders",
-        Component: MyOrders,
+        element: (
+          <CustomerRoutes>
+            <MyOrders></MyOrders>
+          </CustomerRoutes>
+        ),
+      },
+      {
+        path: "order-tracking/:orderId",
+        element: (
+          <CustomerRoutes>
+            <OrderTracking></OrderTracking>
+          </CustomerRoutes>
+        ),
       },
       {
         path: "/dashboard/payment/:orderId",
-        Component: Payment,
+        element: (
+          <CustomerRoutes>
+            <Payment></Payment>
+          </CustomerRoutes>
+        ),
       },
 
       // admin routes
@@ -153,11 +178,20 @@ export const router = createBrowserRouter([
           </AdminRoutes>
         ),
       },
+
       {
-        path: "/dashboard/assignRider",
+        path: "kitchenOrders",
         element: (
           <AdminRoutes>
-            <AssignRider></AssignRider>
+            <KitchenOrders></KitchenOrders>
+          </AdminRoutes>
+        ),
+      },
+      {
+        path: "cashoutRequests",
+        element: (
+          <AdminRoutes>
+            <CashoutRequests></CashoutRequests>
           </AdminRoutes>
         ),
       },
@@ -186,6 +220,14 @@ export const router = createBrowserRouter([
         element: (
           <RiderRoutes>
             <CompletedDeliveries></CompletedDeliveries>
+          </RiderRoutes>
+        ),
+      },
+      {
+        path: "/dashboard/cashouts",
+        element: (
+          <RiderRoutes>
+            <RiderCashouts></RiderCashouts>
           </RiderRoutes>
         ),
       },

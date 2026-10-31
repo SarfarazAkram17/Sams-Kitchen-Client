@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Select from "react-select";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
@@ -28,7 +28,7 @@ const ManageUsers = () => {
 
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["users", searchType.value, searchTerm, roleFilter.value, page],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users`, {
@@ -49,10 +49,6 @@ const ManageUsers = () => {
   const users = data?.users || [];
   const total = data?.total || 0;
 
-  useEffect(() => {
-    refetch();
-  }, [searchTerm, searchType, roleFilter, page]);
-
   return (
     <div className="px-4">
       <h2 className="text-2xl font-bold mb-4 text-center text-primary">
@@ -62,6 +58,7 @@ const ManageUsers = () => {
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-4 items-center mb-6">
         <Select
+          aria-label="Choose user search field"
           options={searchOptions}
           value={searchType}
           onChange={(selected) => {
@@ -69,6 +66,7 @@ const ManageUsers = () => {
             setPage(1);
           }}
           className="w-full md:w-1/3"
+          classNamePrefix="select"
         />
         <label className="input input-bordered w-full md:w-1/3 flex items-center gap-2">
           <input
@@ -84,6 +82,7 @@ const ManageUsers = () => {
           />
         </label>
         <Select
+          aria-label="Filter users by role"
           options={roleOptions}
           value={roleFilter}
           onChange={(selected) => {
@@ -91,12 +90,18 @@ const ManageUsers = () => {
             setPage(1);
           }}
           className="w-full md:w-1/3"
+          classNamePrefix="select"
         />
       </div>
 
       {/* Table */}
       {isLoading ? (
         <Loading />
+      ) : isError ? (
+        <div className="rounded-2xl border border-error/30 bg-error/10 p-6 text-center" role="alert">
+          <p className="font-semibold">Users could not be loaded.</p>
+          <button type="button" onClick={() => refetch()} className="btn btn-sm btn-primary mt-4">Try again</button>
+        </div>
       ) : users.length === 0 ? (
         <p className="text-center mt-10 text-gray-600 text-lg font-medium">
           No users found.

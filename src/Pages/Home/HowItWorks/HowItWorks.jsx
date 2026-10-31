@@ -1,6 +1,6 @@
 import { FaSearch, FaMotorcycle, FaSmile } from "react-icons/fa";
 import { PiShoppingCartBold } from "react-icons/pi";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
 
 const steps = [
   {
@@ -27,8 +27,8 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="px-4 py-12 bg-gray-50">
-      <div className="max-w-[1500px] mx-auto">
+    <section className="max-w-7xl mx-auto px-4">
+      <div className="max-w-full mx-auto">
         <motion.h2
           className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
           initial={{ opacity: 0, y: -40 }}
@@ -40,7 +40,7 @@ const HowItWorks = () => {
         </motion.h2>
 
         <motion.p
-          className="text-center text-gray-600 max-w-3xl mx-auto mb-10 text-sm"
+          className="text-center text-base-content/70 max-w-3xl mx-auto mb-10 text-sm leading-6"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
@@ -58,7 +58,7 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <motion.div
               key={index}
-              className="bg-white rounded-xl border-2 shadow-md border-gray-200 p-4 text-center hover:border-secondary hover:shadow-xl transition-shadow transform-border duration-300"
+              className="bg-base-100 rounded-2xl border border-base-300 shadow-sm p-5 text-center hover:border-secondary hover:shadow-xl transition-shadow transform-border duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.2 }}
@@ -66,7 +66,7 @@ const HowItWorks = () => {
             >
               <div className="mb-4 flex justify-center">{step.icon}</div>
               <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-              <p className="text-gray-600">{step.description}</p>
+              <p className="text-base-content/70">{step.description}</p>
             </motion.div>
           ))}
         </div>

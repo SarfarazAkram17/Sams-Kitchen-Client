@@ -27,6 +27,7 @@ const Register = () => {
     formState: { errors },
     clearErrors,
     reset,
+    setValue,
   } = useForm();
 
   useEffect(() => {
@@ -41,10 +42,12 @@ const Register = () => {
       setSelectedFile(file);
       setPreview(URL.createObjectURL(file));
       clearErrors("photo");
+      setValue("photo", file, { shouldValidate: true });
     }
   };
 
   const handleRegister = async (data) => {
+    if (loading) return;
     setLoading(true);
     const { name, email, password } = data;
 
@@ -91,13 +94,13 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col max-w-[1500px] mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
+    <div className="auth-shell flex flex-col max-w-[1500px] mx-auto px-3 sm:px-5 sm:flex-row gap-6 justify-start items-center md:justify-center mb-16">
       <Lottie
-        className="flex-1"
+        className="hidden sm:block flex-1 max-w-xl"
         animationData={registerLottie}
         loop={true}
       ></Lottie>
-      <div className="card w-full flex-1 shadow-xl">
+      <div className="card w-full min-w-0 flex-1 border border-base-300 shadow-xl">
         <div className="card-body">
           <h1 className="text-2xl md:text-3xl font-extrabold">
             Create Your Account
@@ -121,7 +124,7 @@ const Register = () => {
               className="hidden"
             />
             {errors.photo && (
-              <p className="text-red-500 font-semibold text-xs mt-1">
+              <p className="text-error font-semibold text-xs mt-1">
                 Profile image is required.
               </p>
             )}
@@ -136,7 +139,7 @@ const Register = () => {
               placeholder="Enter your name"
             />
             {errors.name && (
-              <p className="text-red-500 font-semibold text-xs mt-1">
+              <p className="text-error font-semibold text-xs mt-1">
                 {errors.name.type === "required"
                   ? "Name is required."
                   : "Name must be at least 6 characters."}
@@ -153,7 +156,7 @@ const Register = () => {
               placeholder="Enter your email"
             />
             {errors.email && (
-              <p className="text-red-500 font-semibold text-xs mt-1">
+              <p className="text-error font-semibold text-xs mt-1">
                 Email is required.
               </p>
             )}
@@ -196,7 +199,7 @@ const Register = () => {
               )}
             </div>
             {errors.password && (
-              <div className="text-red-500 text-xs font-bold mt-1">
+              <div className="text-error text-xs font-bold mt-1">
                 {errors.password.message ||
                   (errors.password.type === "minLength"
                     ? "Password must be at least 6 characters."
@@ -206,7 +209,6 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={loading}
               className="btn btn-primary w-full text-white mt-6"
             >
               {loading ? (

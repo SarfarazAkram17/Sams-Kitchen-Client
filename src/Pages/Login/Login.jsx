@@ -27,6 +27,7 @@ const Login = () => {
   const email = watch("email")?.trim() || "";
 
   const handleLogin = (formData) => {
+    if (loading) return;
     setLoading(true);
 
     const email = formData.email.trim();
@@ -78,13 +79,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col max-w-[1500px] mx-auto px-4 sm:flex-row gap-6 justify-start items-center md:justify-center">
+    <div className="auth-shell flex flex-col max-w-[1500px] mx-auto px-3 sm:px-5 sm:flex-row gap-6 justify-start items-center md:justify-center mb-16">
       <Lottie
-        className="flex-1"
+        className="hidden sm:block flex-1 max-w-xl"
         animationData={loginLottie}
         loop={true}
       ></Lottie>
-      <div className="card w-full flex-1 shadow-xl">
+      <div className="card w-full min-w-0 flex-1 border border-base-300 shadow-xl">
         <div className="card-body">
           <h1 className="text-3xl font-extrabold">Welcome Back</h1>
           <p className="mb-4 text-sm font-semibold">Login with Sam's Kitchen</p>
@@ -92,13 +93,14 @@ const Login = () => {
             <label className="label font-semibold">Email</label>
             <input
               type="email"
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: "Email is required.",
+                pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address." },
+              })}
               className="input placeholder:text-[13px] placeholder:font-bold w-full"
               placeholder="Enter your email"
             />
-            {errors.email?.type === "required" && (
-              <p className="text-red-500 font-bold">Email is required.</p>
-            )}
+            {errors.email && <p className="mt-1 text-sm font-semibold text-error">{errors.email.message}</p>}
 
             <label className="label font-semibold mt-4">Password</label>
             <div className="relative">
@@ -106,37 +108,33 @@ const Login = () => {
                 type={showPassword ? "text" : "password"}
                 className="input placeholder:text-[13px] placeholder:font-bold w-full"
                 {...register("password", {
-                  required: true,
+                  required: "Password is required.",
                 })}
                 placeholder="Enter your password"
               />
               {errors.password?.type === "required" && (
-                <p className="text-red-500 font-bold">Password is required.</p>
+                <p className="mt-1 text-sm font-semibold text-error">{errors.password.message}</p>
               )}
-              {showPassword ? (
-                <FaEyeSlash
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-3 right-3 cursor-pointer z-10"
-                  size={17}
-                />
-              ) : (
-                <FaEye
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-3 right-3 cursor-pointer z-10"
-                  size={17}
-                />
-              )}
+              <button
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+                onClick={() => setShowPassword((visible) => !visible)}
+                className="absolute right-2 top-1/2 z-10 grid size-9 -translate-y-1/2 place-items-center rounded-full text-base-content/65 hover:bg-base-200 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+              >
+                {showPassword ? <FaEyeSlash size={17} /> : <FaEye size={17} />}
+              </button>
             </div>
             <div>
-              <a
+              <button
+                type="button"
                 onClick={handleForgotPassword}
-                className="link link-hover text-gray-600 font-semibold"
+                className="link link-hover rounded-sm text-base-content/70 font-semibold focus-visible:outline-2 focus-visible:outline-primary"
               >
                 Forgot password?
-              </a>
+              </button>
             </div>
             <button
-              disabled={loading}
               className="btn btn-primary text-white mt-6"
             >
               {" "}

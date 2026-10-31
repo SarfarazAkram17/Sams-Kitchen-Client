@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
@@ -9,30 +9,84 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { Pagination } from "antd";
 import {
-  FiPackage,
   FiCheckCircle,
-  FiXCircle,
   FiClock,
-  FiMapPin,
   FiCreditCard,
   FiFileText,
-  FiUserCheck,
+  FiMapPin,
+  FiPackage,
+  FiTruck,
+  FiXCircle,
 } from "react-icons/fi";
-import { LuChefHat } from "react-icons/lu";
-import { MdDeliveryDining } from "react-icons/md";
 import { generateReceipt } from "../../../lib/generateReceipt";
-import { FaMotorcycle } from "react-icons/fa";
+import OrderItemsList from "../OrderItemsList";
+import { formatCurrency, formatDate } from "../../../lib/formatters";
+
+const statusDetails = {
+  pending: {
+    label: "Awaiting payment",
+    icon: FiClock,
+    tone: "border-warning/35 bg-warning/10 text-warning",
+  },
+  confirmed: {
+    label: "Being prepared",
+    icon: FiPackage,
+    tone: "border-info/35 bg-info/10 text-info",
+  },
+  prepared: {
+    label: "Prepared",
+    icon: FiPackage,
+    tone: "border-info/35 bg-info/10 text-info",
+  },
+  assigned: {
+    label: "Rider assigned",
+    icon: FiTruck,
+    tone: "border-secondary/35 bg-secondary/10 text-secondary",
+  },
+  picked: {
+    label: "On the way",
+    icon: FiTruck,
+    tone: "border-info/35 bg-info/10 text-info",
+  },
+  delivered: {
+    label: "Delivered",
+    icon: FiCheckCircle,
+    tone: "border-success/35 bg-success/10 text-success",
+  },
+  cancelled: {
+    label: "Cancelled",
+    icon: FiXCircle,
+    tone: "border-error/35 bg-error/10 text-error",
+  },
+};
+
+const statusStats = [
+  { label: "All", key: "all" },
+  { label: "Pending", key: "pending" },
+  { label: "Preparing", key: "confirmed" },
+  { label: "Prepared", key: "prepared" },
+  { label: "Assigned", key: "assigned" },
+  { label: "On the way", key: "picked" },
+  { label: "Delivered", key: "delivered" },
+  { label: "Cancelled", key: "cancelled" },
+];
+
+const getAddress = (customer) => {
+  const address = customer?.address || {};
+  return [address.street, address.thana, address.district, address.region]
+    .filter(Boolean)
+    .join(", ");
+};
 
 const MyOrders = () => {
   const { userEmail } = useAuth();
   const axiosSecure = useAxiosSecure();
   const { width, height } = useWindowSize();
-
   const [page, setPage] = useState(1);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["myOrders", page],
     queryFn: async () => {
       const res = await axiosSecure.get("/orders", {
@@ -43,116 +97,51 @@ const MyOrders = () => {
     keepPreviousData: true,
   });
 
-  const orders = data?.orders || [];
+  const orders = useMemo(() => data?.orders || [], [data?.orders]);
   const total = data?.total || 0;
+  const allTimeTotal = data?.allTimeTotal ?? total;
 
   useEffect(() => {
-    const paidCount = orders.filter((o) => o.payment_status === "paid").length;
-    if (paidCount === 5 || paidCount === 10 || paidCount === 15) {
-      setShowConfetti(true);
-      setShowCongrats(true);
-      const timer = setTimeout(() => {
-        setShowConfetti(false);
-        setShowCongrats(false);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
+    const paidCount = orders.filter((order) => order.payment_status === "paid")
+      .length;
+    if (![5, 10, 15].includes(paidCount)) return undefined;
+    setShowConfetti(true);
+    setShowCongrats(true);
+    const timer = setTimeout(() => {
+      setShowConfetti(false);
+      setShowCongrats(false);
+    }, 5000);
+    return () => clearTimeout(timer);
   }, [orders]);
 
   const handleCancel = async (id) => {
-    const confirm = await Swal.fire({
-      title: "Are you sure?",
+    const confirmation = await Swal.fire({
+      title: "Cancel this order?",
       text: "This order will be cancelled.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, Cancel",
-      cancelButtonText: "No, Keep it",
+      confirmButtonText: "Yes, cancel",
+      cancelButtonText: "Keep order",
     });
 
-    if (confirm.isConfirmed) {
-      try {
-        await axiosSecure.patch(`/orders/${id}?email=${userEmail}`, {
-          status: "cancelled",
-        });
-        Swal.fire("Cancelled", "Order has been cancelled.", "success");
-        refetch();
-      } catch (error) {
-        Swal.fire("Failed to cancel order.", error.message, "error");
-      }
+    if (!confirmation.isConfirmed) return;
+    try {
+      await axiosSecure.patch(`/orders/${id}?email=${userEmail}`, {
+        status: "cancelled",
+      });
+      Swal.fire("Cancelled", "Order has been cancelled.", "success");
+      refetch();
+    } catch (error) {
+      Swal.fire(
+        "Failed to cancel order",
+        error.response?.data?.message || error.message || "Please try again.",
+        "error",
+      );
     }
   };
 
-  const getStatusIcon = (status) => {
-    const icons = {
-      pending: <FiClock size={15} className="text-orange-500" />,
-      cancelled: <FiXCircle size={15} className="text-red-500" />,
-      not_assigned: <FiPackage size={15} className="text-purple-500" />,
-      assigned: <FiUserCheck size={15} className="text-yellow-600" />,
-      picked: <FaMotorcycle size={15} className="text-blue-500" />,
-      delivered: <FiCheckCircle size={15} className="text-green-500" />,
-    };
-    return icons[status] || <FiPackage className="text-gray-500" />;
-  };
-
-  const getStatusColor = (status) => {
-    const colors = {
-      pending: "bg-orange-100 text-orange-800 border-orange-200",
-      cancelled: "bg-red-100 text-red-800 border-red-200",
-      not_assigned: "bg-purple-100 text-purple-800 border-purple-200",
-      assigned: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      picked: "bg-blue-100 text-blue-800 border-blue-200",
-      delivered: "bg-green-100 text-green-800 border-green-200",
-    };
-    return colors[status] || "bg-gray-100 text-gray-800 border-gray-200";
-  };
-
-  const getStatusLabel = (status) => {
-    const labels = {
-      pending: "Pending Payment",
-      cancelled: "Cancelled",
-      not_assigned: "Preparing",
-      assigned: "Rider Assigned",
-      picked: "On the Way",
-      delivered: "Delivered",
-    };
-    return labels[status] || status;
-  };
-
-  const getPaymentColor = (status) => {
-    return status === "paid"
-      ? "bg-green-100 text-green-700"
-      : "bg-orange-100 text-orange-700";
-  };
-
-  const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const formatCurrency = (amt) =>
-    `৳${Number(amt).toLocaleString("en-BD", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-
-  // Status order for stats display
-  const statusStats = [
-    { label: "All", key: "all" },
-    { label: "Pending", key: "pending" },
-    { label: "Preparing", key: "not_assigned" },
-    { label: "Assigned", key: "assigned" },
-    { label: "On The Way", key: "picked" },
-    { label: "Delivered", key: "delivered" },
-    { label: "Cancelled", key: "cancelled" },
-  ];
-
   return (
-    <div className="px-4 pb-10">
+    <div className="w-full min-w-0 pb-10">
       {showConfetti && (
         <Confetti
           width={width}
@@ -162,345 +151,362 @@ const MyOrders = () => {
         />
       )}
       {showCongrats && (
-        <div className="fixed top-1/4 left-1/2 space-y-5 -translate-x-1/2 bg-white border border-primary shadow-lg rounded-xl px-6 py-4 z-50 text-center animate-bounce">
-          <h2 className="text-3xl font-bold text-green-600">
-            🎉 Congratulations! 🎉
+        <div className="fixed left-1/2 top-1/4 z-50 max-w-[calc(100vw-1.5rem)] -translate-x-1/2 space-y-2 rounded-2xl border border-primary/30 bg-base-100 px-5 py-4 text-center shadow-lg sm:px-8">
+          <h2 className="font-display text-2xl text-primary sm:text-3xl">
+            Thank you for choosing Sam’s Kitchen.
           </h2>
-          <p className="text-gray-700 lg">
-            You've completed{" "}
-            {orders.filter((o) => o.payment_status === "paid").length} paid
-            orders!
+          <p className="text-sm text-base-content/70">
+            You’ve completed{" "}
+            {orders.filter((order) => order.payment_status === "paid").length}{" "}
+            paid orders.
           </p>
         </div>
       )}
 
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-primary mb-1">
-          My Orders
-        </h1>
-        <p className="text-gray-600">Track and manage your food orders</p>
-      </div>
+      <header className="mb-6 flex flex-col gap-3 border-b border-base-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">
+            Your Sam’s Kitchen account
+          </p>
+          <h1 className="font-display mt-2 text-4xl text-base-content sm:text-5xl">
+            My orders
+          </h1>
+          <p className="mt-2 text-sm text-base-content/70">
+            Follow each delivery from checkout to your door.
+          </p>
+        </div>
+        {!isLoading && !isError && allTimeTotal > 0 && (
+          <p className="text-sm font-medium text-base-content/65">
+            {allTimeTotal} {allTimeTotal === 1 ? "order" : "orders"} in your history
+          </p>
+        )}
+      </header>
 
       {isLoading ? (
         <Loading />
-      ) : orders.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm p-12 text-center">
-          <FiPackage className="mx-auto text-gray-300 mb-4 text-6xl" />
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            No orders yet
-          </h3>
-          <p className="text-gray-500">Start ordering delicious food!</p>
+      ) : isError ? (
+        <div
+          className="rounded-2xl border border-error/30 bg-error/10 p-6 text-center"
+          role="alert"
+        >
+          <h2 className="font-bold text-base-content">
+            Orders could not be loaded
+          </h2>
+          <p className="mt-1 text-sm text-base-content/70">
+            Your order history is still safe. Try again in a moment.
+          </p>
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="btn btn-sm btn-primary mt-4"
+          >
+            Try again
+          </button>
         </div>
+      ) : orders.length === 0 ? (
+        <section className="rounded-3xl border border-base-300 bg-base-100 px-6 py-14 text-center shadow-sm">
+          <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <FiPackage size={25} aria-hidden="true" />
+          </span>
+          <h2 className="mt-5 font-display text-3xl text-base-content">
+            Your table is waiting.
+          </h2>
+          <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-base-content/70">
+            Once you place an order, you’ll find its full journey here.
+          </p>
+        </section>
       ) : (
         <>
-          {/* Stats */}
-          <div className="bg-white rounded-xl shadow-md p-4 mb-6 overflow-x-auto">
-            <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2.5">
-              {statusStats.map(({ label, key }) => (
-                <div
-                  key={key}
-                  className="text-center p-2 rounded-lg bg-base-200 min-w-[70px]"
-                >
-                  <p className="text-xl md:text-2xl font-bold text-gray-900">
-                    {key === "all"
-                      ? orders.length
-                      : orders.filter((o) => o.status === key).length}
-                  </p>
-                  <p className="text-xs text-gray-600">{label}</p>
-                </div>
-              ))}
+          <section
+            className="mb-6 overflow-x-auto rounded-2xl border border-base-300 bg-base-100 p-3 shadow-sm"
+            aria-label="Order counts by status"
+          >
+            <div className="grid min-w-[650px] grid-cols-8 gap-2">
+              {statusStats.map(({ label, key }) => {
+                const count =
+                  key === "all"
+                    ? allTimeTotal
+                    : data?.statusCounts?.[key] || 0;
+                return (
+                  <div
+                    key={key}
+                    className="rounded-xl bg-base-200/75 px-2 py-3 text-center"
+                  >
+                    <p className="text-xl font-bold tabular-nums text-base-content">
+                      {count}
+                    </p>
+                    <p className="mt-0.5 text-[11px] font-medium text-base-content/65">
+                      {label}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-          </div>
+          </section>
 
-          {/* Orders List */}
           <div className="space-y-4">
-            {orders.map((order) => (
-              <div
-                key={order._id}
-                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
-              >
-                {/* Order Header */}
-                <div className="p-4 border-b bg-base-200">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-4">
+            {orders.map((order) => {
+              const status = statusDetails[order.status] || {
+                label: order.status || "Order update",
+                icon: FiPackage,
+                tone: "border-base-300 bg-base-200 text-base-content",
+              };
+              const StatusIcon = status.icon;
+              const items = order.items || [];
+              const itemQuantity = items.reduce(
+                (sum, item) => sum + (Number(item.quantity) || 1),
+                0,
+              );
+              const customer = order.customer || {};
+              const canPay =
+                order.status === "pending" && order.payment_status !== "paid";
+              const canCancel =
+                order.status === "pending" && order.payment_status !== "paid";
+              const canDownloadReceipt =
+                order.status !== "cancelled" && order.status !== "pending";
+
+              return (
+                <article
+                  key={order._id}
+                  className="overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-sm transition-shadow hover:shadow-md"
+                >
+                  <header className="flex flex-col gap-4 border-b border-base-300 bg-base-200/45 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                    <div className="flex min-w-0 flex-wrap items-center gap-x-5 gap-y-3">
                       <div>
-                        <p className="text-xs text-gray-500">Order ID</p>
-                        <p className="font-mono text-sm font-semibold text-gray-900">
-                          {order._id.toUpperCase()}
+                        <p className="text-[10px] font-bold uppercase tracking-[.15em] text-base-content/55">
+                          Order
+                        </p>
+                        <p className="mt-1 break-all font-mono text-sm font-semibold text-base-content">
+                          {String(order._id || "").toUpperCase()}
                         </p>
                       </div>
-                      <div className="hidden sm:block w-px h-8 bg-gray-300" />
+                      <span className="hidden h-8 w-px bg-base-300 sm:block" />
                       <div>
-                        <p className="text-xs text-gray-500">Order Time</p>
-                        <p className="text-sm text-gray-700">
+                        <p className="text-[10px] font-bold uppercase tracking-[.15em] text-base-content/55">
+                          Placed
+                        </p>
+                        <p className="mt-1 text-sm text-base-content/80">
                           {formatDate(order.placedAt)}
                         </p>
                       </div>
-                      <div className="hidden sm:block w-px h-8 bg-gray-300" />
+                      <span className="hidden h-8 w-px bg-base-300 sm:block" />
                       <div>
-                        <p className="text-xs text-gray-500">Total</p>
-                        <p className="text-sm font-bold text-green-600">
+                        <p className="text-[10px] font-bold uppercase tracking-[.15em] text-base-content/55">
+                          Total
+                        </p>
+                        <p className="mt-1 text-sm font-bold text-primary">
                           {formatCurrency(order.total)}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${getStatusColor(
-                          order.status
-                        )}`}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold ${status.tone}`}
                       >
-                        {getStatusIcon(order.status)}
-                        {getStatusLabel(order.status)}
+                        <StatusIcon size={14} aria-hidden="true" />
+                        {status.label}
                       </span>
                       {order.status !== "cancelled" && (
                         <span
-                          className={`px-3 py-1.5 rounded-full text-xs font-medium ${getPaymentColor(
-                            order.payment_status
-                          )}`}
+                          className={`inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                            order.payment_status === "paid"
+                              ? "bg-success/10 text-success"
+                              : "bg-warning/10 text-warning"
+                          }`}
                         >
-                          {order.payment_status === "paid" ? "PAID" : "UNPAID"}
+                          <FiCreditCard size={13} aria-hidden="true" />
+                          {order.payment_status === "paid" ? "Paid" : "Unpaid"}
+                        </span>
+                      )}
+                    </div>
+                  </header>
+
+                  <div className="p-4 sm:p-5">
+                    <section className="min-w-0">
+                      <div className="mb-3 flex items-center gap-2">
+                        <FiPackage className="text-primary" aria-hidden="true" />
+                        <h2 className="text-sm font-bold text-base-content">
+                          Your selection
+                        </h2>
+                        <span className="text-xs text-base-content/60">
+                          {itemQuantity} {itemQuantity === 1 ? "item" : "items"}
+                        </span>
+                      </div>
+                      <div className="overflow-hidden rounded-2xl border border-base-300 bg-base-100">
+                        <OrderItemsList items={items} />
+                      </div>
+                      <div className="mt-3 space-y-1.5 border-t border-dashed border-base-300 pt-3 text-sm">
+                        <div className="flex justify-between text-base-content/70">
+                          <span>Subtotal</span>
+                          <span>{formatCurrency(order.subtotal)}</span>
+                        </div>
+                        <div className="flex justify-between text-base-content/70">
+                          <span>Delivery</span>
+                          <span>
+                            {Number(order.deliveryCharge) === 0
+                              ? "Free"
+                              : formatCurrency(order.deliveryCharge)}
+                          </span>
+                        </div>
+                        {Number(order.discount) > 0 && (
+                          <div className="flex justify-between text-success">
+                            <span>Discount</span>
+                            <span>−{formatCurrency(order.discount)}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between border-t border-base-300 pt-2 text-base font-bold text-base-content">
+                          <span>Total</span>
+                          <span className="text-primary">
+                            {formatCurrency(order.total)}
+                          </span>
+                        </div>
+                      </div>
+                    </section>
+
+                    <section className="mt-5 grid gap-3 md:grid-cols-2">
+                      <div className="rounded-2xl border border-base-300 bg-base-200/65 p-3.5">
+                        <div className="flex items-start gap-2.5">
+                          <FiMapPin
+                            className="mt-0.5 shrink-0 text-info"
+                            aria-hidden="true"
+                          />
+                          <div className="min-w-0">
+                            <h3 className="text-xs font-bold uppercase tracking-wide text-base-content/60">
+                              Delivery address
+                            </h3>
+                            <p className="mt-1 text-sm font-semibold text-base-content">
+                              {[customer.firstName, customer.lastName]
+                                .filter(Boolean)
+                                .join(" ") || "Customer"}
+                            </p>
+                            <p className="mt-1 text-xs leading-5 text-base-content/70 break-words">
+                              {customer.phone || "Phone not provided"}
+                              {getAddress(customer) && ` · ${getAddress(customer)}`}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-2xl border border-base-300 bg-base-200/65 p-3.5">
+                        <div className="flex items-start gap-2.5">
+                          {order.assigned_rider_name ? (
+                            <FiTruck
+                              className="mt-0.5 shrink-0 text-secondary"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            <FiClock
+                              className="mt-0.5 shrink-0 text-info"
+                              aria-hidden="true"
+                            />
+                          )}
+                          <div>
+                            <h3 className="text-xs font-bold uppercase tracking-wide text-base-content/60">
+                              {order.assigned_rider_name
+                                ? "Delivery rider"
+                                : "Payment info"}
+                            </h3>
+                            <p className="mt-1 text-sm font-semibold text-base-content">
+                              {order.assigned_rider_name ||
+                                (order.payment_status === "paid"
+                                  ? "Payment completed"
+                                  : "Payment pending")}
+                            </p>
+                            {order.paidAt && (
+                              <p className="mt-1 text-xs text-base-content/65">
+                                Paid: {formatDate(order.paidAt)}
+                              </p>
+                            )}
+                            {order.assignedAt && (
+                              <p className="mt-1 text-xs text-base-content/65">
+                                Assigned: {formatDate(order.assignedAt)}
+                              </p>
+                            )}
+                            {order.pickedAt && (
+                              <p className="mt-1 text-xs text-base-content/65">
+                                Picked: {formatDate(order.pickedAt)}
+                              </p>
+                            )}
+                            {order.deliveredAt && (
+                              <p className="mt-1 text-xs text-success">
+                                Delivered: {formatDate(order.deliveredAt)}
+                              </p>
+                            )}
+                            {order.status === "confirmed" && (
+                              <p className="mt-1 text-xs text-info">
+                                Your order is being prepared
+                              </p>
+                            )}
+                            {order.status === "prepared" && (
+                              <p className="mt-1 text-xs text-info">
+                                Your food is ready and waiting for a rider
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <div className="mt-4 flex flex-wrap gap-2 border-t border-base-300 pt-4">
+                      {order.status !== "cancelled" && (
+                        <Link
+                          to={`/dashboard/order-tracking/${order._id}`}
+                          className="btn btn-sm min-h-10 border border-base-300 bg-base-100 text-base-content hover:border-primary hover:text-primary"
+                        >
+                          Track order
+                        </Link>
+                      )}
+                      {canPay && (
+                        <Link
+                          to={`/dashboard/payment/${order._id}`}
+                          className="btn btn-sm min-h-10 btn-primary"
+                        >
+                          Pay now
+                        </Link>
+                      )}
+                      {canCancel && (
+                        <button
+                          type="button"
+                          className="btn btn-sm min-h-10 border border-error/35 bg-error/10 text-error hover:border-error hover:bg-error/15"
+                          onClick={() => handleCancel(order._id)}
+                        >
+                          Cancel order
+                        </button>
+                      )}
+                      {canDownloadReceipt && (
+                        <button
+                          type="button"
+                          onClick={() => generateReceipt(order)}
+                          className="btn btn-sm min-h-10 border border-primary/25 bg-primary/10 text-primary hover:border-primary/45 hover:bg-primary/15"
+                        >
+                          <FiFileText aria-hidden="true" />
+                          Download receipt
+                        </button>
+                      )}
+                      {order.status === "cancelled" && (
+                        <span className="self-center text-sm font-medium text-error">
+                          This order was cancelled
                         </span>
                       )}
                     </div>
                   </div>
-                </div>
-
-                {/* Order Items */}
-                <div className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <LuChefHat className="text-primary text-lg" />
-                    <h3 className="font-semibold text-gray-900">Order Items</h3>
-                    <span className="text-xs text-gray-500">
-                      (
-                      {order.items.reduce((totalQuantity, item) => {
-                        return item.quantity + totalQuantity;
-                      }, 0)}{" "}
-                      {order.items.reduce((totalQuantity, item) => {
-                        return item.quantity + totalQuantity;
-                      }, 0) === 1
-                        ? "item"
-                        : "items"}
-                      )
-                    </span>
-                  </div>
-
-                  <div className="space-y-2">
-                    {order.items.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-3 p-3 bg-base-200 rounded-lg hover:bg-base-300 transition-colors"
-                      >
-                        {item.image && (
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-18 h-14 md:w-20 md:h-16 object-cover rounded-lg flex-shrink-0"
-                          />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h4 title={item.name} className="font-medium text-gray-900 text-sm truncate">
-                            {item.name}
-                          </h4>
-                          <div className="flex items-center gap-2 text-xs text-gray-600 mt-1 flex-wrap">
-                            <span>
-                              {formatCurrency(item.price)} × {item.quantity}
-                            </span>
-                            {item.discount > 0 && (
-                              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full text-[10px]">
-                                {item.discount}% OFF
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <p className="font-semibold text-gray-900 flex-shrink-0 text-sm">
-                          {formatCurrency(item.subtotal)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Order Summary */}
-                  <div className="mt-4 pt-3 border-t border-dashed space-y-1 text-sm">
-                    <div className="flex justify-between text-gray-600">
-                      <span>Subtotal</span>
-                      <span>{formatCurrency(order.subtotal)}</span>
-                    </div>
-                    <div className="flex justify-between text-gray-600">
-                      <span>Delivery</span>
-                      <span
-                        className={
-                          Number(order.deliveryCharge) === 0
-                            ? "text-green-600 font-medium"
-                            : ""
-                        }
-                      >
-                        {Number(order.deliveryCharge) === 0
-                          ? "Free"
-                          : formatCurrency(order.deliveryCharge)}
-                      </span>
-                    </div>
-                    {Number(order.discount) > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Discount</span>
-                        <span className="text-orange-600">-{formatCurrency(order.discount)}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between font-bold text-gray-900 pt-2 border-t">
-                      <span>Total</span>
-                      <span className="text-green-600">
-                        {formatCurrency(order.total)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Info */}
-                <div className="p-4 pt-0">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {/* Delivery Address */}
-                    <div className="bg-blue-50 p-3 rounded-lg">
-                      <div className="flex items-start gap-2">
-                        <FiMapPin className="text-blue-600 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-xs font-semibold text-blue-900 mb-1">
-                            Delivery Address
-                          </p>
-                          <p className="text-sm text-gray-700 font-medium">
-                            {order.customer.firstName} {order.customer.lastName}
-                          </p>
-                          <p className="text-xs text-gray-600">
-                            {order.customer.phone}
-                          </p>
-                          <p className="text-xs text-gray-600">
-                            {[
-                              order.customer.address?.street,
-                              order.customer.address?.thana,
-                              order.customer.address?.district,
-                              order.customer.address?.region,
-                            ]
-                              .filter(Boolean)
-                              .join(", ")}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Rider/Payment Info */}
-                    <div
-                      className={`p-3 rounded-lg ${
-                        order.assigned_rider_name
-                          ? "bg-amber-50"
-                          : "bg-green-50"
-                      }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        {order.assigned_rider_name ? (
-                          <>
-                            <FaMotorcycle className="text-amber-600 mt-0.5 flex-shrink-0 text-lg" />
-                            <div>
-                              <p className="text-xs font-semibold text-amber-900 mb-1">
-                                Delivery Rider
-                              </p>
-                              <p className="text-sm text-gray-700 font-medium">
-                                {order.assigned_rider_name}
-                              </p>
-                              {order.assignedAt && (
-                                <p className="text-xs text-gray-600">
-                                  Assigned: {formatDate(order.assignedAt)}
-                                </p>
-                              )}
-                              {order.pickedAt && (
-                                <p className="text-xs text-gray-600">
-                                  Picked: {formatDate(order.pickedAt)}
-                                </p>
-                              )}
-                              {order.deliveredAt && (
-                                <p className="text-xs text-green-600 font-medium">
-                                  Delivered: {formatDate(order.deliveredAt)}
-                                </p>
-                              )}
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <FiCreditCard className="text-green-600 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <p className="text-xs font-semibold text-green-900 mb-1">
-                                Payment Info
-                              </p>
-                              <p className="text-sm text-gray-700 font-medium">
-                                {order.payment_status === "paid"
-                                  ? "Payment Completed"
-                                  : "Payment Pending"}
-                              </p>
-                              {order.paidAt && (
-                                <p className="text-xs text-gray-600">
-                                  Paid: {formatDate(order.paidAt)}
-                                </p>
-                              )}
-                              {order.status === "not_assigned" && (
-                                <p className="text-xs text-purple-600 mt-1">
-                                  Your order is being prepared
-                                </p>
-                              )}
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {order.status === "pending" && (
-                      <>
-                        <Link to={`/dashboard/payment/${order._id}`}>
-                          <button className="btn btn-sm btn-primary text-white">
-                            Pay Now
-                          </button>
-                        </Link>
-                        <button
-                          className="btn btn-sm btn-error text-white"
-                          onClick={() => handleCancel(order._id)}
-                        >
-                          Cancel Order
-                        </button>
-                      </>
-                    )}
-                    {order.status === "cancelled" && (
-                      <span className="text-sm text-red-500 font-medium">
-                        This order was cancelled
-                      </span>
-                    )}
-                    {order.status !== "cancelled" &&
-                      order.status !== "pending" && (
-                        <button
-                          onClick={() => generateReceipt(order)}
-                          className="btn btn-sm btn-info text-white"
-                        >
-                          <FiFileText className="mr-1" />
-                          Download Receipt
-                        </button>
-                      )}
-                  </div>
-                </div>
-              </div>
-            ))}
+                </article>
+              );
+            })}
           </div>
 
-          {/* Pagination */}
-          <div className="flex justify-center mt-10">
-            <Pagination
-              current={page}
-              align="center"
-              total={total}
-              pageSize={10}
-              showSizeChanger={false}
-              onChange={(newPage) => setPage(newPage)}
-            />
-          </div>
+          {total > 10 && (
+            <div className="mt-8 flex justify-center">
+              <Pagination
+                current={page}
+                align="center"
+                total={total}
+                pageSize={10}
+                showSizeChanger={false}
+                onChange={setPage}
+              />
+            </div>
+          )}
         </>
       )}
     </div>

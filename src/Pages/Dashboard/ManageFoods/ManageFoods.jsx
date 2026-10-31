@@ -16,7 +16,7 @@ const ManageFoods = () => {
   const [page, setPage] = useState(1);
 
   // Fetch foods
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["foods", page],
     queryFn: async () => {
       const res = await axiosInstance.get("/foods", {
@@ -63,7 +63,12 @@ const ManageFoods = () => {
         Manage Foods
       </h2>
 
-      {foods.length === 0 ? (
+      {isError ? (
+        <div className="rounded-2xl border border-error/30 bg-error/10 p-6 text-center" role="alert">
+          <p className="font-semibold">Food menu could not be loaded.</p>
+          <button type="button" onClick={() => refetch()} className="btn btn-sm btn-primary mt-4">Try again</button>
+        </div>
+      ) : foods.length === 0 ? (
         <p className="text-center text-lg text-gray-600">
           No foods available yet.
         </p>
@@ -74,7 +79,7 @@ const ManageFoods = () => {
             {foods.map((food) => (
               <div
                 key={food._id}
-                className="border h-full rounded-xl overflow-hidden shadow hover:shadow-lg transition duration-500"
+                className="surface-panel h-full rounded-2xl overflow-hidden shadow hover:shadow-lg transition duration-300"
               >
                 <img
                   src={food.image}
@@ -113,11 +118,9 @@ const ManageFoods = () => {
                   </p>
 
                   <div className="flex justify-between items-center mt-4">
-                    <div className="flex gap-2">
-                      <Link to={`/dashboard/editFood/${food._id}`}>
-                        <button className="btn btn-sm btn-outline btn-primary hover:text-white">
-                          <FiEdit3 className="mr-1" /> Edit
-                        </button>
+                    <div className="flex flex-wrap gap-2">
+                      <Link to={`/dashboard/editFood/${food._id}`} className="btn btn-sm btn-outline btn-primary">
+                        <FiEdit3 className="mr-1" /> Edit
                       </Link>
                       <button
                         onClick={() => handleDelete(food._id)}

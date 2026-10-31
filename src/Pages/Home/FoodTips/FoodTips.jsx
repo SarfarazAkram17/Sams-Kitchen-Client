@@ -1,28 +1,27 @@
-import React from "react";
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"; // eslint-disable-line no-unused-vars
 import { FaSnowflake, FaFire, FaLeaf, FaClock } from "react-icons/fa";
 
 const foodTips = [
   {
-    icon: <FaSnowflake className="text-3xl text-blue-500" />,
+    icon: <FaSnowflake className="text-3xl text-info" />,
     title: "Proper Storage",
     description:
       "Store meals in airtight containers and refrigerate within 2 hours to maintain freshness and prevent spoilage.",
   },
   {
-    icon: <FaFire className="text-3xl text-red-500" />,
+    icon: <FaFire className="text-3xl text-primary" />,
     title: "Reheat Safely",
     description:
       "Reheat your food evenly to at least 165°F (74°C) to ensure safety and preserve taste.",
   },
   {
-    icon: <FaLeaf className="text-4xl text-green-500" />,
+    icon: <FaLeaf className="text-4xl text-success" />,
     title: "Use Fresh Ingredients",
     description:
       "We prepare all meals using fresh, high-quality ingredients for the best flavor and nutrition.",
   },
   {
-    icon: <FaClock className="text-3xl text-yellow-500" />,
+    icon: <FaClock className="text-3xl text-secondary" />,
     title: "Consume Timely",
     description:
       "Enjoy your cooked foods within 3-4 days for optimal taste and safety.",
@@ -31,8 +30,8 @@ const foodTips = [
 
 const FoodTips = () => {
   return (
-    <section className="bg-gray-50 py-16 px-4">
-      <div className="max-w-[1500px] mx-auto">
+    <section className="max-w-7xl mx-auto">
+      <div className="max-w-full mx-auto">
         <motion.h2
           className="text-center text-3xl md:text-4xl font-bold text-primary mb-6"
           initial={{ opacity: 0, y: -40 }}
@@ -44,7 +43,7 @@ const FoodTips = () => {
         </motion.h2>
 
         <motion.p
-          className="text-center text-sm max-w-3xl mx-auto text-gray-600 mb-10"
+          className="text-center text-sm max-w-3xl mx-auto text-base-content/70 mb-10 leading-6"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.2 }}
@@ -59,7 +58,7 @@ const FoodTips = () => {
           {foodTips.map((tip, index) => (
             <motion.div
               key={index}
-              className="rounded-xl border-2 border-gray-200 hover:border-secondary shadow-md hover:shadow-xl transition-shadow transform-border transition-border duration-300 p-6 bg-white"
+              className="rounded-2xl border border-base-300 hover:border-secondary shadow-sm hover:shadow-xl transition-shadow transform-border transition-border duration-300 p-6 bg-base-100"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
@@ -71,7 +70,7 @@ const FoodTips = () => {
                   {tip.title}
                 </h3>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-base-content/70 text-sm leading-relaxed">
                 {tip.description}
               </p>
             </motion.div>

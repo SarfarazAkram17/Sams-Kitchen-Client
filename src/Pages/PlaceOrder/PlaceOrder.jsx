@@ -54,14 +54,14 @@ const PlaceOrder = () => {
 
   const discount = cartItems.reduce((sum, item) => {
     const foodItem = foods?.find((food) => food._id === item.foodId);
-    if (!foodItem || foodItem?.discount <= 0) return sum;
+    if (!foodItem || foodItem.discount <= 0) return sum;
     const discountAmount =
-      ((foodItem?.price * foodItem?.discount) / 100) * item.quantity;
+      ((foodItem.price * foodItem.discount) / 100) * item.quantity;
     return sum + discountAmount;
   }, 0);
 
   let deliveryCharge =
-    cartItems?.length > 1 ? 50 : cartItems?.length === 1 ? 30 : 0;
+    cartItems.length > 1 ? 50 : cartItems.length === 1 ? 30 : 0;
 
   if (subtotal + deliveryCharge - discount >= 1000) {
     deliveryCharge = 0;
@@ -70,7 +70,7 @@ const PlaceOrder = () => {
   const total = subtotal + deliveryCharge - discount;
 
   return (
-    <div className="flex max-w-[1500px] mx-auto px-4 flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8">
+    <div className="flex max-w-[1500px] mx-auto px-4 flex-col-reverse lg:flex-row justify-start lg:justify-center items-start gap-8 mb-16">
       {/* Left Section: Personal & Delivery Details Form */}
       <div className="lg:w-[62%] w-full">
         <PlaceOrderForm cartItems={cartItems} foods={foods}></PlaceOrderForm>
@@ -95,8 +95,8 @@ const PlaceOrder = () => {
 
         <div className="px-4 mb-6">
           <div className="space-y-2">
-            {cartItems?.length > 0 ? (
-              cartItems?.map((item) => {
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => {
                 const foodItem = foods?.find(
                   (food) => food._id === item.foodId
                 );
@@ -133,7 +133,7 @@ const PlaceOrder = () => {
                         {foodItem?.discount > 0 ? (
                           <div>
                             <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-gray-400">
-                              ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
+                              ৳ {(foodItem?.price * item.quantity).toFixed(2)}
                             </span>
                             <span className="text-green-600 whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}

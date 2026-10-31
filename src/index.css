@@ -1,20 +1,132 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
-
 @plugin "daisyui/theme" {
   name: "light";
-
-  --color-primary: #d62828;
-  --color-secondary: #bf5b1f;
-  --color-warning: #ea580c;
-  --color-info: #2563eb;
+  default: false;
+  color-scheme: light;
+  --color-primary: #a7472e;
+  --color-primary-content: #fff7ee;
+  --color-secondary: #bd9147;
+  --color-secondary-content: #241c10;
+  --color-accent: #617d68;
+  --color-accent-content: #f5fff5;
+  --color-neutral: #e5ddcf;
+  --color-neutral-content: #302a21;
+  --color-base-100: #f6f2e9;
+  --color-base-200: #ebe5d8;
+  --color-base-300: #d8cfbf;
+  --color-base-content: #292a23;
+  --color-info: #547786;
+  --color-success: #4f755d;
+  --color-warning: #a87832;
+  --color-error: #a8493d;
+}
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: true;
+  color-scheme: dark;
+  --color-primary: #e48261;
+  --color-primary-content: #24140f;
+  --color-secondary: #d6b05e;
+  --color-secondary-content: #20190c;
+  --color-accent: #91aa91;
+  --color-accent-content: #132018;
+  --color-neutral: #292c25;
+  --color-neutral-content: #eee9de;
+  --color-base-100: #171a16;
+  --color-base-200: #20231e;
+  --color-base-300: #33372f;
+  --color-base-content: #f1ecdf;
+  --color-info: #9ab9c5;
+  --color-success: #9bbc91;
+  --color-warning: #e0b267;
+  --color-error: #ed9382;
 }
 
-.active {
-  background-color: #d6282820;
-  color: #d62828;
-  font-weight: bold;
+:root {
+  font-family: "DM Sans", sans-serif;
+  color-scheme: dark;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "DM Sans", sans-serif;
+  --ink: var(--color-base-content);
+  --muted: color-mix(in srgb, var(--color-base-content) 86%, var(--color-base-100));
+  --line: var(--color-base-300);
+  --surface-raised: var(--color-base-200);
+  --surface-sunken: var(--color-base-100);
+  --accent-soft: color-mix(in srgb, var(--color-primary) 14%, var(--color-base-100));
+  --surface-glass: color-mix(in srgb, var(--color-base-100) 88%, transparent);
+  --shadow-soft: 0 18px 45px -32px color-mix(in srgb, #090b08 70%, transparent);
+  --shadow-card: 0 14px 34px -25px color-mix(in srgb, #080a07 76%, transparent);
+  --chart-1: #e48261;
+  --chart-2: #d6b05e;
+  --chart-3: #91aa91;
+  --chart-4: #9ab9c5;
+  --chart-6: #7668b5;
+  --status-pending: #e0b267;
+  --status-confirmed: #7fb4d4;
+  --status-prepared: #5fd0bd;
+  --status-assigned: #a99bf0;
+  --status-picked: #f09a5a;
+  --status-delivered: #8fcf8a;
+  --status-cancelled: #ef7d72;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ink: var(--color-base-content);
+  --muted: color-mix(in srgb, var(--color-base-content) 86%, var(--color-base-100));
+  --line: var(--color-base-300);
+  --surface-raised: var(--color-base-200);
+  --surface-sunken: var(--color-base-100);
+  --accent-soft: color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100));
+  --chart-1: #a7472e;
+  --chart-2: #8c661e;
+  --chart-3: #426d4c;
+  --chart-4: #41697a;
+  --chart-6: #a69ae8;
+  --status-pending: #9a6a1c;
+  --status-confirmed: #2f6f8f;
+  --status-prepared: #1f8a7a;
+  --status-assigned: #6b57c2;
+  --status-picked: #c2571a;
+  --status-delivered: #3d7a4f;
+  --status-cancelled: #b23a3a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  background: var(--color-base-100);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 a,
@@ -24,11 +136,49 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Inter", sans-serif;
+  font-family: "DM Sans", sans-serif;
 }
 
-body {
-  font-family: "Poppins", sans-serif;
+h1,
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+::selection {
+  color: #241714;
+  background: #f08061;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  color: var(--color-base-content);
+  background-color: var(--color-base-100);
+  border-color: var(--color-base-300);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--color-base-content) 50%, transparent);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.65;
+}
+
+.active {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  font-weight: 700;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -38,4 +188,1032 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.select__control {
+  min-height: 44px !important;
+  border-color: var(--color-base-300) !important;
+  background-color: var(--color-base-100) !important;
+  box-shadow: none !important;
+}
+
+.select__control:hover,
+.select__control--is-focused {
+  border-color: var(--color-primary) !important;
+}
+
+.select__menu,
+.select__menu-list {
+  color: var(--color-base-content) !important;
+  background-color: var(--color-base-200) !important;
+}
+
+.select__option {
+  color: var(--color-base-content) !important;
+  background-color: transparent !important;
+}
+
+.select__option--is-focused {
+  background-color: color-mix(in srgb, var(--color-primary) 16%, var(--color-base-200)) !important;
+}
+
+.select__option--is-selected {
+  color: var(--color-primary-content) !important;
+  background-color: var(--color-primary) !important;
+}
+
+.select__single-value,
+.select__input-container,
+.select__placeholder {
+  color: var(--color-base-content) !important;
+}
+
+.select__indicator,
+.select__indicator-separator {
+  color: color-mix(in srgb, var(--color-base-content) 68%, transparent) !important;
+}
+
+option {
+  color: var(--color-base-content);
+  background-color: var(--color-base-100);
+}
+
+.bg-white {
+  background-color: var(--color-base-100) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--color-base-200) !important;
+}
+
+.bg-green-100 {
+  background-color: var(--color-base-200) !important;
+}
+
+.border-gray-100,
+.border-gray-200,
+.border-gray-300 {
+  border-color: var(--color-base-300) !important;
+}
+
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-gray-700 {
+  color: var(--muted) !important;
+}
+
+.text-gray-900,
+.text-black {
+  color: var(--color-base-content) !important;
+}
+
+.text-green-600,
+.text-green-700 {
+  color: var(--color-success) !important;
+}
+
+.text-red-500,
+.text-red-600 {
+  color: var(--color-error) !important;
+}
+
+.text-blue-600,
+.text-blue-800 {
+  color: var(--color-info) !important;
+}
+
+.btn-primary.text-white,
+.bg-primary.text-white {
+  color: var(--color-primary-content) !important;
+}
+
+.btn-secondary.text-white,
+.bg-secondary.text-white {
+  color: var(--color-secondary-content) !important;
+}
+
+.header-search input {
+  color: inherit !important;
+  background-color: transparent !important;
+}
+
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text {
+  fill: var(--color-base-content) !important;
+  color: var(--color-base-content) !important;
+}
+
+.recharts-default-tooltip {
+  border-color: var(--color-base-300) !important;
+  background-color: var(--color-base-100) !important;
+  color: var(--color-base-content) !important;
+}
+
+.page-enter {
+  animation: page-rise 420ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+.empty-state {
+  animation: empty-state-enter 360ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+.empty-state__icon {
+  animation: empty-state-icon-enter 420ms cubic-bezier(.2,.75,.25,1) 60ms both;
+}
+
+@keyframes page-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes empty-state-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes empty-state-icon-enter {
+  from { opacity: 0; transform: scale(.82); }
+  72% { opacity: 1; transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Sam's Kitchen — night-market editorial system */
+:root {
+  scrollbar-color: var(--color-base-300) var(--color-base-100);
+}
+
+body {
+  letter-spacing: -0.01em;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a[href],
+button:not(:disabled),
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+select:not(:disabled),
+option:not(:disabled),
+summary,
+[role="button"]:not([aria-disabled="true"]),
+[role="link"]:not([aria-disabled="true"]),
+.select__option:not(.select__option--is-disabled),
+.ant-select-item-option:not(.ant-select-item-option-disabled),
+.ant-pagination-item:not(.ant-pagination-item-disabled) {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+[aria-disabled="true"],
+.select__control--is-disabled,
+.ant-btn-disabled,
+.ant-select-item-option-disabled,
+.ant-pagination-item-disabled {
+  cursor: not-allowed;
+}
+
+a,
+button,
+[role="button"],
+[role="link"] {
+  touch-action: manipulation;
+}
+
+.shared-route-link {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--color-base-content) 86%, var(--color-base-100));
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.shared-route-link:hover {
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.shared-route-link[aria-current="page"] {
+  border-color: color-mix(in srgb, var(--color-primary) 26%, var(--color-base-300));
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 13%, var(--color-base-100));
+  font-weight: 700;
+}
+
+.text-base-content\/30,
+.text-base-content\/35 {
+  color: color-mix(in srgb, var(--color-base-content) 92%, var(--color-base-100)) !important;
+}
+
+.text-base-content\/40,
+.text-base-content\/45,
+.text-base-content\/50 {
+  color: color-mix(in srgb, var(--color-base-content) 90%, var(--color-base-100)) !important;
+}
+
+.text-base-content\/55,
+.text-base-content\/60 {
+  color: color-mix(in srgb, var(--color-base-content) 88%, var(--color-base-100)) !important;
+}
+
+.text-base-content\/65,
+.text-base-content\/70,
+.text-base-content\/75 {
+  color: color-mix(in srgb, var(--color-base-content) 85%, var(--color-base-100)) !important;
+}
+
+.dashboard-nav-link-active {
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, var(--color-base-300));
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-base-100));
+}
+
+.dashboard-sidebar {
+  scrollbar-color: var(--color-base-300) transparent;
+}
+
+::selection {
+  color: var(--color-primary-content);
+  background: var(--color-primary);
+}
+
+.navbar,
+.menu {
+  color: var(--color-base-content);
+}
+
+.navbar {
+  background: transparent;
+}
+
+.btn {
+  border-radius: 999px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  box-shadow: none;
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  color: var(--color-primary-content) !important;
+  border-color: var(--color-primary) !important;
+  background: var(--color-primary) !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--color-primary) 84%, var(--color-base-content)) !important;
+  background: color-mix(in srgb, var(--color-primary) 84%, var(--color-base-content)) !important;
+}
+
+.card,
+.modal-box,
+.dropdown-content {
+  border-color: var(--color-base-300);
+  color: var(--color-base-content);
+}
+
+.input,
+.textarea,
+.select,
+.file-input {
+  border-color: var(--color-base-300);
+  color: var(--color-base-content);
+  background: var(--color-base-100);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus,
+.file-input:focus {
+  border-color: var(--color-primary);
+  outline-color: color-mix(in srgb, var(--color-primary) 28%, transparent);
+}
+
+.badge {
+  border-color: var(--color-base-300);
+}
+
+.table {
+  color: var(--color-base-content);
+}
+
+.table :where(thead, tfoot) {
+  color: color-mix(in srgb, var(--color-base-content) 78%, transparent);
+}
+
+.table :where(th, td) {
+  border-color: var(--color-base-300);
+}
+
+.table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-base-100));
+}
+
+/* React Select */
+.select__control {
+  min-height: 46px !important;
+  border-radius: 12px !important;
+  border-color: var(--color-base-300) !important;
+  background-color: var(--color-base-100) !important;
+  box-shadow: none !important;
+}
+
+.select__control:hover,
+.select__control--is-focused {
+  border-color: var(--color-primary) !important;
+}
+
+.select__control--is-focused {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent) !important;
+}
+
+.select__value-container,
+.select__input-container,
+.select__single-value,
+.select__placeholder,
+.select__indicator {
+  color: var(--color-base-content) !important;
+}
+
+.select__placeholder {
+  color: var(--muted) !important;
+  opacity: 1;
+}
+
+.select__menu,
+.select__menu-list {
+  border-color: var(--color-base-300) !important;
+  border-radius: 12px !important;
+  color: var(--color-base-content) !important;
+  background-color: var(--color-base-200) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.select__option {
+  color: var(--color-base-content) !important;
+  background-color: transparent !important;
+}
+
+.select__option--is-focused {
+  background-color: color-mix(in srgb, var(--color-primary) 14%, var(--color-base-200)) !important;
+}
+
+.select__option--is-selected {
+  color: var(--color-primary-content) !important;
+  background-color: var(--color-primary) !important;
+}
+
+.select__indicator-separator {
+  background-color: var(--color-base-300) !important;
+}
+
+.select__multi-value {
+  border-radius: 7px !important;
+  background: color-mix(in srgb, var(--color-primary) 18%, var(--color-base-200)) !important;
+}
+
+.select__multi-value__label,
+.select__multi-value__remove {
+  color: var(--color-base-content) !important;
+}
+
+.select__multi-value__remove:hover {
+  color: var(--color-primary-content) !important;
+  background: var(--color-primary) !important;
+}
+
+/* Ant Design widgets share the live DaisyUI theme rather than Ant's defaults. */
+.ant-pagination,
+.ant-pagination .ant-pagination-item a,
+.ant-pagination .ant-pagination-prev button,
+.ant-pagination .ant-pagination-next button,
+.ant-pagination .ant-pagination-jump-prev,
+.ant-pagination .ant-pagination-jump-next,
+.ant-rate,
+.ant-empty-description,
+.ant-table,
+.ant-table-cell,
+.ant-select,
+.ant-select-selection-item,
+.ant-select-selection-placeholder,
+.ant-picker,
+.ant-input,
+.ant-input-number,
+.ant-modal,
+.ant-dropdown,
+.ant-popover,
+.ant-tooltip {
+  color: var(--color-base-content) !important;
+}
+
+.ant-pagination .ant-pagination-item,
+.ant-pagination .ant-pagination-prev button,
+.ant-pagination .ant-pagination-next button,
+.ant-select-selector,
+.ant-picker,
+.ant-input,
+.ant-input-number,
+.ant-table,
+.ant-modal-content,
+.ant-dropdown-menu,
+.ant-popover-inner,
+.ant-tooltip-inner {
+  border-color: var(--color-base-300) !important;
+  background-color: var(--color-base-100) !important;
+}
+
+.ant-pagination .ant-pagination-item-active {
+  border-color: var(--color-primary) !important;
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-base-100)) !important;
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: var(--color-primary) !important;
+}
+
+.ant-select-dropdown,
+.ant-picker-dropdown .ant-picker-panel-container {
+  color: var(--color-base-content) !important;
+  background: var(--color-base-200) !important;
+}
+
+.ant-select-item,
+.ant-picker-cell,
+.ant-picker-header,
+.ant-picker-content th {
+  color: var(--color-base-content) !important;
+}
+
+.ant-select-item-option-active:not(.ant-select-item-option-disabled),
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+.ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+  color: var(--color-primary-content) !important;
+  background: var(--color-primary) !important;
+}
+
+.ant-table-wrapper .ant-table,
+.ant-table-wrapper .ant-table-container,
+.ant-table-wrapper .ant-table-thead > tr > th,
+.ant-table-wrapper .ant-table-tbody > tr > td {
+  color: var(--color-base-content) !important;
+  border-color: var(--color-base-300) !important;
+  background: var(--color-base-100) !important;
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th {
+  color: color-mix(in srgb, var(--color-base-content) 72%, transparent) !important;
+  background: var(--color-base-200) !important;
+}
+
+.ant-table-wrapper .ant-table-tbody > tr:hover > td {
+  background: color-mix(in srgb, var(--color-primary) 7%, var(--color-base-100)) !important;
+}
+
+.ant-modal-content,
+.ant-popover-inner,
+.ant-dropdown-menu {
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.ant-modal-header,
+.ant-modal-footer {
+  border-color: var(--color-base-300) !important;
+  background: var(--color-base-100) !important;
+}
+
+.ant-modal-title {
+  color: var(--color-base-content) !important;
+}
+
+.ant-empty .ant-empty-description,
+.ant-form-item-explain,
+.ant-form-item-extra {
+  color: var(--muted) !important;
+}
+
+.ant-btn,
+.ant-checkbox-wrapper,
+.ant-radio-wrapper,
+.ant-switch,
+.ant-alert,
+.ant-tag,
+.ant-segmented {
+  color: var(--color-base-content) !important;
+}
+
+.ant-btn-default,
+.ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text) {
+  border-color: var(--color-base-300) !important;
+  color: var(--color-base-content) !important;
+  background: var(--color-base-200) !important;
+}
+
+.ant-btn-default:hover,
+.ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+.ant-btn-primary {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+  background: var(--color-primary) !important;
+}
+
+.ant-input::placeholder,
+.ant-select-selection-placeholder,
+.ant-picker-input > input::placeholder {
+  color: color-mix(in srgb, var(--color-base-content) 48%, transparent) !important;
+}
+
+.ant-spin-dot-item {
+  background: var(--color-primary) !important;
+}
+
+.ant-alert,
+.ant-segmented,
+.ant-input,
+.ant-input-number,
+.ant-picker,
+.ant-select-selector {
+  border-color: var(--color-base-300) !important;
+}
+
+.ant-segmented,
+.ant-segmented-item-selected {
+  background: var(--color-base-200) !important;
+}
+
+.ant-checkbox-inner,
+.ant-radio-inner {
+  border-color: var(--color-base-300) !important;
+  background: var(--color-base-100) !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner,
+.ant-radio-checked .ant-radio-inner {
+  border-color: var(--color-primary) !important;
+  background: var(--color-primary) !important;
+}
+
+.ant-switch {
+  background: var(--color-base-300) !important;
+}
+
+.ant-switch.ant-switch-checked {
+  background: var(--color-primary) !important;
+}
+
+.swal2-popup {
+  border: 1px solid var(--color-base-300) !important;
+  border-radius: 20px !important;
+  color: var(--color-base-content) !important;
+  background: var(--color-base-100) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.swal2-title,
+.swal2-html-container {
+  color: var(--color-base-content) !important;
+}
+
+.swal2-input,
+.swal2-textarea,
+.swal2-select {
+  border-color: var(--color-base-300) !important;
+  color: var(--color-base-content) !important;
+  background: var(--color-base-200) !important;
+}
+
+.swal2-styled.swal2-confirm {
+  color: var(--color-primary-content) !important;
+  background: var(--color-primary) !important;
+}
+
+.swal2-styled.swal2-cancel {
+  color: var(--color-base-content) !important;
+  background: var(--color-base-300) !important;
+}
+
+.ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
+.ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-second {
+  color: color-mix(in srgb, var(--color-base-content) 28%, transparent) !important;
+}
+
+.ant-rate-star-full .ant-rate-star-first,
+.ant-rate-star-full .ant-rate-star-second,
+.ant-rate-star-half .ant-rate-star-first {
+  color: var(--color-secondary) !important;
+}
+
+/* Keep older utility-based screens readable in both theme modes. */
+.bg-white {
+  background-color: var(--color-base-100) !important;
+  color: var(--color-base-content) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: var(--color-base-200) !important;
+  color: var(--color-base-content) !important;
+}
+
+.text-black,
+.text-gray-900,
+.text-gray-700 {
+  color: var(--color-base-content) !important;
+}
+
+.text-gray-600,
+.text-gray-500,
+.text-gray-400 {
+  color: color-mix(in srgb, var(--color-base-content) 72%, transparent) !important;
+}
+
+.border-sky-200,
+.border-sky-300,
+.border-blue-200 {
+  border-color: var(--color-base-300) !important;
+}
+
+.bg-sky-50,
+.bg-blue-50,
+.text-blue-800 {
+  color: var(--color-info) !important;
+}
+
+.bg-sky-50,
+.bg-blue-50 {
+  background: color-mix(in srgb, var(--color-info) 13%, var(--color-base-100)) !important;
+}
+
+.bg-green-100,
+.bg-emerald-50,
+.text-green-700,
+.text-green-600 {
+  color: var(--color-success) !important;
+}
+
+.bg-green-100,
+.bg-emerald-50 {
+  background: color-mix(in srgb, var(--color-success) 13%, var(--color-base-100)) !important;
+}
+
+.bg-red-50,
+.bg-red-200,
+.text-red-600,
+.text-red-500 {
+  color: var(--color-error) !important;
+}
+
+.bg-red-50,
+.bg-red-200 {
+  background: color-mix(in srgb, var(--color-error) 13%, var(--color-base-100)) !important;
+}
+
+.bg-amber-50,
+.text-amber-800 {
+  color: var(--color-warning) !important;
+}
+
+.bg-amber-50 {
+  background: color-mix(in srgb, var(--color-warning) 13%, var(--color-base-100)) !important;
+}
+
+.text-info {
+  color: var(--color-info) !important;
+}
+
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+a[href],
+button:not(:disabled),
+[role="button"],
+[role="link"] {
+  cursor: pointer;
+}
+
+.shadow,
+.shadow-md,
+.shadow-lg,
+.shadow-xl {
+  box-shadow: var(--shadow-card);
+}
+
+.page-enter {
+  min-width: 0;
+}
+
+.Toastify__toast-container .Toastify__toast {
+  color: var(--color-base-content);
+  border: 1px solid var(--color-base-300);
+  border-radius: 14px;
+  background: var(--color-base-200);
+  box-shadow: var(--shadow-soft);
+}
+
+.Toastify__toast-container .Toastify__close-button,
+.Toastify__toast-container .Toastify__toast-body {
+  color: var(--color-base-content);
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--color-base-300) !important;
+}
+
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line {
+  stroke: var(--color-base-300) !important;
+}
+
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text,
+.recharts-pie-label-text,
+.recharts-text {
+  fill: var(--color-base-content) !important;
+  color: var(--color-base-content) !important;
+}
+
+.recharts-default-legend {
+  color: var(--color-base-content) !important;
+}
+
+.recharts-default-tooltip,
+.recharts-tooltip-label,
+.recharts-tooltip-item {
+  color: var(--color-base-content) !important;
+}
+
+.recharts-default-tooltip {
+  border: 1px solid var(--color-base-300) !important;
+  border-radius: 12px !important;
+  background: var(--color-base-100) !important;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:disabled {
+  color: color-mix(in srgb, var(--color-primary-content) 58%, var(--color-primary)) !important;
+}
+
+@media (max-width: 640px) {
+  .ant-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .ant-pagination .ant-pagination-options {
+    display: none;
+  }
+
+  .table {
+    font-size: 0.78rem;
+  }
+}
+
+/* Order progress: quiet, legible steps with an unmistakable current moment. */
+.tracking-hero {
+  background:
+    radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--color-secondary) 18%, transparent), transparent 40%),
+    linear-gradient(130deg, color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100)), var(--color-base-100) 68%);
+}
+
+.tracking-steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tracking-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  column-gap: 1rem;
+  color: color-mix(in srgb, var(--color-base-content) 72%, var(--color-base-100));
+}
+
+.tracking-step:not(:last-child)::after {
+  position: absolute;
+  top: 2.45rem;
+  bottom: 0.25rem;
+  left: 1.2rem;
+  width: 1px;
+  content: "";
+  background: var(--color-base-300);
+}
+
+.tracking-step.is-complete:not(:last-child)::after {
+  background: color-mix(in srgb, var(--color-primary) 54%, var(--color-base-300));
+}
+
+.tracking-step-mark {
+  z-index: 1;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid var(--color-base-300);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--color-base-content) 58%, var(--color-base-100));
+  background: var(--color-base-200);
+}
+
+.tracking-step.is-complete .tracking-step-mark {
+  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-base-300));
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-base-100));
+}
+
+.tracking-step.is-current .tracking-step-mark {
+  border-color: var(--color-primary);
+  color: var(--color-primary-content);
+  background: var(--color-primary);
+}
+
+/* Vertical timeline below 1280px; all six steps share one row from there up. */
+@media (min-width: 1280px) {
+  .tracking-steps {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .tracking-step {
+    grid-template-columns: 1fr;
+    row-gap: 0.85rem;
+    padding-right: 0.75rem;
+  }
+
+  .tracking-step:not(:last-child)::after {
+    top: 1.25rem;
+    right: 0;
+    bottom: auto;
+    left: 2.75rem;
+    width: auto;
+    height: 1px;
+  }
+}
+
+/* Shared app primitives used by customer, admin and rider workspaces. */
+.surface-panel {
+  border: 1px solid var(--color-base-300);
+  color: var(--color-base-content);
+  background: var(--color-base-100);
+  box-shadow: var(--shadow-card);
+}
+
+.auth-shell {
+  min-height: min(720px, calc(100dvh - 12rem));
+}
+
+/* Keep old utility-heavy screens readable at narrow widths and in both themes. */
+html,
+body,
+#root {
+  max-width: 100%;
+}
+
+body {
+  overflow-x: clip;
+}
+
+main,
+section,
+article,
+.card,
+.modal-box {
+  min-width: 0;
+}
+
+input,
+textarea,
+select,
+.select__control {
+  max-width: 100%;
+}
+
+button,
+a,
+[role="button"],
+[role="link"],
+summary,
+select,
+.ant-select-selector,
+.ant-pagination-item {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+[aria-disabled="true"],
+.select__control--is-disabled,
+.ant-btn-disabled,
+.ant-pagination-item-disabled {
+  cursor: not-allowed;
+}
+
+/* Keep button loading indicators aligned with the button label for contrast. */
+.btn .loading-spinner {
+  color: inherit !important;
+}
+
+@media (max-width: 380px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .ant-pagination {
+    gap: 0;
+  }
+
+  .ant-pagination .ant-pagination-item,
+  .ant-pagination .ant-pagination-prev,
+  .ant-pagination .ant-pagination-next {
+    margin-inline: 1px !important;
+  }
+
+  .auth-shell {
+    min-height: 0;
+  }
+}
+
+/* Dashboard analytics ------------------------------------------------------ */
+.dash-hero {
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--color-secondary) 18%, transparent), transparent 55%),
+    radial-gradient(ellipse at 0% 100%, color-mix(in srgb, var(--color-primary) 13%, transparent), transparent 55%),
+    var(--color-base-100);
+  box-shadow: var(--shadow-card);
+}
+
+.dash-panel,
+.dash-kpi {
+  box-shadow: var(--shadow-card);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.dash-panel:hover,
+.dash-kpi:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 32%, var(--color-base-300));
+}
+
+.dash-chart .recharts-cartesian-axis-tick-value {
+  fill: color-mix(in srgb, var(--color-base-content) 62%, transparent) !important;
+  font-size: 11px;
+}
+
+.dash-chart .recharts-cartesian-grid line {
+  stroke: color-mix(in srgb, var(--color-base-300) 70%, transparent) !important;
+}
+
+.dash-chart .recharts-surface:focus,
+.dash-chart .recharts-wrapper:focus,
+.dash-chart *:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-panel,
+  .dash-kpi {
+    transition: none;
+  }
 }

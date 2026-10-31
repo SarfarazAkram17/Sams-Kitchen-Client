@@ -4,7 +4,8 @@ import Notification from "./Notification";
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../Hooks/useAxios";
 import { useNavigate } from "react-router";
-import { ConfigProvider, Rate } from "antd";
+import ThemeToggle from "./ThemeToggle";
+import useCanOrder from "../../Hooks/useCanOrder";
 
 const Header = () => {
   const [search, setSearch] = useState("");
@@ -12,6 +13,7 @@ const Header = () => {
   const modalRef = useRef(null); // Reference for the modal container
   const axiosInstance = useAxios();
   const navigate = useNavigate();
+  const canOrder = useCanOrder();
 
   // Query for searching foods
   const {
@@ -22,7 +24,7 @@ const Header = () => {
     queryKey: ["search-food", search],
     queryFn: async () => {
       if (!search.trim()) return [];
-      const res = await axiosInstance.get(`/foods/search?name=${search}`);
+      const res = await axiosInstance.get(`/foods/search?name=${encodeURIComponent(search)}`);
       return res.data;
     },
     enabled: !!search.trim(),
@@ -67,10 +69,10 @@ const Header = () => {
   };
 
   return (
-    <div className="relative bg-neutral">
-      <div className="flex max-w-[1500px] mx-auto py-2 px-3 justify-between gap-4">
-        <div className="w-[78%] sm:w-[70%] relative">
-          <label className="input w-full">
+    <div className="relative bg-primary text-primary-content">
+      <div className="mx-auto flex w-full max-w-[1500px] items-center justify-between gap-2 px-3 py-2 sm:gap-3 sm:px-5">
+        <div className="relative min-w-0 flex-1">
+          <label className="header-search input w-full rounded-xl border-primary-content/20 bg-primary-content/10 text-primary-content focus-within:outline-primary-content/50">
             <svg
               className="h-[1.2em] opacity-50"
               xmlns="http://www.w3.org/2000/svg"
@@ -89,10 +91,12 @@ const Header = () => {
             </svg>
             <input
               type="search"
+              aria-label="Search the Sam's Kitchen menu"
               onClick={handleSearchClick}
               onChange={(e) => setSearch(e.target.value)}
               value={search}
-              placeholder="Search for foods (e.g. pizza, burger, cake)"
+              placeholder="Search our kitchen"
+              className="placeholder:text-primary-content/60"
             />
           </label>
 
@@ -100,12 +104,13 @@ const Header = () => {
           {isModalOpen && (
             <div
               ref={modalRef}
-              className="absolute top-9 p-2 left-0 mt-2 w-full bg-white rounded shadow-lg max-h-64 overflow-y-auto z-50"
+              className="absolute top-full p-2 left-0 mt-2 w-full bg-base-100 text-base-content border border-base-300 rounded-2xl shadow-xl max-h-[min(70vh,28rem)] overflow-y-auto z-[90]"
             >
               {isLoading ? (
-                <p className="p-4 text-center text-sm text-gray-500 animate-pulse">
-                  Searching...
-                </p>
+                <div className="p-4 space-y-3" aria-label="Searching menu items">
+                  <div className="h-12 rounded-lg bg-base-200 animate-pulse" />
+                  <div className="h-12 rounded-lg bg-base-200 animate-pulse" />
+                </div>
               ) : searchResults?.length > 0 ? (
                 searchResults.map((food) => (
                   <div
@@ -114,7 +119,15 @@ const Header = () => {
                       navigate(`/foods/${food._id}`);
                       setIsModalOpen(false);
                     }}
-                    className="cursor-pointer hover:bg-gray-100 px-2 sm:px-4 py-3 rounded-md flex justify-between items-start gap-4"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        navigate(`/foods/${food._id}`);
+                        setIsModalOpen(false);
+                      }
+                    }}
+                     className="cursor-pointer min-w-0 hover:bg-base-200 px-2 sm:px-4 py-3 rounded-xl flex justify-between items-start gap-3 sm:gap-4 focus-visible:outline-2 focus-visible:outline-primary"
                   >
                     <div className="flex gap-3 items-center">
                       <img
@@ -127,10 +140,10 @@ const Header = () => {
                           {food.name}
                         </p>
 
-                        <p className="text-xs sm:text-sm text-gray-500">
+                          <p className="text-xs sm:text-sm text-base-content/60">
                           <span
                             className={`${
-                              food.available ? "text-green-500" : "text-red-500"
+                              food.available ? "text-success" : "text-error"
                             }`}
                           >
                             {food.available ? "Available" : "Unavailable"}
@@ -142,15 +155,15 @@ const Header = () => {
                     <div className="gap-1 flex flex-col items-end">
                       {food.discount ? (
                         <>
-                          <p className="text-gray-600 whitespace-nowrap line-through text-xs sm:text-sm">
+                          <p className="text-base-content/45 whitespace-nowrap line-through text-xs sm:text-sm">
                             ৳ {food.price.toFixed(2)}
                           </p>
-                          <p className="text-green-600 text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
+                          <p className="text-success text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
                             ৳ {calculateDiscountedPrice(food).toFixed(2)}
                           </p>{" "}
                         </>
                       ) : (
-                        <p className="text-green-600 text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
+                        <p className="text-success text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
                           ৳ {calculateDiscountedPrice(food).toFixed(2)}
                         </p>
                       )}
@@ -158,7 +171,7 @@ const Header = () => {
                   </div>
                 ))
               ) : (
-                <p className="p-4 text-center text-sm text-gray-500">
+                <p className="p-4 text-center text-sm text-base-content/60">
                   No food found with this name. Try with another name.
                 </p>
               )}
@@ -166,9 +179,10 @@ const Header = () => {
           )}
         </div>
 
-        <div className="flex w-[22%] sm:w-[30%] justify-end mt-2 mr-1 items-center gap-4 sm:gap-6 relative">
+        <div className="relative flex shrink-0 items-center justify-end gap-1.5 sm:gap-3">
+          <ThemeToggle />
           <Notification />
-          <Cart />
+          {canOrder && <Cart />}
         </div>
       </div>
     </div>

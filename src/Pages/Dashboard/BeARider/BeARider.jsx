@@ -240,6 +240,7 @@ const BeARider = () => {
               className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
               {...register("experience", {
                 required: "Experience is required",
+                min: { value: 0, message: "Experience cannot be negative" },
               })}
             />
             {errors.experience && (
@@ -259,6 +260,10 @@ const BeARider = () => {
               className="w-full p-2 border border-gray-400 rounded-md text-xs xl:text-sm mt-1"
               {...register("phone", {
                 required: "Phone number is required",
+                pattern: {
+                  value: /^(?:\+?88)?01[3-9]\d{8}$/,
+                  message: "Enter a valid Bangladesh mobile number",
+                },
               })}
             />
             {errors.phone && (
@@ -274,11 +279,14 @@ const BeARider = () => {
               Region <span className="text-red-500">*</span>
             </label>
             <Select
+              aria-label="Region"
+              aria-invalid={Boolean(errors.region)}
               options={regions.map((r) => ({ value: r, label: r }))}
               value={selectedRegion}
               onChange={handleRegionChange}
               placeholder="Select Region"
               className="text-xs xl:text-sm mt-1"
+              classNamePrefix="select"
             />
             {errors.region && (
               <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -293,12 +301,15 @@ const BeARider = () => {
               District <span className="text-red-500">*</span>
             </label>
             <Select
+              aria-label="District"
+              aria-invalid={Boolean(errors.district)}
               options={districts.map((d) => ({ value: d, label: d }))}
               value={selectedDistrict}
               onChange={handleDistrictChange}
               isDisabled={!selectedRegion}
               placeholder="Select District"
               className="text-xs xl:text-sm mt-1"
+              classNamePrefix="select"
             />
             {errors.district && (
               <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -313,12 +324,15 @@ const BeARider = () => {
               Thana <span className="text-red-500">*</span>
             </label>
             <Select
+              aria-label="Thana"
+              aria-invalid={Boolean(errors.thana)}
               options={thanas.map((t) => ({ value: t, label: t }))}
               value={selectedThana}
               onChange={handleThanaChange}
               isDisabled={!selectedRegion || !selectedDistrict}
               placeholder="Select Thana"
               className="text-xs xl:text-sm mt-1"
+              classNamePrefix="select"
             />
             {errors.thana && (
               <span className="text-red-500 text-xs mt-1 font-semibold">
@@ -331,7 +345,6 @@ const BeARider = () => {
         <button
           type="submit"
           className="btn mt-10 btn-primary w-full text-white disabled:text-black/50"
-          disabled={submitting}
         >
           {submitting ? (
             <>
