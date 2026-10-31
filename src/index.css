@@ -58,11 +58,19 @@
   --font-display: "Instrument Serif", Georgia, serif;
   --font-body: "DM Sans", sans-serif;
   --ink: var(--color-base-content);
-  --muted: color-mix(in srgb, var(--color-base-content) 86%, var(--color-base-100));
+  --muted: color-mix(
+    in srgb,
+    var(--color-base-content) 86%,
+    var(--color-base-100)
+  );
   --line: var(--color-base-300);
   --surface-raised: var(--color-base-200);
   --surface-sunken: var(--color-base-100);
-  --accent-soft: color-mix(in srgb, var(--color-primary) 14%, var(--color-base-100));
+  --accent-soft: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    var(--color-base-100)
+  );
   --surface-glass: color-mix(in srgb, var(--color-base-100) 88%, transparent);
   --shadow-soft: 0 18px 45px -32px color-mix(in srgb, #090b08 70%, transparent);
   --shadow-card: 0 14px 34px -25px color-mix(in srgb, #080a07 76%, transparent);
@@ -83,11 +91,19 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --ink: var(--color-base-content);
-  --muted: color-mix(in srgb, var(--color-base-content) 86%, var(--color-base-100));
+  --muted: color-mix(
+    in srgb,
+    var(--color-base-content) 86%,
+    var(--color-base-100)
+  );
   --line: var(--color-base-300);
   --surface-raised: var(--color-base-200);
   --surface-sunken: var(--color-base-100);
-  --accent-soft: color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100));
+  --accent-soft: color-mix(
+    in srgb,
+    var(--color-primary) 10%,
+    var(--color-base-100)
+  );
   --chart-1: #a7472e;
   --chart-2: #8c661e;
   --chart-3: #426d4c;
@@ -255,9 +271,14 @@ option {
   color: var(--color-secondary-content) !important;
 }
 
-.header-search input {
+.header-search input,
+.header-search input:focus,
+.header-search input:focus-visible {
   color: inherit !important;
   background-color: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .recharts-cartesian-axis-tick-value,
@@ -273,31 +294,52 @@ option {
 }
 
 .page-enter {
-  animation: page-rise 420ms cubic-bezier(.2,.75,.25,1) both;
+  animation: page-rise 420ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
 
 .empty-state {
-  animation: empty-state-enter 360ms cubic-bezier(.2,.75,.25,1) both;
+  animation: empty-state-enter 360ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
 
 .empty-state__icon {
-  animation: empty-state-icon-enter 420ms cubic-bezier(.2,.75,.25,1) 60ms both;
+  animation: empty-state-icon-enter 420ms cubic-bezier(0.2, 0.75, 0.25, 1) 60ms
+    both;
 }
 
 @keyframes page-rise {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes empty-state-enter {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes empty-state-icon-enter {
-  from { opacity: 0; transform: scale(.82); }
-  72% { opacity: 1; transform: scale(1.06); }
-  to { transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  72% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -373,9 +415,16 @@ button,
   align-items: center;
   border: 1px solid transparent;
   border-radius: 999px;
-  color: color-mix(in srgb, var(--color-base-content) 86%, var(--color-base-100));
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 86%,
+    var(--color-base-100)
+  );
   text-decoration: none;
-  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
 }
 
 .shared-route-link:hover {
@@ -384,9 +433,17 @@ button,
 }
 
 .shared-route-link[aria-current="page"] {
-  border-color: color-mix(in srgb, var(--color-primary) 26%, var(--color-base-300));
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 26%,
+    var(--color-base-300)
+  );
   color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 13%, var(--color-base-100));
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 13%,
+    var(--color-base-100)
+  );
   font-weight: 700;
 }
 
@@ -395,24 +452,41 @@ button,
 .text-base-content\/40,
 .text-base-content\/45,
 .text-base-content\/50 {
-  color: color-mix(in srgb, var(--color-base-content) 64%, var(--color-base-100)) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 64%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .text-base-content\/55,
 .text-base-content\/60 {
-  color: color-mix(in srgb, var(--color-base-content) 72%, var(--color-base-100)) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 72%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .text-base-content\/65,
 .text-base-content\/70,
 .text-base-content\/75 {
-  color: color-mix(in srgb, var(--color-base-content) 80%, var(--color-base-100)) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 80%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .dashboard-nav-link-active {
-  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, var(--color-base-300));
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 24%, var(--color-base-300));
   color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-base-100));
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 12%,
+    var(--color-base-100)
+  );
 }
 
 .dashboard-sidebar {
@@ -438,7 +512,11 @@ button,
   font-weight: 650;
   letter-spacing: -0.015em;
   box-shadow: none;
-  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
 }
 
 .btn:active:not(:disabled) {
@@ -452,8 +530,16 @@ button,
 }
 
 .btn-primary:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--color-primary) 84%, var(--color-base-content)) !important;
-  background: color-mix(in srgb, var(--color-primary) 84%, var(--color-base-content)) !important;
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 84%,
+    var(--color-base-content)
+  ) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 84%,
+    var(--color-base-content)
+  ) !important;
 }
 
 .card,
@@ -497,7 +583,11 @@ button,
 }
 
 .table tbody tr:hover {
-  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-base-100));
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 6%,
+    var(--color-base-100)
+  );
 }
 
 /* React Select */
@@ -515,7 +605,8 @@ button,
 }
 
 .select__control--is-focused {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent) !important;
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary) 18%, transparent) !important;
 }
 
 .select__value-container,
@@ -546,7 +637,11 @@ button,
 }
 
 .select__option--is-focused {
-  background-color: color-mix(in srgb, var(--color-primary) 14%, var(--color-base-200)) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    var(--color-base-200)
+  ) !important;
 }
 
 .select__option--is-selected {
@@ -560,7 +655,11 @@ button,
 
 .select__multi-value {
   border-radius: 7px !important;
-  background: color-mix(in srgb, var(--color-primary) 18%, var(--color-base-200)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 18%,
+    var(--color-base-200)
+  ) !important;
 }
 
 .select__multi-value__label,
@@ -615,7 +714,11 @@ button,
 
 .ant-pagination .ant-pagination-item-active {
   border-color: var(--color-primary) !important;
-  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-base-100)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 12%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .ant-pagination .ant-pagination-item-active a {
@@ -653,12 +756,20 @@ button,
 }
 
 .ant-table-wrapper .ant-table-thead > tr > th {
-  color: color-mix(in srgb, var(--color-base-content) 72%, transparent) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 72%,
+    transparent
+  ) !important;
   background: var(--color-base-200) !important;
 }
 
 .ant-table-wrapper .ant-table-tbody > tr:hover > td {
-  background: color-mix(in srgb, var(--color-primary) 7%, var(--color-base-100)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 7%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .ant-modal-content,
@@ -715,7 +826,11 @@ button,
 .ant-input::placeholder,
 .ant-select-selection-placeholder,
 .ant-picker-input > input::placeholder {
-  color: color-mix(in srgb, var(--color-base-content) 48%, transparent) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 48%,
+    transparent
+  ) !important;
 }
 
 .ant-spin-dot-item {
@@ -787,14 +902,19 @@ button,
   background: var(--color-base-300) !important;
 }
 
-.ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
-.ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-second {
-  color: color-mix(in srgb, var(--color-base-content) 28%, transparent) !important;
+/* Review stars: half and full stars share one fill colour; only the empty part is muted. */
+.ant-rate .ant-rate-star .ant-rate-star-first,
+.ant-rate .ant-rate-star .ant-rate-star-second {
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 28%,
+    transparent
+  ) !important;
 }
 
-.ant-rate-star-full .ant-rate-star-first,
-.ant-rate-star-full .ant-rate-star-second,
-.ant-rate-star-half .ant-rate-star-first {
+.ant-rate .ant-rate-star-full .ant-rate-star-first,
+.ant-rate .ant-rate-star-full .ant-rate-star-second,
+.ant-rate .ant-rate-star-half .ant-rate-star-first {
   color: var(--color-secondary) !important;
 }
 
@@ -819,7 +939,11 @@ button,
 .text-gray-600,
 .text-gray-500,
 .text-gray-400 {
-  color: color-mix(in srgb, var(--color-base-content) 72%, transparent) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 72%,
+    transparent
+  ) !important;
 }
 
 .border-sky-200,
@@ -836,7 +960,11 @@ button,
 
 .bg-sky-50,
 .bg-blue-50 {
-  background: color-mix(in srgb, var(--color-info) 13%, var(--color-base-100)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-info) 13%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .bg-green-100,
@@ -848,7 +976,11 @@ button,
 
 .bg-green-100,
 .bg-emerald-50 {
-  background: color-mix(in srgb, var(--color-success) 13%, var(--color-base-100)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-success) 13%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .bg-red-50,
@@ -860,7 +992,11 @@ button,
 
 .bg-red-50,
 .bg-red-200 {
-  background: color-mix(in srgb, var(--color-error) 13%, var(--color-base-100)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-error) 13%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .bg-amber-50,
@@ -869,7 +1005,11 @@ button,
 }
 
 .bg-amber-50 {
-  background: color-mix(in srgb, var(--color-warning) 13%, var(--color-base-100)) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-warning) 13%,
+    var(--color-base-100)
+  ) !important;
 }
 
 .text-info {
@@ -947,7 +1087,11 @@ button:not(:disabled),
 }
 
 .btn-primary:disabled {
-  color: color-mix(in srgb, var(--color-primary-content) 58%, var(--color-primary)) !important;
+  color: color-mix(
+    in srgb,
+    var(--color-primary-content) 58%,
+    var(--color-primary)
+  ) !important;
 }
 
 @media (max-width: 640px) {
@@ -970,8 +1114,16 @@ button:not(:disabled),
 /* Order progress: quiet, legible steps with an unmistakable current moment. */
 .tracking-hero {
   background:
-    radial-gradient(ellipse at 88% 8%, color-mix(in srgb, var(--color-secondary) 18%, transparent), transparent 40%),
-    linear-gradient(130deg, color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100)), var(--color-base-100) 68%);
+    radial-gradient(
+      ellipse at 88% 8%,
+      color-mix(in srgb, var(--color-secondary) 18%, transparent),
+      transparent 40%
+    ),
+    linear-gradient(
+      130deg,
+      color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100)),
+      var(--color-base-100) 68%
+    );
 }
 
 .tracking-steps {
@@ -987,7 +1139,11 @@ button:not(:disabled),
   display: grid;
   grid-template-columns: 2.5rem minmax(0, 1fr);
   column-gap: 1rem;
-  color: color-mix(in srgb, var(--color-base-content) 72%, var(--color-base-100));
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 72%,
+    var(--color-base-100)
+  );
 }
 
 .tracking-step:not(:last-child)::after {
@@ -1001,7 +1157,11 @@ button:not(:disabled),
 }
 
 .tracking-step.is-complete:not(:last-child)::after {
-  background: color-mix(in srgb, var(--color-primary) 54%, var(--color-base-300));
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 54%,
+    var(--color-base-300)
+  );
 }
 
 .tracking-step-mark {
@@ -1012,14 +1172,26 @@ button:not(:disabled),
   place-items: center;
   border: 1px solid var(--color-base-300);
   border-radius: 999px;
-  color: color-mix(in srgb, var(--color-base-content) 58%, var(--color-base-100));
+  color: color-mix(
+    in srgb,
+    var(--color-base-content) 58%,
+    var(--color-base-100)
+  );
   background: var(--color-base-200);
 }
 
 .tracking-step.is-complete .tracking-step-mark {
-  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-base-300));
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 40%,
+    var(--color-base-300)
+  );
   color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-base-100));
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 12%,
+    var(--color-base-100)
+  );
 }
 
 .tracking-step.is-current .tracking-step-mark {
@@ -1137,8 +1309,16 @@ select:disabled,
 /* Dashboard analytics ------------------------------------------------------ */
 .dash-hero {
   background:
-    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--color-secondary) 18%, transparent), transparent 55%),
-    radial-gradient(ellipse at 0% 100%, color-mix(in srgb, var(--color-primary) 13%, transparent), transparent 55%),
+    radial-gradient(
+      ellipse at 100% 0%,
+      color-mix(in srgb, var(--color-secondary) 18%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 0% 100%,
+      color-mix(in srgb, var(--color-primary) 13%, transparent),
+      transparent 55%
+    ),
     var(--color-base-100);
   box-shadow: var(--shadow-card);
 }
@@ -1146,16 +1326,26 @@ select:disabled,
 .dash-panel,
 .dash-kpi {
   box-shadow: var(--shadow-card);
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .dash-panel:hover,
 .dash-kpi:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 32%, var(--color-base-300));
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 32%,
+    var(--color-base-300)
+  );
 }
 
 .dash-chart .recharts-cartesian-axis-tick-value {
-  fill: color-mix(in srgb, var(--color-base-content) 62%, transparent) !important;
+  fill: color-mix(
+    in srgb,
+    var(--color-base-content) 62%,
+    transparent
+  ) !important;
   font-size: 11px;
 }
 
@@ -1179,8 +1369,16 @@ select:disabled,
 /* Home page ---------------------------------------------------------------- */
 .hero-surface {
   background:
-    radial-gradient(ellipse 60% 70% at 95% 0%, color-mix(in srgb, var(--color-secondary) 20%, transparent), transparent 70%),
-    radial-gradient(ellipse 55% 60% at 0% 100%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 70%),
+    radial-gradient(
+      ellipse 60% 70% at 95% 0%,
+      color-mix(in srgb, var(--color-secondary) 20%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 55% 60% at 0% 100%,
+      color-mix(in srgb, var(--color-primary) 18%, transparent),
+      transparent 70%
+    ),
     var(--color-base-200);
 }
 
@@ -1190,32 +1388,58 @@ select:disabled,
   z-index: 0;
   content: "";
   pointer-events: none;
-  background-image: radial-gradient(color-mix(in srgb, var(--color-base-content) 16%, transparent) 1px, transparent 1px);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-base-content) 16%, transparent) 1px,
+    transparent 1px
+  );
   background-size: 22px 22px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(
+    ellipse 80% 80% at 50% 40%,
+    #000 20%,
+    transparent 75%
+  );
   opacity: 0.55;
 }
 
 .band-warm {
   background:
-    radial-gradient(ellipse 50% 90% at 100% 0%, color-mix(in srgb, var(--color-secondary) 14%, transparent), transparent 70%),
-    radial-gradient(ellipse 50% 90% at 0% 100%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 70%),
+    radial-gradient(
+      ellipse 50% 90% at 100% 0%,
+      color-mix(in srgb, var(--color-secondary) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 90% at 0% 100%,
+      color-mix(in srgb, var(--color-primary) 12%, transparent),
+      transparent 70%
+    ),
     var(--color-base-200);
 }
 
 .card-lift {
-  transition: transform 260ms cubic-bezier(.2,.75,.25,1), border-color 260ms ease, box-shadow 260ms ease;
+  transition:
+    transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    border-color 260ms ease,
+    box-shadow 260ms ease;
 }
 
 .card-lift:hover {
   transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--color-primary) 38%, var(--color-base-300));
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 38%,
+    var(--color-base-300)
+  );
   box-shadow: var(--shadow-soft);
 }
 
 @keyframes hero-progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .hero-progress {
@@ -1224,6 +1448,11 @@ select:disabled,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card-lift:hover { transform: none; }
-  .hero-progress { animation: none; transform: scaleX(1); }
+  .card-lift:hover {
+    transform: none;
+  }
+  .hero-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
 }

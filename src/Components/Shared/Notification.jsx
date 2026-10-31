@@ -116,21 +116,21 @@ const Notification = () => {
 
       {showNotifications && (
         <section
-          className="absolute right-0 top-full z-[100] mt-3 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-base-300 bg-base-100 text-base-content shadow-2xl"
+          className="fixed inset-x-3 top-[3.75rem] z-[100] flex max-h-[calc(100dvh-5rem)] flex-col overflow-hidden rounded-2xl border border-base-300 bg-base-100 text-base-content shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-3 sm:w-96 sm:max-h-[min(80dvh,34rem)]"
           aria-label="Notifications"
         >
-          <div className="flex items-center justify-between border-b border-base-300 px-4 py-3">
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-base-300 px-4 py-3">
             <div>
               <h2 className="font-bold">Kitchen notes</h2>
               <p className="text-xs text-base-content/55">
                 Updates for your account
               </p>
             </div>
-            <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+            <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
               {unreadCount} new
             </span>
           </div>
-          <div className="max-h-[min(60vh,24rem)] overflow-y-auto">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
             {isLoading ? (
               <div className="space-y-3 p-4" aria-label="Loading notifications">
                 <div className="h-14 animate-pulse rounded-xl bg-base-200" />
@@ -165,8 +165,8 @@ const Notification = () => {
                         <FaRegBell size={12} />
                       )}
                     </span>
-                    <div className="min-w-0">
-                      <p className="text-sm leading-5">
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words text-sm leading-5">
                         {notification.message}
                       </p>
                       <time className="mt-1 block text-[11px] text-base-content/50">
@@ -189,7 +189,7 @@ const Notification = () => {
           {hasNextPage && (
             <button
               type="button"
-              className="w-full border-t border-base-300 py-3 text-xs font-bold text-primary hover:bg-base-200"
+              className="w-full shrink-0 border-t border-base-300 py-3 text-xs font-bold text-primary hover:bg-base-200"
               onClick={() => fetchNextPage()}
             >
               Load earlier updates

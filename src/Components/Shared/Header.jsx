@@ -24,7 +24,9 @@ const Header = () => {
     queryKey: ["search-food", search],
     queryFn: async () => {
       if (!search.trim()) return [];
-      const res = await axiosInstance.get(`/foods/search?name=${encodeURIComponent(search)}`);
+      const res = await axiosInstance.get(
+        `/foods/search?name=${encodeURIComponent(search)}`,
+      );
       return res.data;
     },
     enabled: !!search.trim(),
@@ -104,10 +106,13 @@ const Header = () => {
           {isModalOpen && (
             <div
               ref={modalRef}
-              className="absolute top-full p-2 left-0 mt-2 w-full bg-base-100 text-base-content border border-base-300 rounded-2xl shadow-xl max-h-[min(70vh,28rem)] overflow-y-auto z-[90]"
+              className="fixed inset-x-3 top-[3.75rem] z-[90] max-h-[min(70dvh,28rem)] overflow-y-auto overscroll-contain rounded-2xl border border-base-300 bg-base-100 p-2 text-base-content shadow-xl sm:absolute sm:inset-x-auto sm:left-0 sm:top-full sm:mt-2 sm:w-full"
             >
               {isLoading ? (
-                <div className="p-4 space-y-3" aria-label="Searching menu items">
+                <div
+                  className="p-4 space-y-3"
+                  aria-label="Searching menu items"
+                >
                   <div className="h-12 rounded-lg bg-base-200 animate-pulse" />
                   <div className="h-12 rounded-lg bg-base-200 animate-pulse" />
                 </div>
@@ -127,46 +132,37 @@ const Header = () => {
                         setIsModalOpen(false);
                       }
                     }}
-                     className="cursor-pointer min-w-0 hover:bg-base-200 px-2 sm:px-4 py-3 rounded-xl flex justify-between items-start gap-3 sm:gap-4 focus-visible:outline-2 focus-visible:outline-primary"
+                    className="flex min-w-0 cursor-pointer items-center justify-between gap-3 rounded-xl px-2 py-2.5 hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-primary sm:px-3"
                   >
-                    <div className="flex gap-3 items-center">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                       <img
                         src={food.image}
-                        alt={food.name}
-                        className="sm:w-20 sm:h-16 h-12 w-16 object-cover rounded"
+                        alt=""
+                        className="h-12 w-14 shrink-0 rounded-lg object-cover sm:h-14 sm:w-[4.5rem]"
                       />
-                      <div className="space-y-2">
-                        <p className="font-medium text-xs sm:text-[1rem]">
+                      <div className="min-w-0 flex-1">
+                        <p className="line-clamp-2 break-words text-sm font-medium leading-snug">
                           {food.name}
                         </p>
-
-                          <p className="text-xs sm:text-sm text-base-content/60">
-                          <span
-                            className={`${
-                              food.available ? "text-success" : "text-error"
-                            }`}
-                          >
-                            {food.available ? "Available" : "Unavailable"}
-                          </span>
+                        <p
+                          className={`mt-0.5 text-xs ${
+                            food.available ? "text-success" : "text-error"
+                          }`}
+                        >
+                          {food.available ? "Available" : "Unavailable"}
                         </p>
                       </div>
                     </div>
 
-                    <div className="gap-1 flex flex-col items-end">
+                    <div className="flex shrink-0 flex-col items-end gap-0.5 text-right">
                       {food.discount ? (
-                        <>
-                          <p className="text-base-content/45 whitespace-nowrap line-through text-xs sm:text-sm">
-                            ৳ {food.price.toFixed(2)}
-                          </p>
-                          <p className="text-success text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
-                            ৳ {calculateDiscountedPrice(food).toFixed(2)}
-                          </p>{" "}
-                        </>
-                      ) : (
-                        <p className="text-success text-[13px] sm:text-[1rem] whitespace-nowrap font-semibold">
-                          ৳ {calculateDiscountedPrice(food).toFixed(2)}
+                        <p className="whitespace-nowrap text-xs text-base-content/60 line-through">
+                          ৳ {Number(food.price).toFixed(2)}
                         </p>
-                      )}
+                      ) : null}
+                      <p className="whitespace-nowrap text-sm font-semibold text-success">
+                        ৳ {calculateDiscountedPrice(food).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 ))
