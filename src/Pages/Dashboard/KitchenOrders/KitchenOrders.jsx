@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pagination } from "antd";
-import Swal from "sweetalert2";
+import { useCallback, useState } from "react";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import AppPagination from "../../../Components/Shared/AppPagination";
 import { toast } from "react-toastify";
 import {
   FiCalendar,
@@ -11,12 +15,17 @@ import {
   FiPackage,
   FiPhone,
 } from "react-icons/fi";
-import Loading from "../../../Components/Loading/Loading";
 import EmptyState from "../../../Components/Shared/EmptyState";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import OrderItemsList from "../OrderItemsList";
 import { formatCurrency, formatDate } from "../../../lib/formatters";
+import { KitchenOrdersListSkeleton } from "../../../Components/Skeletons/PageSkeletons";
+import useConfirm from "../../../Hooks/useConfirm";
+import ListToolbar from "../../../Components/Shared/ListToolbar";
+import FilterTabs from "../../../Components/Shared/FilterTabs";
+import EmptyResults from "../../../Components/Shared/EmptyResults";
+import PageHeading from "../../../Components/Shared/PageHeading";
 
 const PAGE_SIZE = 10;
 
@@ -25,20 +34,53 @@ const TABS = [
   { key: "prepared", label: "Prepared" },
 ];
 
+// Badge for an order's stage. Only paid orders that are waiting to be cooked or
+// waiting for a rider are listed here.
+const STAGES = {
+  confirmed: { label: "To prepare", icon: FiClock, tone: "badge-info" },
+  prepared: { label: "Prepared", icon: FiCheckCircle, tone: "badge-success" },
+};
+
+const stageNote = (order) =>
+  order.status === "prepared"
+    ? `Prepared ${formatDate(order.preparedAt)} · waiting for a rider`
+    : "";
+
 const KitchenOrders = () => {
+  const confirm = useConfirm();
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { userEmail } = useAuth();
   const [status, setStatus] = useState("confirmed");
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
+
+  const updateSearch = useCallback((value) => {
+    setSearch(value);
+    setPage(1);
+  }, []);
+  const resetFilters = () => {
+    setSearch("");
+    setSort("");
+    setPage(1);
+  };
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["kitchenOrders", status, page],
+    queryKey: ["kitchenOrders", status, page, search, sort],
+    placeholderData: keepPreviousData,
     enabled: !!userEmail,
     refetchInterval: 30000,
     queryFn: async () => {
       const res = await axiosSecure.get("/orders/kitchen", {
-        params: { email: userEmail, status, page, limit: PAGE_SIZE },
+        params: {
+          email: userEmail,
+          status,
+          page,
+          limit: PAGE_SIZE,
+          search: search || undefined,
+          sort: sort || undefined,
+        },
       });
       return res.data;
     },
@@ -70,60 +112,81 @@ const KitchenOrders = () => {
 
   const handleMarkPrepared = async (order) => {
     const thana = order.customer?.address?.thana;
-    const confirmation = await Swal.fire({
+    const confirmed = await confirm({
       title: "Mark as prepared?",
-      text: `Riders in ${thana || "the delivery area"} will be notified to pick this order up.`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes, it's prepared",
+      message: `Riders in ${thana || "the delivery area"} will be notified to pick this order up.`,
+      confirmLabel: "Yes, it's prepared",
     });
-    if (confirmation.isConfirmed) markPrepared.mutate(order._id);
+    if (confirmed) markPrepared.mutate(order._id);
   };
 
+  // Each tab starts from its own default order: To prepare is oldest first,
+  // Prepared is newest first. A sort picked on one tab must not carry over to
+  // the next.
   const changeTab = (key) => {
     setStatus(key);
+    setSort("");
     setPage(1);
   };
 
   return (
     <div className="w-full space-y-6 pb-8">
-      <header className="flex flex-col gap-2 border-b border-base-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">
-            Admin workspace
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-base-content sm:text-4xl">
-            Kitchen orders
-          </h1>
-        </div>
-        <p className="max-w-md text-sm leading-6 text-base-content/70 sm:text-right">
-          Confirmed orders wait here while the chef cooks. Mark an order as
-          prepared to offer it to riders.
-        </p>
-      </header>
+      <PageHeading
+        eyebrow="Admin workspace"
+        title="Kitchen orders"
+        description="Confirmed orders wait here while the chef cooks. Mark an order as prepared to offer it to riders."
+      />
 
-      <div role="tablist" className="flex flex-wrap gap-2">
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={status === key}
-            onClick={() => changeTab(key)}
-            className={`btn btn-sm min-h-10 rounded-full ${
-              status === key
-                ? "btn-primary"
-                : "border border-base-300 bg-base-100 text-base-content"
-            }`}
-          >
-            {label}
-            <span className="ml-1 font-bold">{counts[key] ?? 0}</span>
-          </button>
-        ))}
-      </div>
+      <FilterTabs
+        label="Order stage"
+        value={status}
+        onChange={changeTab}
+        tabs={TABS.map(({ key, label }) => ({
+          key,
+          label,
+          count: counts[key] ?? 0,
+        }))}
+      />
+
+      <ListToolbar
+        searchId="kitchen-search"
+        searchLabel="Search orders"
+        searchPlaceholder="Order ID, customer, thana or dish"
+        search={search}
+        onSearch={updateSearch}
+        activeCount={(search ? 1 : 0) + (sort ? 1 : 0)}
+        onReset={resetFilters}
+        summary={
+          isLoading
+            ? "Loading orders"
+            : `${total} ${total === 1 ? "order" : "orders"} found`
+        }
+        filters={[
+          {
+            key: "sort",
+            label: "Order",
+            options: [
+              {
+                value: "",
+                label:
+                  status === "confirmed"
+                    ? "Default (oldest first)"
+                    : "Default (newest first)",
+              },
+              { value: "oldest", label: "Oldest first" },
+              { value: "newest", label: "Newest first" },
+            ],
+            value: sort,
+            onChange: (value) => {
+              setSort(value);
+              setPage(1);
+            },
+          },
+        ]}
+      />
 
       {isLoading ? (
-        <Loading />
+        <KitchenOrdersListSkeleton count={4} />
       ) : isError ? (
         <div
           className="rounded-2xl border border-error/30 bg-error/10 p-6 text-center"
@@ -140,6 +203,12 @@ const KitchenOrders = () => {
             Try again
           </button>
         </div>
+      ) : orders.length === 0 && search ? (
+        <EmptyResults
+          title="No orders match"
+          message="Try another order ID, customer, area or dish."
+          onReset={resetFilters}
+        />
       ) : orders.length === 0 ? (
         <EmptyState
           title={
@@ -173,7 +242,7 @@ const KitchenOrders = () => {
               return (
                 <article
                   key={order._id}
-                  className="overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-shadow hover:shadow-md"
+                  className="flex h-full flex-col overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-sm transition-shadow hover:shadow-md"
                 >
                   <header className="flex flex-wrap items-start justify-between gap-3 border-b border-base-300 bg-base-200/60 px-4 py-4 sm:px-5">
                     <div className="min-w-0">
@@ -188,20 +257,21 @@ const KitchenOrders = () => {
                         Confirmed {formatDate(order.paidAt)}
                       </p>
                     </div>
-                    {status === "confirmed" ? (
-                      <span className="badge badge-info gap-1 rounded-full px-3 py-3 font-semibold">
-                        <FiClock aria-hidden="true" />
-                        To prepare
-                      </span>
-                    ) : (
-                      <span className="badge badge-success gap-1 rounded-full px-3 py-3 font-semibold">
-                        <FiCheckCircle aria-hidden="true" />
-                        Prepared
-                      </span>
-                    )}
+                    {(() => {
+                      const stage = STAGES[order.status] || STAGES.confirmed;
+                      const StageIcon = stage.icon;
+                      return (
+                        <span
+                          className={`badge ${stage.tone} gap-1 rounded-full px-3 py-3 font-semibold`}
+                        >
+                          <StageIcon aria-hidden="true" />
+                          {stage.label}
+                        </span>
+                      );
+                    })()}
                   </header>
 
-                  <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5">
+                  <div className="grid flex-1 grid-rows-[auto_auto_1fr] gap-3 p-4 sm:grid-cols-2 sm:grid-rows-[auto_1fr] sm:p-5">
                     <section className="rounded-xl bg-base-200 p-3.5">
                       <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-base-content/60">
                         <FiPhone className="text-info" aria-hidden="true" />
@@ -227,10 +297,13 @@ const KitchenOrders = () => {
                       </p>
                     </section>
 
-                    <section className="overflow-hidden rounded-xl border border-base-300 sm:col-span-2">
-                      <div className="flex items-center justify-between gap-3 bg-base-200 px-3.5 py-2.5">
+                    <section className="flex flex-col overflow-hidden rounded-xl border border-base-300 sm:col-span-2">
+                      <div className="flex shrink-0 items-center justify-between gap-3 bg-base-200 px-3.5 py-2.5">
                         <h3 className="flex items-center gap-2 text-sm font-semibold text-base-content">
-                          <FiPackage className="text-primary" aria-hidden="true" />
+                          <FiPackage
+                            className="text-primary"
+                            aria-hidden="true"
+                          />
                           Food to prepare
                         </h3>
                         <span className="text-xs text-base-content/65">
@@ -239,7 +312,7 @@ const KitchenOrders = () => {
                         </span>
                       </div>
                       <div
-                        className="max-h-52 overflow-y-auto overscroll-contain"
+                        className="min-h-[7.5rem] grow basis-0 overflow-y-auto overscroll-contain"
                         role="region"
                         aria-label="Food items list"
                         tabIndex={0}
@@ -256,7 +329,7 @@ const KitchenOrders = () => {
                         {formatCurrency(order.total)}
                       </strong>
                     </p>
-                    {status === "confirmed" ? (
+                    {order.status === "confirmed" ? (
                       <button
                         type="button"
                         className="btn btn-sm min-h-10 rounded-full bg-primary px-4 text-primary-content"
@@ -274,8 +347,7 @@ const KitchenOrders = () => {
                       </button>
                     ) : (
                       <p className="text-xs text-base-content/65">
-                        Prepared {formatDate(order.preparedAt)} · waiting for a
-                        rider
+                        {stageNote(order)}
                       </p>
                     )}
                   </footer>
@@ -285,16 +357,13 @@ const KitchenOrders = () => {
           </div>
 
           {total > PAGE_SIZE && (
-            <div className="flex justify-center pt-2">
-              <Pagination
-                current={page}
-                align="center"
-                total={total}
-                pageSize={PAGE_SIZE}
-                showSizeChanger={false}
-                onChange={setPage}
-              />
-            </div>
+            <AppPagination
+              className="pt-2"
+              current={page}
+              total={total}
+              pageSize={PAGE_SIZE}
+              onChange={setPage}
+            />
           )}
         </>
       )}

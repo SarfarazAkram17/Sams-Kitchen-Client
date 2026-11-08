@@ -1,81 +1,62 @@
-import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import axios from "axios";
+import { FiPercent, FiType } from "react-icons/fi";
+import { TbCurrencyTaka } from "react-icons/tb";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
-import { FiX } from "react-icons/fi";
+import useImageUpload from "../../../Hooks/useImageUpload";
+import { formatAmount, getDiscountedPrice } from "../../../lib/money";
+import Field, {
+  SelectField,
+  TextAreaField,
+} from "../../../Components/Forms/Field";
+import {
+  FormActions,
+  FormPage,
+  FormSection,
+  ImageDropzone,
+} from "../../../Components/Forms/FormKit";
+
+const AVAILABILITY = [
+  { value: "true", label: "Available" },
+  { value: "false", label: "Unavailable" },
+];
+
+const wholeNumber = (message) => (value) =>
+  Number.isInteger(Number(value)) || message;
 
 const AddFood = () => {
   const axiosSecure = useAxiosSecure();
-  const fileInputRef = useRef();
   const { userEmail } = useAuth();
+  const image = useImageUpload();
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: { discount: 0, available: "true" } });
 
-  const [uploading, setUploading] = useState(false);
-  const [imageURL, setImageURL] = useState("");
-  const [imageError, setImageError] = useState("");
+  const price = watch("price");
+  const discount = watch("discount");
+  const description = watch("description") || "";
+  const customerPays = getDiscountedPrice(price, discount);
 
-  const cloudName = import.meta.env.VITE_cloudinary_cloud_name;
-  const uploadPreset = import.meta.env.VITE_cloudinary_preset_name;
-
-  // ---------------- IMAGE UPLOAD ----------------
-  const handleImageUpload = async (files) => {
-    if (!files.length) return;
-
-    const totalImages = imageURL.length + files.length;
-    if (totalImages > 1) {
-      toast.error("You can upload 1 image.");
-      return;
-    }
-
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", files[0]);
-      formData.append("upload_preset", uploadPreset);
-
-      const res = await axios.post(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData
-      );
-
-      setImageURL(res.data.secure_url);
-      setImageError("");
-
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err) {
-      toast.error(`Image upload failed: ${err.message}`);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleImageRemove = () => {
-    setImageURL("");
-  };
-
-  // ---------------- POST FOOD MUTATION ----------------
   const { mutate: addFood, isPending } = useMutation({
     mutationFn: async (newFood) => {
       const { data } = await axiosSecure.post(
         `/foods?email=${userEmail}`,
-        newFood
+        newFood,
       );
       return data;
     },
     onSuccess: (data) => {
       if (data.foodId) {
-        Swal.fire("Success", "Food added successfully.", "success");
-        setImageURL("");
+        toast.success("Dish added to the menu.");
+        image.clear();
         reset();
       }
     },
@@ -84,174 +65,143 @@ const AddFood = () => {
     },
   });
 
-  const handleAddFood = async (data) => {
-    if (uploading || isPending) return;
-    if (!imageURL) {
-      setImageError("A food image is required.");
+  const handleAddFood = (data) => {
+    if (image.uploading || isPending) return;
+    if (!image.url) {
+      image.setError("A food image is required.");
       return;
     }
-    const price = Math.round(parseFloat(data.price) * 100) / 100;
-    const discount = Math.round(parseFloat(data.discount) * 100) / 100;
 
-    const newFood = {
-      name: data.name,
-      price,
-      discount,
-      description: data.description,
-      image: imageURL,
+    addFood({
+      name: data.name.trim(),
+      price: Math.round(Number(data.price)),
+      discount: Math.round(Number(data.discount) || 0),
+      description: data.description.trim(),
+      image: image.url,
       available: data.available === "true",
       addedAt: new Date().toISOString(),
-    };
-
-    addFood(newFood);
+    });
   };
 
   return (
-    <div className="px-4">
-      <h2 className="text-3xl md:text-4xl text-center font-bold mb-4 text-primary">
-        Add New Food
-      </h2>
-      <p className="text-center text-sm text-base-content/80 mb-8 max-w-2xl mx-auto">
-        Add a new food item to the menu. Upload one image, set price and
-        details. Discount defaults to 0% but can be updated later by Admin.
-      </p>
-
-      <form onSubmit={handleSubmit(handleAddFood)} className="space-y-4">
-        {/* Food Name */}
-        <div>
-          <label className="block font-semibold mb-1">Food Name</label>
-          <input
-            type="text"
-            placeholder="Food Name"
-            className="input input-bordered w-full"
-            {...register("name", { required: true })}
+    <FormPage
+      standard
+      eyebrow="Menu"
+      title="Add a new dish"
+      subtitle="Upload one image, set the price and write a short description. Prices are whole taka."
+    >
+      <form
+        onSubmit={handleSubmit(handleAddFood)}
+        className="space-y-6"
+        noValidate
+      >
+        <FormSection
+          title="Dish details"
+          description="What customers see on the menu."
+        >
+          <Field
+            className="sm:col-span-2"
+            label="Food name"
+            icon={FiType}
+            placeholder="e.g. Kacchi biryani"
+            error={errors.name?.message}
+            {...register("name", { required: "Enter the food name." })}
           />
-          {errors.name && (
-            <p className="text-error text-xs font-semibold mt-1">
-              Food name is required.
-            </p>
-          )}
-        </div>
-
-        {/* Price */}
-        <div>
-          <label className="block font-semibold mb-1">Price (BDT)</label>
-          <input
-            type="number"
-            step="0.01"
-            placeholder="Price (BDT)"
-            className="input input-bordered w-full"
-            {...register("price", {
-              required: "Price is required.",
-              min: { value: 1, message: "Price must be greater than 0." },
+          <TextAreaField
+            className="sm:col-span-2"
+            label="Description"
+            rows={4}
+            maxLength={300}
+            counter={`${description.length}/300`}
+            placeholder="Ingredients, portion size, what makes it special"
+            error={errors.description?.message}
+            {...register("description", {
+              required: "Enter a short description.",
             })}
           />
-          {errors.price && (
-            <p className="text-error text-xs font-semibold mt-1">
-              {errors.price.message}
-            </p>
-          )}
-        </div>
+        </FormSection>
 
-        {/* Discount */}
-        <div>
-          <label className="block font-semibold mb-1">Discount (%)</label>
-          <input
+        <FormSection
+          title="Pricing"
+          description="Discounts are a whole percentage."
+        >
+          <Field
+            label="Price (৳)"
             type="number"
-            step="0.01"
-            placeholder="Discount (%)"
-            className="input input-bordered w-full"
-            defaultValue={0}
-            {...register("discount", { min: 0, max: 100 })}
+            inputMode="numeric"
+            step="1"
+            icon={TbCurrencyTaka}
+            placeholder="250"
+            error={errors.price?.message}
+            {...register("price", {
+              required: "Enter the price.",
+              min: { value: 1, message: "Price must be greater than 0." },
+              validate: wholeNumber("Use a whole number, like 250."),
+            })}
           />
-          <p className="text-xs text-base-content/60 mt-1">
-            Default 0%. Can be updated later up to 100%.
-          </p>
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block font-semibold mb-1">Description</label>
-          <textarea
-            placeholder="Description"
-            className="textarea textarea-bordered w-full resize-none"
-            rows={4}
-            {...register("description", { required: true })}
+          <Field
+            label="Discount (%)"
+            type="number"
+            inputMode="numeric"
+            step="1"
+            icon={FiPercent}
+            placeholder="0"
+            hint="0 means no discount. Up to 100."
+            error={errors.discount?.message}
+            {...register("discount", {
+              min: { value: 0, message: "Discount cannot be negative." },
+              max: {
+                value: 100,
+                message: "Discount cannot be more than 100%.",
+              },
+              validate: wholeNumber("Use a whole number, like 10."),
+            })}
           />
-          {errors.description && (
-            <p className="text-error text-xs font-semibold mt-1">
-              Food description is required.
-            </p>
-          )}
-        </div>
-
-        {/* Image Upload */}
-        <div>
-          <label className="block font-semibold mb-1">Upload Images</label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e.target.files)}
-            className="file-input file-input-bordered w-full"
-            disabled={uploading || imageURL}
-          />
-          {imageError && <p className="mt-2 text-sm font-semibold text-error" role="alert">{imageError}</p>}
-
-          {imageURL && (
-            <div className="relative my-1 w-fit">
-              <img
-                src={imageURL}
-                alt="food image"
-                className="h-28 w-auto object-cover rounded border"
-              />
-              <button
-                type="button"
-                onClick={() => handleImageRemove()}
-                className="absolute top-1 right-1 bg-error text-error-content text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
-              >
-                <FiX aria-hidden="true" />
-              </button>
-            </div>
-          )}
-
-          <p className="text-xs text-base-content/80 mt-1">
-            {imageURL
-              ? "You have uploaded 1 image."
-              : `Uploaded: ${imageURL.length} / 1`}
-          </p>
-        </div>
-
-        {/* Availability */}
-        <div>
-          <label className="block font-semibold mb-1">Availability</label>
-          <select
-            {...register("available")}
-            className="select select-bordered w-full"
-          >
-            <option value="true">Available</option>
-            <option value="false">Unavailable</option>
-          </select>
-        </div>
-
-        {/* Submit */}
-        <div className="flex justify-end">
-          <button
-            className="btn w-full mt-8 btn-primary disabled:text-base-content/50"
-            type="submit"
-          >
-            {uploading || isPending ? (
-              <>
-                <span className="loading loading-spinner text-primary"></span>{" "}
-                {uploading ? "Uploading image" : "Adding Food"}
-              </>
-            ) : (
-              "Add Food"
+          <div className="rounded-2xl border border-primary/25 bg-primary/8 px-4 py-3 text-sm sm:col-span-2">
+            Customers will pay{" "}
+            <strong className="text-base text-primary">
+              ৳{formatAmount(customerPays)}
+            </strong>
+            {Number(discount) > 0 && Number(price) > 0 && (
+              <span className="text-base-content/65">
+                {" "}
+                instead of ৳{formatAmount(price)}
+              </span>
             )}
-          </button>
-        </div>
+          </div>
+        </FormSection>
+
+        <FormSection
+          title="Image and availability"
+          description="One image, shown on cards and the dish page."
+        >
+          <ImageDropzone
+            label="Dish image"
+            hint="JPG, PNG or WebP, up to 5 MB"
+            url={image.url}
+            uploading={image.uploading}
+            error={image.error}
+            onSelect={image.upload}
+            onRemove={image.clear}
+            disabled={isPending}
+          />
+          <SelectField
+            className="sm:col-span-2"
+            label="Availability"
+            name="available"
+            control={control}
+            options={AVAILABILITY}
+          />
+        </FormSection>
+
+        <FormActions
+          loading={image.uploading || isPending}
+          loadingLabel={image.uploading ? "Uploading image" : "Adding dish"}
+        >
+          Add dish
+        </FormActions>
       </form>
-    </div>
+    </FormPage>
   );
 };
 

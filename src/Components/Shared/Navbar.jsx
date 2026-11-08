@@ -3,26 +3,18 @@ import logo from "../../assets/images/logo.png";
 import { RxCross2 } from "react-icons/rx";
 import { useState, useRef, useEffect } from "react";
 import { RiMenu2Line } from "react-icons/ri";
-import { FiLogOut, FiPlusCircle, FiUser } from "react-icons/fi";
-import { TbLayoutDashboard } from "react-icons/tb";
-import { LuChefHat, LuCodesandbox } from "react-icons/lu";
-import { IoFastFoodOutline } from "react-icons/io5";
-import {
-  FaCheckCircle,
-  FaTasks,
-  FaUserClock,
-  FaUsers,
-  FaMotorcycle,
-  FaWallet,
-  FaMoneyBillWave,
-} from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { getDashboardLinks } from "../../lib/dashboardLinks";
 import useAuth from "../../Hooks/useAuth";
+import useUserProfile from "../../Hooks/useUserProfile";
 import useUserRole from "../../Hooks/useUserRole";
 import { toast } from "react-toastify";
+import { Skeleton } from "../Skeletons/Skeleton";
 
 const Navbar = () => {
-  const { user, userEmail, logOutUser } = useAuth();
-  const { roleLoading, role } = useUserRole();
+  const { user, userEmail, loading, logOutUser } = useAuth();
+  const { roleLoading, role, roleLabel: roleLabelFromDb } = useUserRole();
+  const { profile } = useUserProfile();
 
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null); // Ref for mobile menu
@@ -33,88 +25,9 @@ const Navbar = () => {
   const displayName =
     user?.displayName?.trim() || userEmail?.split("@")[0] || "Your account";
   const avatarInitial = displayName.charAt(0).toUpperCase();
-  const roleLabel = roleLoading
-    ? "Loading role"
-    : role
-      ? role.charAt(0).toUpperCase() + role.slice(1)
-      : "Member";
+  const roleLabel = roleLoading ? "Loading role" : roleLabelFromDb || "Member";
 
-  // Dashboard links (same role logic as DashboardLayout)
-  const commonLinks = [
-    {
-      to: "/dashboard",
-      label: "Dashboard",
-      icon: TbLayoutDashboard,
-      end: true,
-    },
-    { to: "/dashboard/manageProfile", label: "Manage Profile", icon: FiUser },
-  ];
-
-  const roleLinks = roleLoading
-    ? []
-    : role === "admin"
-      ? [
-          {
-            to: "/dashboard/kitchenOrders",
-            label: "Kitchen Orders",
-            icon: LuChefHat,
-          },
-          { to: "/dashboard/addFood", label: "Add Food", icon: FiPlusCircle },
-          {
-            to: "/dashboard/manageFoods",
-            label: "Manage Foods",
-            icon: IoFastFoodOutline,
-          },
-          {
-            to: "/dashboard/manageUsers",
-            label: "Manage Users",
-            icon: FaUsers,
-          },
-          {
-            to: "/dashboard/pendingRiders",
-            label: "Pending Riders",
-            icon: FaUserClock,
-          },
-          {
-            to: "/dashboard/cashoutRequests",
-            label: "Cashout Requests",
-            icon: FaMoneyBillWave,
-          },
-        ]
-      : role === "customer"
-        ? [
-            {
-              to: "/dashboard/myOrders",
-              label: "My Orders",
-              icon: LuCodesandbox,
-            },
-            {
-              to: "/dashboard/beARider",
-              label: "Be a Rider",
-              icon: FaMotorcycle,
-            },
-          ]
-        : role === "rider"
-          ? [
-              {
-                to: "/dashboard/pendingDeliveries",
-                label: "Pending Deliveries",
-                icon: FaTasks,
-              },
-              {
-                to: "/dashboard/completedDeliveries",
-                label: "Completed Deliveries",
-                icon: FaCheckCircle,
-              },
-              {
-                to: "/dashboard/cashouts",
-                label: "Cashouts",
-                icon: FaWallet,
-              },
-            ]
-          : [];
-
-  const dashboardLinks = [...commonLinks, ...roleLinks];
+  const dashboardLinks = getDashboardLinks(roleLoading ? null : role, profile?.riderStatus);
 
   const closeProfileMenu = () => setProfileOpen(false);
 
@@ -253,7 +166,7 @@ const Navbar = () => {
               alt="Sam's Kitchen Logo"
               className="h-10 md:h-14 w-auto bg-transparent object-contain"
             />
-            <span className="text-base-content text-sm font-bold sm:text-base md:text-xl whitespace-nowrap tracking-tight">
+            <span className="text-base-content text-sm font-bold sm:text-base md:text-xl whitespace-nowrap tracking-tight max-[359px]:hidden">
               Sam's Kitchen
             </span>
           </Link>
@@ -265,7 +178,9 @@ const Navbar = () => {
 
         <div className="flex navbar-end items-center gap-2 sm:gap-3 relative">
           {/* Auth Section */}
-          {user ? (
+          {loading ? (
+            <Skeleton className="size-12 rounded-full!" />
+          ) : user ? (
             <div ref={profileRef} className="relative">
               {/* Trigger: avatar only */}
               <button

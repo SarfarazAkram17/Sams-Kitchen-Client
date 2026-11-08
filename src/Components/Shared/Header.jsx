@@ -6,6 +6,9 @@ import useAxios from "../../Hooks/useAxios";
 import { useNavigate } from "react-router";
 import ThemeToggle from "./ThemeToggle";
 import useCanOrder from "../../Hooks/useCanOrder";
+import { foodPrice, formatAmount } from "../../lib/money";
+import LazyImage from "./LazyImage";
+import { SearchResultSkeleton } from "../Skeletons/CardSkeletons";
 
 const Header = () => {
   const [search, setSearch] = useState("");
@@ -62,14 +65,6 @@ const Header = () => {
     }
   };
 
-  const calculateDiscountedPrice = (food) => {
-    const discountedPrice =
-      food.discount > 0
-        ? food.price - (food.price * food.discount) / 100
-        : food.price;
-    return discountedPrice;
-  };
-
   return (
     <div className="relative bg-primary text-primary-content">
       <div className="mx-auto flex w-full max-w-[1500px] items-center justify-between gap-2 px-3 py-2 sm:gap-3 sm:px-5">
@@ -98,7 +93,6 @@ const Header = () => {
               onChange={(e) => setSearch(e.target.value)}
               value={search}
               placeholder="Search our kitchen"
-              className="placeholder:text-primary-content/60"
             />
           </label>
 
@@ -110,11 +104,13 @@ const Header = () => {
             >
               {isLoading ? (
                 <div
-                  className="p-4 space-y-3"
+                  className="space-y-1 p-2"
+                  role="status"
                   aria-label="Searching menu items"
                 >
-                  <div className="h-12 rounded-lg bg-base-200 animate-pulse" />
-                  <div className="h-12 rounded-lg bg-base-200 animate-pulse" />
+                  {[0, 1, 2].map((index) => (
+                    <SearchResultSkeleton key={index} />
+                  ))}
                 </div>
               ) : searchResults?.length > 0 ? (
                 searchResults.map((food) => (
@@ -135,11 +131,9 @@ const Header = () => {
                     className="flex min-w-0 cursor-pointer items-center justify-between gap-3 rounded-xl px-2 py-2.5 hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-primary sm:px-3"
                   >
                     <div className="flex min-w-0 flex-1 items-center gap-3">
-                      <img
-                        src={food.image}
-                        alt=""
-                        className="h-12 w-14 shrink-0 rounded-lg object-cover sm:h-14 sm:w-[4.5rem]"
-                      />
+                      <div className="relative h-12 w-14 shrink-0 overflow-hidden rounded-lg sm:h-14 sm:w-[4.5rem]">
+                        <LazyImage src={food.image} alt="" className="size-full object-cover" />
+                      </div>
                       <div className="min-w-0 flex-1">
                         <p className="line-clamp-2 break-words text-sm font-medium leading-snug">
                           {food.name}
@@ -157,11 +151,11 @@ const Header = () => {
                     <div className="flex shrink-0 flex-col items-end gap-0.5 text-right">
                       {food.discount ? (
                         <p className="whitespace-nowrap text-xs text-base-content/60 line-through">
-                          ৳ {Number(food.price).toFixed(2)}
+                          ৳ {formatAmount(food.price)}
                         </p>
                       ) : null}
                       <p className="whitespace-nowrap text-sm font-semibold text-success">
-                        ৳ {calculateDiscountedPrice(food).toFixed(2)}
+                        ৳ {formatAmount(foodPrice(food))}
                       </p>
                     </div>
                   </div>

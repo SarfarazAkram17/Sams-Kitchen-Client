@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import {
   createUserWithEmailAndPassword,
@@ -22,70 +22,127 @@ googleProvider.addScope("email");
 
 const facebookProvider = new FacebookAuthProvider();
 
+const emailOf = (firebaseUser) =>
+  firebaseUser?.email || firebaseUser?.providerData?.[0]?.email || "";
+
+// Email and password accounts count as signed in only after the address is verified.
+const needsVerification = (firebaseUser) =>
+  firebaseUser.providerData.some((info) => info.providerId === "password") &&
+  !firebaseUser.emailVerified;
+
 const AuthProvider = ({ children }) => {
   const axiosInstance = useAxios();
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const userEmail = user?.email || user?.providerData?.[0]?.email || "";
+  const sessions = useRef(new Map());
+  const userEmail = emailOf(user);
 
-  const createUser = (email, password) => {
+  // Starts the API session. A first-time sign-in has no account yet, so the
+  // account is created (without a role; onboarding asks for it) and the
+  // session is requested again.
+  const startSession = useCallback(
+    async (firebaseUser) => {
+      const email = emailOf(firebaseUser);
+      if (!email) {
+        throw new Error("This sign-in method did not share an email address.");
+      }
+
+      try {
+        await axiosInstance.post("/auth/jwt", { email });
+      } catch (error) {
+        if (error.response?.status !== 404) throw error;
+
+        await axiosInstance.post("/users", {
+          email,
+          name: firebaseUser.displayName || "",
+          photo: firebaseUser.photoURL || "",
+          providerId: firebaseUser.providerData?.[0]?.providerId || "",
+          createdAt: firebaseUser.metadata?.createdAt,
+        });
+        await axiosInstance.post("/auth/jwt", { email });
+      }
+    },
+    [axiosInstance],
+  );
+
+  // Sign-in calls and the auth listener share one in-flight request per account.
+  const applySession = useCallback(
+    async (firebaseUser) => {
+      try {
+        if (!firebaseUser || needsVerification(firebaseUser)) {
+          setUser(null);
+          return;
+        }
+
+        const pending =
+          sessions.current.get(firebaseUser.uid) ||
+          startSession(firebaseUser).finally(() =>
+            sessions.current.delete(firebaseUser.uid),
+          );
+        sessions.current.set(firebaseUser.uid, pending);
+
+        try {
+          await pending;
+        } catch (error) {
+          console.error("Could not start the session:", error);
+        }
+        setUser(firebaseUser);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [startSession],
+  );
+
+  const signInWith = async (signIn) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      const result = await signIn();
+      await applySession(result.user);
+      return result;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
-  const loginUser = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
-  };
+  const createUser = (email, password) =>
+    createUserWithEmailAndPassword(auth, email, password);
 
-  const updateUserProfile = (profileInfo) => {
-    return updateProfile(auth.currentUser, profileInfo);
-  };
+  const loginUser = (email, password) =>
+    signInWith(() => signInWithEmailAndPassword(auth, email, password));
 
-  const sendVerificationEmail = () => {
-    setLoading(true);
-    return sendEmailVerification(auth.currentUser);
-  };
+  const continueWithGoogle = () =>
+    signInWith(() => signInWithPopup(auth, googleProvider));
 
-  const continueWithGoogle = () => {
-    setLoading(true);
-    return signInWithPopup(auth, googleProvider);
-  };
+  const continueWithFacebook = () =>
+    signInWith(() => signInWithPopup(auth, facebookProvider));
 
-  const continueWithFacebook = () => {
-    setLoading(true);
-    return signInWithPopup(auth, facebookProvider);
-  };
+  const updateUserProfile = (profileInfo) =>
+    updateProfile(auth.currentUser, profileInfo);
 
-  const forgotPassword = (email) => {
-    return sendPasswordResetEmail(auth, email);
-  };
+  const sendVerificationEmail = () => sendEmailVerification(auth.currentUser);
+
+  const forgotPassword = (email) => sendPasswordResetEmail(auth, email);
 
   const logOutUser = async () => {
     setLoading(true);
-    queryClient.clear();
-    await axiosInstance.post("/auth/logout");
-    clearCart();
-    return signOut(auth);
+    try {
+      queryClient.clear();
+      await axiosInstance.post("/auth/logout").catch(() => {});
+      clearCart();
+      await signOut(auth);
+    } finally {
+      setUser(null);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-
-      if (currentUser) {
-        const email = currentUser.email || currentUser.providerData[0].email;
-        await axiosInstance.post("/auth/jwt", {
-          email,
-        });
-      }
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [axiosInstance]);
+    const unsubscribe = onAuthStateChanged(auth, applySession);
+    return unsubscribe;
+  }, [applySession]);
 
   const authInfo = {
     user,

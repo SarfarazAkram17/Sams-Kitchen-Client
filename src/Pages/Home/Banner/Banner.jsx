@@ -9,6 +9,8 @@ import useAuth from "../../../Hooks/useAuth";
 import useCanOrder from "../../../Hooks/useCanOrder";
 import useAxios from "../../../Hooks/useAxios";
 import { PiShoppingCartBold } from "react-icons/pi";
+import { formatAmount, getDiscountedPrice } from "../../../lib/money";
+import { BannerDishSkeleton } from "../../../Components/Skeletons/CardSkeletons";
 
 const SLIDE_MS = 6000;
 
@@ -54,7 +56,7 @@ const Banner = () => {
   const food = foods[activeIndex % Math.max(count, 1)];
   const price = Number(food?.price || 0);
   const discount = Number(food?.discount || 0);
-  const discountedPrice = price - (price * discount) / 100;
+  const discountedPrice = getDiscountedPrice(price, discount);
 
   const handleOrder = () => {
     if (!food) return;
@@ -155,13 +157,9 @@ const Banner = () => {
             />
 
             {isLoading ? (
-              <div
-                className="aspect-[4/4.6] animate-pulse rounded-[2rem] border border-base-300 bg-base-100"
-                role="status"
-                aria-label="Loading featured dish"
-              />
+              <BannerDishSkeleton />
             ) : isError ? (
-              <div className="grid aspect-[4/4.6] place-items-center rounded-[2rem] border border-base-300 bg-base-100 p-8 text-center">
+              <div className="grid aspect-[4/4.6] place-items-center rounded-[2rem] border border-base-300 bg-base-100 p-5 sm:p-8 text-center">
                 <div>
                   <p className="font-display text-3xl">
                     The menu is taking a moment.
@@ -212,7 +210,7 @@ const Banner = () => {
                       )}
                     </div>
                     <span className="shrink-0 rounded-full bg-white/15 px-3 py-2 text-sm font-bold backdrop-blur-md sm:px-4 sm:text-base">
-                      ৳{discountedPrice.toFixed(0)}
+                      ৳{formatAmount(discountedPrice)}
                     </span>
                   </div>
                 </div>
@@ -235,7 +233,7 @@ const Banner = () => {
                 </div>
               </button>
             ) : (
-              <div className="grid aspect-[4/4.6] place-items-center rounded-[2rem] border border-base-300 bg-base-100 p-8 text-center">
+              <div className="grid aspect-[4/4.6] place-items-center rounded-[2rem] border border-base-300 bg-base-100 p-5 sm:p-8 text-center">
                 <div>
                   <p className="font-display text-3xl">
                     A fresh menu is coming soon.

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { lazy, Suspense, useState, useRef, useEffect } from "react";
 import {
   useInfiniteQuery,
   useMutation,
@@ -8,7 +8,11 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import { FaRegBell } from "react-icons/fa6";
-import { FiCheck, FiInbox } from "react-icons/fi";
+import { NotificationItemSkeleton } from "../Skeletons/CardSkeletons";
+
+// The list (and its code) is fetched the first time the panel opens.
+const loadNotificationList = () => import("./NotificationList");
+const NotificationList = lazy(loadNotificationList);
 
 const Notification = () => {
   const { userEmail } = useAuth();
@@ -16,9 +20,18 @@ const Notification = () => {
   const axiosInstance = useAxios();
   const queryClient = useQueryClient();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [idleReady, setIdleReady] = useState(false);
   const dropdownRef = useRef(null);
 
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, refetch } =
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } =
     useInfiniteQuery({
       queryKey: ["notifications", userEmail],
       queryFn: async ({ pageParam = 1 }) => {
@@ -30,9 +43,19 @@ const Notification = () => {
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages) =>
         allPages.length * 7 < lastPage.total ? allPages.length + 1 : undefined,
-      enabled: !!userEmail,
+      // Wait until the browser is idle (or the panel is opened) instead of
+      // competing with the first paint.
+      enabled: !!userEmail && (idleReady || showNotifications),
       refetchInterval: 30000,
     });
+
+  useEffect(() => {
+    if (!userEmail) return undefined;
+    const schedule = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1500));
+    const cancel = window.cancelIdleCallback || window.clearTimeout;
+    const handle = schedule(() => setIdleReady(true), { timeout: 4000 });
+    return () => cancel(handle);
+  }, [userEmail]);
 
   useEffect(() => {
     if (!userEmail) return undefined;
@@ -101,6 +124,8 @@ const Notification = () => {
         type="button"
         className="grid size-10 place-items-center rounded-full text-primary-content cursor-pointer transition hover:bg-primary-content/10 focus-visible:outline-primary-content"
         onClick={handleShowNotifications}
+        onMouseEnter={loadNotificationList}
+        onFocus={loadNotificationList}
         aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
         aria-expanded={showNotifications}
       >
@@ -131,70 +156,26 @@ const Notification = () => {
             </span>
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-            {isLoading ? (
-              <div className="space-y-3 p-4" aria-label="Loading notifications">
-                <div className="h-14 animate-pulse rounded-xl bg-base-200" />
-                <div className="h-14 animate-pulse rounded-xl bg-base-200" />
-              </div>
-            ) : isError ? (
-              <div className="p-5 text-center">
-                <p className="text-sm text-base-content/65">
-                  Updates could not be loaded.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => refetch()}
-                  className="btn btn-sm btn-ghost mt-2 text-primary"
-                >
-                  Try again
-                </button>
-              </div>
-            ) : notifications.length ? (
-              notifications.map((notification) => (
-                <article
-                  key={notification._id}
-                  className={`border-b border-base-300/70 px-4 py-3 last:border-0 ${notification.isRead ? "" : "bg-primary/[0.06]"}`}
-                >
-                  <div className="flex gap-3">
-                    <span
-                      className={`mt-1 grid size-7 shrink-0 place-items-center rounded-full ${notification.isRead ? "bg-base-200 text-base-content/55" : "bg-primary/15 text-primary"}`}
-                    >
-                      {notification.isRead ? (
-                        <FiCheck size={14} />
-                      ) : (
-                        <FaRegBell size={12} />
-                      )}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="break-words text-sm leading-5">
-                        {notification.message}
-                      </p>
-                      <time className="mt-1 block text-[11px] text-base-content/50">
-                        {new Date(notification.createdAt).toLocaleString()}
-                      </time>
-                    </div>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <div className="px-5 py-9 text-center">
-                <FiInbox className="mx-auto mb-2 text-2xl text-base-content/35" />
-                <p className="text-sm font-semibold">Nothing new yet</p>
-                <p className="mt-1 text-xs text-base-content/55">
-                  We’ll keep your order updates here.
-                </p>
-              </div>
-            )}
-          </div>
-          {hasNextPage && (
-            <button
-              type="button"
-              className="w-full shrink-0 border-t border-base-300 py-3 text-xs font-bold text-primary hover:bg-base-200"
-              onClick={() => fetchNextPage()}
+            <Suspense
+              fallback={
+                <div role="status" aria-label="Loading notifications">
+                  {[0, 1, 2, 3, 4].map((index) => (
+                    <NotificationItemSkeleton key={index} />
+                  ))}
+                </div>
+              }
             >
-              Load earlier updates
-            </button>
-          )}
+              <NotificationList
+                notifications={notifications}
+                isLoading={isLoading || (!data && !isError)}
+                isError={isError}
+                refetch={refetch}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+              />
+            </Suspense>
+          </div>
         </section>
       )}
     </div>

@@ -1,13 +1,25 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pagination } from "antd";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import AppPagination from "../../../Components/Shared/AppPagination";
 import { toast } from "react-toastify";
-import Loading from "../../../Components/Loading/Loading";
 import EmptyState from "../../../Components/Shared/EmptyState";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import { CASHOUT_METHODS } from "../../../lib/cashoutMethods";
 import { formatCurrency, formatDate } from "../../../lib/formatters";
+import {
+  CashoutHistoryListSkeleton,
+  RiderCashoutsSkeleton,
+} from "../../../Components/Skeletons/PageSkeletons";
+import AppSelect from "../../../Components/Shared/AppSelect";
+import ListToolbar from "../../../Components/Shared/ListToolbar";
+import PageHeading from "../../../Components/Shared/PageHeading";
+import EmptyResults from "../../../Components/Shared/EmptyResults";
 import {
   CashoutStatusBadge,
   PayoutDetails,
@@ -32,7 +44,17 @@ const RiderCashouts = () => {
   const queryClient = useQueryClient();
   const { userEmail } = useAuth();
   const [page, setPage] = useState(1);
+  const [historyStatus, setHistoryStatus] = useState("");
+  const [historyMethod, setHistoryMethod] = useState("");
+  const [historySort, setHistorySort] = useState("newest");
   const [method, setMethod] = useState("bkash");
+
+  const resetHistory = () => {
+    setHistoryStatus("");
+    setHistoryMethod("");
+    setHistorySort("newest");
+    setPage(1);
+  };
   const [details, setDetails] = useState({});
 
   const { data: balance, isLoading: balanceLoading } = useQuery({
@@ -51,11 +73,26 @@ const RiderCashouts = () => {
     isLoading: historyLoading,
     isError: historyError,
   } = useQuery({
-    queryKey: ["myCashouts", userEmail, page],
+    queryKey: [
+      "myCashouts",
+      userEmail,
+      page,
+      historyStatus,
+      historyMethod,
+      historySort,
+    ],
+    placeholderData: keepPreviousData,
     enabled: !!userEmail,
     queryFn: async () => {
       const res = await axiosSecure.get("/cashouts/me", {
-        params: { email: userEmail, page, limit: PAGE_SIZE },
+        params: {
+          email: userEmail,
+          page,
+          limit: PAGE_SIZE,
+          status: historyStatus || undefined,
+          method: historyMethod || undefined,
+          sort: historySort,
+        },
       });
       return res.data;
     },
@@ -103,24 +140,15 @@ const RiderCashouts = () => {
     requestCashout.mutate();
   };
 
-  if (balanceLoading) return <Loading />;
+  if (balanceLoading) return <RiderCashoutsSkeleton />;
 
   return (
-    <div className="w-full space-y-8 pb-8">
-      <header className="flex flex-col gap-2 border-b border-base-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[.16em] text-secondary">
-            Rider workspace
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-base-content sm:text-4xl">
-            Cashouts
-          </h1>
-        </div>
-        <p className="max-w-md text-sm leading-6 text-base-content/70 sm:text-right">
-          Request your delivery earnings, then track the payment and see the
-          proof once the admin has sent it.
-        </p>
-      </header>
+    <div className="w-full space-y-6 pb-8">
+      <PageHeading
+        eyebrow="Rider workspace"
+        title="Cashouts"
+        description="Request your delivery earnings, then track the payment and see the proof once the admin has sent it."
+      />
 
       <section className="grid gap-4 sm:grid-cols-3" aria-label="Earnings">
         <BalanceCard
@@ -182,31 +210,35 @@ const RiderCashouts = () => {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {fields.map(
-              ({ name, label, placeholder, inputMode, pattern, title, options }) => (
-                <label key={`${method}-${name}`} className="block">
-                  <span className="mb-1 block text-sm font-medium text-base-content">
+              ({
+                name,
+                label,
+                placeholder,
+                inputMode,
+                pattern,
+                title,
+                options,
+              }) => (
+                <div key={`${method}-${name}`} className="block">
+                  <label
+                    htmlFor={`cashout-${name}`}
+                    className="mb-1 block text-sm font-medium text-base-content"
+                  >
                     {label}
-                  </span>
+                  </label>
                   {options ? (
-                    <select
-                      className="select select-bordered w-full"
-                      required
+                    <AppSelect
+                      inputId={`cashout-${name}`}
+                      options={options}
                       value={details[name] || ""}
-                      onChange={(event) =>
-                        setDetails({ ...details, [name]: event.target.value })
+                      placeholder={`Select ${label.toLowerCase()}`}
+                      onChange={(option) =>
+                        setDetails({ ...details, [name]: option.value })
                       }
-                    >
-                      <option value="" disabled>
-                        Select {label.toLowerCase()}
-                      </option>
-                      {options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                    />
                   ) : (
                     <input
+                      id={`cashout-${name}`}
                       className="input input-bordered w-full"
                       required
                       placeholder={placeholder}
@@ -219,15 +251,15 @@ const RiderCashouts = () => {
                       }
                     />
                   )}
-                </label>
+                </div>
               ),
             )}
           </div>
 
           {method === "card" && (
             <p className="text-xs text-base-content/60">
-              Only enter the card number and holder name. Never share the CVV
-              or expiry date.
+              Only enter the card number and holder name. Never share the CVV or
+              expiry date.
             </p>
           )}
 
@@ -256,8 +288,68 @@ const RiderCashouts = () => {
           Your cashout requests
         </h2>
 
+        <ListToolbar
+          searchId="history"
+          hideSearch
+          activeCount={
+            (historyStatus ? 1 : 0) +
+            (historyMethod ? 1 : 0) +
+            (historySort !== "newest" ? 1 : 0)
+          }
+          onReset={resetHistory}
+          summary={
+            historyLoading
+              ? "Loading requests"
+              : `${total} ${total === 1 ? "request" : "requests"}`
+          }
+          filters={[
+            {
+              key: "status",
+              label: "Status",
+              options: [
+                { value: "", label: "All statuses" },
+                { value: "pending", label: "Pending" },
+                { value: "cashed_out", label: "Cashed out" },
+              ],
+              value: historyStatus,
+              onChange: (value) => {
+                setHistoryStatus(value);
+                setPage(1);
+              },
+            },
+            {
+              key: "method",
+              label: "Payout method",
+              options: [
+                { value: "", label: "All methods" },
+                ...Object.entries(CASHOUT_METHODS).map(
+                  ([value, { label }]) => ({ value, label }),
+                ),
+              ],
+              value: historyMethod,
+              onChange: (value) => {
+                setHistoryMethod(value);
+                setPage(1);
+              },
+            },
+            {
+              key: "sort",
+              label: "Sort by",
+              options: [
+                { value: "newest", label: "Newest first" },
+                { value: "oldest", label: "Oldest first" },
+              ],
+              value: historySort,
+              onChange: (value) => {
+                setHistorySort(value);
+                setPage(1);
+              },
+            },
+          ]}
+        />
+
         {historyLoading ? (
-          <Loading />
+          <CashoutHistoryListSkeleton />
         ) : historyError ? (
           <div
             className="rounded-2xl border border-error/30 bg-error/10 p-4 text-sm text-error"
@@ -265,6 +357,12 @@ const RiderCashouts = () => {
           >
             Your cashout requests could not be loaded.
           </div>
+        ) : requests.length === 0 && (historyStatus || historyMethod) ? (
+          <EmptyResults
+            title="No requests match"
+            message="Try another status or payout method."
+            onReset={resetHistory}
+          />
         ) : requests.length === 0 ? (
           <EmptyState
             title="No cashout requests yet"
@@ -284,7 +382,8 @@ const RiderCashouts = () => {
                         {formatCurrency(request.amount)}
                       </p>
                       <p className="mt-1 text-xs text-base-content/70">
-                        {CASHOUT_METHODS[request.method]?.label || request.method}
+                        {CASHOUT_METHODS[request.method]?.label ||
+                          request.method}
                         {" · "}
                         {request.orderIds?.length || 0} order
                         {request.orderIds?.length === 1 ? "" : "s"}
@@ -329,16 +428,13 @@ const RiderCashouts = () => {
             </div>
 
             {total > PAGE_SIZE && (
-              <div className="flex justify-center pt-2">
-                <Pagination
-                  current={page}
-                  align="center"
-                  total={total}
-                  pageSize={PAGE_SIZE}
-                  showSizeChanger={false}
-                  onChange={setPage}
-                />
-              </div>
+              <AppPagination
+                className="pt-2"
+                current={page}
+                total={total}
+                pageSize={PAGE_SIZE}
+                onChange={setPage}
+              />
             )}
           </>
         )}

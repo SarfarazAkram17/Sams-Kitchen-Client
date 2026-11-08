@@ -1,66 +1,82 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
+
+/*
+ * Palette: deep teal and saffron.
+ * Dark   – teal ink surfaces, saffron primary, verdigris secondary.
+ * Light  – ivory surfaces, deep teal primary, brass secondary.
+ */
 @plugin "daisyui/theme" {
   name: "light";
   default: false;
   color-scheme: light;
-  --color-primary: #a7472e;
-  --color-primary-content: #fff7ee;
-  --color-secondary: #bd9147;
-  --color-secondary-content: #241c10;
-  --color-accent: #617d68;
-  --color-accent-content: #f5fff5;
-  --color-neutral: #e5ddcf;
-  --color-neutral-content: #302a21;
-  --color-base-100: #f6f2e9;
-  --color-base-200: #ebe5d8;
-  --color-base-300: #d8cfbf;
-  --color-base-content: #292a23;
-  --color-info: #547786;
-  --color-info-content: #f4fbff;
-  --color-success: #4f755d;
-  --color-success-content: #f4fbf5;
-  --color-warning: #a87832;
-  --color-warning-content: #1f1608;
-  --color-error: #a8493d;
-  --color-error-content: #fff6f3;
+  --color-primary: #0f5f63;
+  --color-primary-content: #f3fbf9;
+  --color-secondary: #a96f0c;
+  --color-secondary-content: #fff8e6;
+  --color-accent: #b5442f;
+  --color-accent-content: #fff3ef;
+  --color-neutral: #e6e1d3;
+  --color-neutral-content: #14292c;
+  --color-base-100: #faf8f2;
+  --color-base-200: #f0ece0;
+  --color-base-300: #d9d2bf;
+  --color-base-content: #11282b;
+  --color-info: #2f6c93;
+  --color-info-content: #f2f9ff;
+  --color-success: #2f7d4f;
+  --color-success-content: #f2fbf5;
+  --color-warning: #a8740a;
+  --color-warning-content: #fff9ea;
+  --color-error: #b23a3a;
+  --color-error-content: #fff4f2;
+  --radius-selector: 999px;
+  --radius-field: 0.85rem;
+  --radius-box: 1.25rem;
+  --depth: 1;
+  --noise: 0;
 }
 @plugin "daisyui/theme" {
   name: "dark";
   default: true;
   color-scheme: dark;
-  --color-primary: #e48261;
-  --color-primary-content: #24140f;
-  --color-secondary: #d6b05e;
-  --color-secondary-content: #20190c;
-  --color-accent: #91aa91;
-  --color-accent-content: #132018;
-  --color-neutral: #292c25;
-  --color-neutral-content: #eee9de;
-  --color-base-100: #171a16;
-  --color-base-200: #20231e;
-  --color-base-300: #33372f;
-  --color-base-content: #f1ecdf;
-  --color-info: #9ab9c5;
-  --color-info-content: #0f1e24;
-  --color-success: #9bbc91;
-  --color-success-content: #11200f;
-  --color-warning: #e0b267;
-  --color-warning-content: #241a08;
-  --color-error: #ed9382;
-  --color-error-content: #2a0f0b;
+  --color-primary: #e9a23b;
+  --color-primary-content: #1d1405;
+  --color-secondary: #52b5aa;
+  --color-secondary-content: #062320;
+  --color-accent: #e0735a;
+  --color-accent-content: #2b0e07;
+  --color-neutral: #17353a;
+  --color-neutral-content: #f2ecdd;
+  --color-base-100: #0b1f23;
+  --color-base-200: #11292e;
+  --color-base-300: #1f3f45;
+  --color-base-content: #f2ecdd;
+  --color-info: #86b9e0;
+  --color-info-content: #0b1c28;
+  --color-success: #8fc88a;
+  --color-success-content: #0e2210;
+  --color-warning: #f4c95d;
+  --color-warning-content: #271b04;
+  --color-error: #f0867a;
+  --color-error-content: #2b0e0a;
+  --radius-selector: 999px;
+  --radius-field: 0.85rem;
+  --radius-box: 1.25rem;
+  --depth: 1;
+  --noise: 0;
 }
 
 :root {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Manrope", sans-serif;
   color-scheme: dark;
-  --font-display: "Instrument Serif", Georgia, serif;
-  --font-body: "DM Sans", sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", sans-serif;
   --ink: var(--color-base-content);
   --muted: color-mix(
     in srgb,
-    var(--color-base-content) 86%,
+    var(--color-base-content) 82%,
     var(--color-base-100)
   );
   --line: var(--color-base-300);
@@ -71,44 +87,57 @@
     var(--color-primary) 14%,
     var(--color-base-100)
   );
-  --surface-glass: color-mix(in srgb, var(--color-base-100) 88%, transparent);
-  --shadow-soft: 0 18px 45px -32px color-mix(in srgb, #090b08 70%, transparent);
-  --shadow-card: 0 14px 34px -25px color-mix(in srgb, #080a07 76%, transparent);
-  --chart-1: #e48261;
-  --chart-2: #d6b05e;
-  --chart-3: #91aa91;
-  --chart-4: #9ab9c5;
-  --chart-6: #7668b5;
-  --status-pending: #e0b267;
-  --status-confirmed: #7fb4d4;
-  --status-prepared: #5fd0bd;
-  --status-assigned: #a99bf0;
-  --status-picked: #f09a5a;
-  --status-delivered: #8fcf8a;
-  --status-cancelled: #ef7d72;
+  --surface-glass: color-mix(in srgb, var(--color-base-100) 78%, transparent);
+  /* Depth: a lit top edge, a contact shadow and a long soft shadow. */
+  --edge-light: inset 0 1px 0 rgb(255 255 255 / 0.07);
+  --shadow-soft:
+    0 2px 6px rgb(0 0 0 / 0.22), 0 24px 48px -20px rgb(0 0 0 / 0.6);
+  --shadow-card:
+    var(--edge-light), 0 1px 2px rgb(0 0 0 / 0.25),
+    0 16px 34px -18px rgb(0 0 0 / 0.65);
+  --shadow-float:
+    var(--edge-light), 0 2px 4px rgb(0 0 0 / 0.3),
+    0 36px 70px -24px rgb(0 0 0 / 0.75);
+  --chart-1: #e9a23b;
+  --chart-2: #52b5aa;
+  --chart-3: #8fc27e;
+  --chart-4: #7fa9d9;
+  --chart-6: #a98bd8;
+  --status-pending: #f4c95d;
+  --status-confirmed: #86b9e0;
+  --status-prepared: #52b5aa;
+  --status-assigned: #a98bd8;
+  --status-picked: #f0955a;
+  --status-delivered: #8fc88a;
+  --status-cancelled: #f0867a;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --ink: var(--color-base-content);
   --muted: color-mix(
     in srgb,
-    var(--color-base-content) 86%,
+    var(--color-base-content) 78%,
     var(--color-base-100)
   );
-  --line: var(--color-base-300);
-  --surface-raised: var(--color-base-200);
-  --surface-sunken: var(--color-base-100);
   --accent-soft: color-mix(
     in srgb,
-    var(--color-primary) 10%,
+    var(--color-primary) 9%,
     var(--color-base-100)
   );
-  --chart-1: #a7472e;
-  --chart-2: #8c661e;
-  --chart-3: #426d4c;
-  --chart-4: #41697a;
-  --chart-6: #5b4fa8;
+  --edge-light: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-soft:
+    0 1px 3px rgb(17 40 43 / 0.08), 0 22px 44px -22px rgb(17 40 43 / 0.28);
+  --shadow-card:
+    var(--edge-light), 0 1px 2px rgb(17 40 43 / 0.08),
+    0 14px 30px -18px rgb(17 40 43 / 0.28);
+  --shadow-float:
+    var(--edge-light), 0 2px 4px rgb(17 40 43 / 0.1),
+    0 34px 64px -26px rgb(17 40 43 / 0.38);
+  --chart-1: #b77a0b;
+  --chart-2: #0f7c77;
+  --chart-3: #4a8a3d;
+  --chart-4: #3b6ea5;
+  --chart-6: #6d4fb0;
   --status-pending: #9a6a1c;
   --status-confirmed: #2f6f8f;
   --status-prepared: #1f8a7a;
@@ -134,7 +163,7 @@ body {
   margin: 0;
   background: var(--color-base-100);
   color: var(--color-base-content);
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -160,14 +189,14 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-body);
 }
 
 h1,
 .font-display {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 :focus-visible {
@@ -271,6 +300,15 @@ option {
   color: var(--color-secondary-content) !important;
 }
 
+/* Header search: white in the dark theme, black in the light theme. */
+.header-search {
+  color: #fff !important;
+}
+
+:root[data-theme="light"] .header-search {
+  color: #000 !important;
+}
+
 .header-search input,
 .header-search input:focus,
 .header-search input:focus-visible {
@@ -279,6 +317,21 @@ option {
   border: 0 !important;
   outline: none !important;
   box-shadow: none !important;
+}
+
+.header-search input::placeholder {
+  color: #fff !important;
+  opacity: 0.9 !important;
+}
+
+:root[data-theme="light"] .header-search input::placeholder {
+  color: #000 !important;
+  opacity: 0.8 !important;
+}
+
+.header-search input::-webkit-search-cancel-button {
+  opacity: 0.7;
+  cursor: pointer;
 }
 
 .recharts-cartesian-axis-tick-value,
@@ -353,13 +406,33 @@ option {
   }
 }
 
-/* Sam's Kitchen — night-market editorial system */
+/* Sam's Kitchen — deep teal and saffron */
 :root {
   scrollbar-color: var(--color-base-300) var(--color-base-100);
 }
 
 body {
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
+}
+
+/* A soft pool of light behind every page, fixed so it never scrolls. */
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(
+      900px 520px at 88% -8%,
+      color-mix(in srgb, var(--color-primary) 11%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      760px 480px at -6% 104%,
+      color-mix(in srgb, var(--color-secondary) 9%, transparent),
+      transparent 70%
+    );
 }
 
 button,
@@ -376,33 +449,6 @@ a {
 }
 
 a[href],
-button:not(:disabled),
-input[type="button"]:not(:disabled),
-input[type="submit"]:not(:disabled),
-input[type="checkbox"]:not(:disabled),
-input[type="radio"]:not(:disabled),
-select:not(:disabled),
-option:not(:disabled),
-summary,
-[role="button"]:not([aria-disabled="true"]),
-[role="link"]:not([aria-disabled="true"]),
-.select__option:not(.select__option--is-disabled),
-.ant-select-item-option:not(.ant-select-item-option-disabled),
-.ant-pagination-item:not(.ant-pagination-item-disabled) {
-  cursor: pointer;
-}
-
-button:disabled,
-input:disabled,
-select:disabled,
-[aria-disabled="true"],
-.select__control--is-disabled,
-.ant-btn-disabled,
-.ant-select-item-option-disabled,
-.ant-pagination-item-disabled {
-  cursor: not-allowed;
-}
-
 a,
 button,
 [role="button"],
@@ -510,12 +556,14 @@ button,
 .btn {
   border-radius: 999px;
   font-weight: 650;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   box-shadow: none;
   transition:
-    transform 180ms ease,
+    transform 160ms ease,
     background-color 180ms ease,
     border-color 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease,
     color 180ms ease;
 }
 
@@ -523,30 +571,57 @@ button,
   transform: translateY(1px);
 }
 
+/* Primary buttons read as a raised key: lit top edge, darker base, grounded shadow. */
 .btn-primary {
   color: var(--color-primary-content) !important;
-  border-color: var(--color-primary) !important;
-  background: var(--color-primary) !important;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 68%, #000) !important;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-primary) 80%, #fff) 0%,
+    var(--color-primary) 52%,
+    color-mix(in srgb, var(--color-primary) 86%, #000) 100%
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.38),
+    inset 0 -2px 0 rgb(0 0 0 / 0.16),
+    0 10px 20px -10px color-mix(in srgb, var(--color-primary) 75%, transparent) !important;
 }
 
 .btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 5px rgb(0 0 0 / 0.28),
+    0 2px 6px -3px color-mix(in srgb, var(--color-primary) 60%, transparent) !important;
+}
+
+.btn:not(.btn-primary):not(.btn-ghost):not(.btn-link):hover:not(:disabled) {
   border-color: color-mix(
     in srgb,
-    var(--color-primary) 84%,
-    var(--color-base-content)
-  ) !important;
-  background: color-mix(
-    in srgb,
-    var(--color-primary) 84%,
-    var(--color-base-content)
-  ) !important;
+    var(--color-primary) 45%,
+    var(--color-base-300)
+  );
 }
 
 .card,
 .modal-box,
 .dropdown-content {
-  border-color: var(--color-base-300);
+  border-color: color-mix(in srgb, var(--color-base-300) 80%, transparent);
   color: var(--color-base-content);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-base-content) 4%, transparent),
+    transparent 42%
+  );
+  box-shadow: var(--shadow-card);
+}
+
+.modal-box {
+  box-shadow: var(--shadow-float);
 }
 
 .input,
@@ -558,10 +633,17 @@ button,
   background: var(--color-base-100);
 }
 
+.input,
+.textarea,
+.select {
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.12);
+}
+
 .input:focus,
 .textarea:focus,
 .select:focus,
-.file-input:focus {
+.file-input:focus,
+.input:focus-within {
   border-color: var(--color-primary);
   outline-color: color-mix(in srgb, var(--color-primary) 28%, transparent);
 }
@@ -1029,9 +1111,12 @@ button:not(:disabled),
 
 .shadow,
 .shadow-md,
-.shadow-lg,
-.shadow-xl {
+.shadow-lg {
   box-shadow: var(--shadow-card);
+}
+
+.shadow-xl {
+  box-shadow: var(--shadow-float);
 }
 
 .page-enter {
@@ -1260,27 +1345,6 @@ select,
   max-width: 100%;
 }
 
-button,
-a,
-[role="button"],
-[role="link"],
-summary,
-select,
-.ant-select-selector,
-.ant-pagination-item {
-  cursor: pointer;
-}
-
-button:disabled,
-input:disabled,
-select:disabled,
-[aria-disabled="true"],
-.select__control--is-disabled,
-.ant-btn-disabled,
-.ant-pagination-item-disabled {
-  cursor: not-allowed;
-}
-
 /* Keep button loading indicators aligned with the button label for contrast. */
 .btn .loading-spinner {
   color: inherit !important;
@@ -1417,6 +1481,7 @@ select:disabled,
 }
 
 .card-lift {
+  transform-style: preserve-3d;
   transition:
     transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1),
     border-color 260ms ease,
@@ -1424,7 +1489,7 @@ select:disabled,
 }
 
 .card-lift:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px) rotateX(2deg);
   border-color: color-mix(
     in srgb,
     var(--color-primary) 38%,
@@ -1455,4 +1520,683 @@ select:disabled,
     animation: none;
     transform: scaleX(1);
   }
+}
+/* 3D language -------------------------------------------------------------- */
+.stage {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Frosted panel that sits above the page, used in scenes and over imagery. */
+.glass-card {
+  border: 1px solid
+    color-mix(in srgb, var(--color-base-content) 14%, transparent);
+  border-radius: 1.25rem;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--color-base-content) 12%, transparent),
+    color-mix(in srgb, var(--color-base-content) 3%, transparent)
+  );
+  box-shadow: var(--shadow-float);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+}
+
+:root[data-theme="light"] .glass-card {
+  border-color: rgb(255 255 255 / 0.9);
+  background: linear-gradient(
+    145deg,
+    rgb(255 255 255 / 0.9),
+    rgb(255 255 255 / 0.55)
+  );
+}
+
+/* Sign in, register and onboarding ---------------------------------------- */
+.auth-page {
+  display: grid;
+  min-height: 100dvh;
+}
+
+@media (min-width: 1024px) {
+  .auth-page {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  }
+}
+
+.auth-aside {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-right: 1px solid var(--color-base-300);
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--color-secondary) 20%, var(--color-base-200)) 0%,
+    var(--color-base-200) 42%,
+    var(--color-base-100) 100%
+  );
+}
+
+.auth-aside::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-base-content) 14%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+  mask-image: radial-gradient(
+    ellipse 75% 65% at 50% 55%,
+    #000 25%,
+    transparent 78%
+  );
+}
+
+.auth-card {
+  position: relative;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--color-base-300) 85%, transparent);
+  border-radius: 1.75rem;
+  padding: 1.75rem 1.25rem;
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-float);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+@media (min-width: 640px) {
+  .auth-card {
+    padding: 2.25rem 2.25rem;
+  }
+}
+
+.auth-card::before {
+  position: absolute;
+  inset: 0 2rem auto;
+  height: 1px;
+  content: "";
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-primary) 80%, transparent),
+    transparent
+  );
+}
+
+.auth-field {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 3rem;
+  padding-inline: 0.95rem 0.5rem;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-field);
+  background: color-mix(in srgb, var(--color-base-100) 70%, transparent);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.14);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.auth-field:focus-within {
+  border-color: var(--color-primary);
+  box-shadow:
+    inset 0 1px 2px rgb(0 0 0 / 0.14),
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent);
+}
+
+.auth-field[data-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.auth-field input,
+.auth-field select {
+  flex: 1;
+  min-width: 0;
+  height: 2.9rem;
+  color: inherit;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.auth-field select {
+  padding-right: 0.25rem;
+}
+
+.auth-field select option {
+  color: var(--color-base-content);
+  background: var(--color-base-200);
+}
+
+.role-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid var(--color-base-300);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--color-base-200) 70%, transparent);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.role-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 45%,
+    var(--color-base-300)
+  );
+}
+
+.role-card:has(input:checked) {
+  border-color: var(--color-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 11%,
+    var(--color-base-100)
+  );
+  box-shadow:
+    0 0 0 1px var(--color-primary),
+    var(--shadow-float);
+}
+
+.role-card:has(input:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.role-card__icon {
+  display: grid;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 0.9rem;
+  color: var(--color-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    var(--color-base-100)
+  );
+  box-shadow:
+    var(--edge-light),
+    0 6px 12px -6px rgb(0 0 0 / 0.5);
+}
+
+.role-card__check {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: grid;
+  width: 1.4rem;
+  height: 1.4rem;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--color-primary-content);
+  background: var(--color-primary);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 160ms ease,
+    transform 200ms cubic-bezier(0.2, 0.9, 0.3, 1.3);
+}
+
+.role-card:has(input:checked) .role-card__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* The showcase beside the forms: an order cooked, paid and on its way. */
+.scene-plate {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  width: 30rem;
+  max-width: 96%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translateX(-50%) rotateX(68deg);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-primary) 34%, transparent) 0%,
+    color-mix(in srgb, var(--color-primary) 9%, transparent) 46%,
+    transparent 70%
+  );
+}
+
+.scene-ring {
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 42%, transparent);
+  border-radius: 50%;
+}
+
+.scene-dot {
+  animation: scene-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes scene-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0
+      color-mix(in srgb, var(--color-primary) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+/* Error and access pages: extruded numerals that sit in the page. */
+.digit-3d {
+  --digit-color: var(--color-primary);
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 22vw, 13rem);
+  font-weight: 700;
+  line-height: 0.95;
+  color: var(--digit-color);
+  text-shadow:
+    0 1px 0 color-mix(in srgb, var(--digit-color) 95%, #000),
+    0 2px 0 color-mix(in srgb, var(--digit-color) 91%, #000),
+    0 3px 0 color-mix(in srgb, var(--digit-color) 87%, #000),
+    0 4px 0 color-mix(in srgb, var(--digit-color) 83%, #000),
+    0 5px 0 color-mix(in srgb, var(--digit-color) 79%, #000),
+    0 6px 0 color-mix(in srgb, var(--digit-color) 75%, #000),
+    0 7px 0 color-mix(in srgb, var(--digit-color) 71%, #000),
+    0 8px 0 color-mix(in srgb, var(--digit-color) 66%, #000),
+    0 9px 0 color-mix(in srgb, var(--digit-color) 62%, #000),
+    0 10px 0 color-mix(in srgb, var(--digit-color) 58%, #000),
+    0 11px 0 color-mix(in srgb, var(--digit-color) 54%, #000),
+    0 12px 0 color-mix(in srgb, var(--digit-color) 50%, #000),
+    0 13px 0 color-mix(in srgb, var(--digit-color) 46%, #000),
+    0 14px 0 color-mix(in srgb, var(--digit-color) 42%, #000),
+    0 40px 34px rgb(0 0 0 / 0.38);
+  animation: digit-float 6s ease-in-out infinite;
+}
+
+.digit-3d:nth-child(2) {
+  --digit-color: var(--color-secondary);
+  animation-delay: -2s;
+}
+
+.digit-3d:nth-child(3) {
+  animation-delay: -4s;
+}
+
+@keyframes digit-float {
+  0%,
+  100% {
+    transform: translateY(0) translateZ(0);
+  }
+  50% {
+    transform: translateY(-12px) translateZ(24px);
+  }
+}
+
+/* Pagination: right aligned, with clear hover, active and disabled states ---- */
+.app-pagination .ant-pagination {
+  justify-content: flex-end !important;
+  margin-inline: 0 !important;
+  row-gap: 0.5rem;
+}
+
+.app-pagination .ant-pagination .ant-pagination-item,
+.app-pagination .ant-pagination .ant-pagination-prev button,
+.app-pagination .ant-pagination .ant-pagination-next button {
+  border-radius: 0.75rem !important;
+  box-shadow:
+    var(--edge-light),
+    0 1px 2px rgb(0 0 0 / 0.12);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease !important;
+}
+
+.app-pagination .ant-pagination .ant-pagination-item a {
+  transition: color 160ms ease;
+}
+
+.app-pagination
+  .ant-pagination
+  .ant-pagination-item:not(.ant-pagination-item-active):hover,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-prev:not(.ant-pagination-disabled):hover
+  button,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-next:not(.ant-pagination-disabled):hover
+  button {
+  transform: translateY(-2px);
+  border-color: var(--color-primary) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    var(--color-base-100)
+  ) !important;
+  box-shadow:
+    var(--edge-light),
+    0 10px 18px -10px color-mix(in srgb, var(--color-primary) 70%, transparent);
+}
+
+.app-pagination
+  .ant-pagination
+  .ant-pagination-item:not(.ant-pagination-item-active):hover
+  a,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-prev:not(.ant-pagination-disabled):hover
+  button,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-next:not(.ant-pagination-disabled):hover
+  button,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-jump-prev:hover
+  .ant-pagination-item-link-icon,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-jump-next:hover
+  .ant-pagination-item-link-icon {
+  color: var(--color-primary) !important;
+}
+
+.app-pagination
+  .ant-pagination
+  .ant-pagination-item:not(.ant-pagination-item-active):active,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-prev:not(.ant-pagination-disabled):active
+  button,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-next:not(.ant-pagination-disabled):active
+  button {
+  transform: translateY(0);
+}
+
+.app-pagination .ant-pagination .ant-pagination-item-active {
+  border-color: color-mix(in srgb, var(--color-primary) 68%, #000) !important;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-primary) 80%, #fff),
+    var(--color-primary)
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    0 8px 16px -8px color-mix(in srgb, var(--color-primary) 75%, transparent);
+}
+
+.app-pagination .ant-pagination .ant-pagination-item-active a,
+.app-pagination .ant-pagination .ant-pagination-item-active:hover a {
+  color: var(--color-primary-content) !important;
+}
+
+.app-pagination .ant-pagination .ant-pagination-item-active:hover {
+  filter: brightness(1.07);
+}
+
+.app-pagination .ant-pagination .ant-pagination-disabled button,
+.app-pagination
+  .ant-pagination
+  .ant-pagination-disabled
+  .ant-pagination-item-link {
+  opacity: 0.4;
+  transform: none;
+  box-shadow: none;
+}
+
+.app-pagination .ant-pagination .ant-pagination-item:focus-visible,
+.app-pagination .ant-pagination .ant-pagination-prev button:focus-visible,
+.app-pagination .ant-pagination .ant-pagination-next button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-pagination .ant-pagination .ant-pagination-item:hover,
+  .app-pagination .ant-pagination .ant-pagination-prev:hover button,
+  .app-pagination .ant-pagination .ant-pagination-next:hover button {
+    transform: none;
+  }
+}
+
+/* Skeletons ------------------------------------------------------------------ */
+.skeleton-block {
+  border-radius: 0.6rem;
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--color-base-content) 7%, var(--color-base-200)) 30%,
+    color-mix(in srgb, var(--color-base-content) 14%, var(--color-base-200)) 50%,
+    color-mix(in srgb, var(--color-base-content) 7%, var(--color-base-200)) 70%
+  );
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Cursors: pointer for anything clickable, not-allowed while disabled or loading ---- */
+button,
+a[href],
+summary,
+label[for],
+select,
+.btn,
+[role="button"],
+[role="link"],
+[role="tab"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"],
+.select__control,
+.select__option,
+.select__indicator,
+.ant-pagination-item,
+.ant-pagination-prev,
+.ant-pagination-next,
+.ant-pagination-jump-prev,
+.ant-pagination-jump-next,
+.ant-select-selector {
+  cursor: pointer;
+}
+
+button:disabled,
+.btn:disabled,
+.btn[disabled],
+.btn.btn-disabled,
+.btn[aria-busy="true"],
+.btn:has(.loading),
+button[aria-busy="true"],
+select:disabled,
+input:disabled,
+textarea:disabled,
+label:has(input:disabled),
+[aria-disabled="true"],
+.select__control--is-disabled,
+.select__control--is-disabled *,
+.ant-btn-disabled,
+.ant-pagination-disabled,
+.ant-pagination-disabled * {
+  cursor: not-allowed !important;
+}
+
+/* One look for every dropdown (AppSelect). */
+.select__control {
+  min-height: 3rem !important;
+  border-radius: var(--radius-field) !important;
+  border-color: var(--color-base-300) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--color-base-100) 70%,
+    transparent
+  ) !important;
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.14) !important;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.select__control:hover {
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 55%,
+    var(--color-base-300)
+  ) !important;
+}
+
+.select__control--is-focused,
+.select__control--menu-is-open {
+  border-color: var(--color-primary) !important;
+  box-shadow:
+    inset 0 1px 2px rgb(0 0 0 / 0.14),
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 22%, transparent) !important;
+}
+
+.select-invalid .select__control {
+  border-color: var(--color-error) !important;
+}
+
+.select__control--is-disabled {
+  opacity: 0.55;
+}
+
+.select__value-container {
+  padding-inline: 0.85rem 0.25rem !important;
+}
+
+.select__single-value {
+  font-weight: 500;
+}
+
+.select__indicator {
+  cursor: pointer;
+}
+
+.select__menu {
+  margin-top: 0.4rem !important;
+  overflow: hidden;
+  border: 1px solid var(--color-base-300) !important;
+  border-radius: 1rem !important;
+  box-shadow: var(--shadow-float) !important;
+}
+
+.select__menu-list {
+  padding: 0.35rem !important;
+}
+
+.select__option {
+  border-radius: 0.65rem !important;
+  cursor: pointer;
+}
+
+.select__option--is-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Very narrow screens (down to 315px) ------------------------------------- */
+@media (max-width: 359px) {
+  .auth-card {
+    padding: 1.25rem 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .auth-field {
+    padding-inline: 0.75rem 0.35rem;
+  }
+
+  .role-card {
+    padding: 0.85rem;
+    gap: 0.7rem;
+  }
+
+  .dash-hero,
+  .dash-panel,
+  .dash-kpi {
+    border-radius: 1.25rem;
+  }
+
+  .app-pagination .ant-pagination .ant-pagination-item,
+  .app-pagination .ant-pagination .ant-pagination-prev,
+  .app-pagination .ant-pagination .ant-pagination-next {
+    min-width: 2rem;
+    height: 2rem;
+    margin-inline-end: 0.25rem;
+  }
+}
+
+.app-pagination .ant-pagination {
+  max-width: 100%;
+}
+
+/* react-select sets its own cursors through emotion, so these must win. */
+.select__control,
+.select__control *,
+.select__option,
+.select__indicator,
+.select__dropdown-indicator,
+.select__indicators,
+.select__value-container,
+.select__single-value,
+.select__placeholder,
+.select__input-container,
+.select__menu-list {
+  cursor: pointer !important;
+}
+
+.select__control--is-disabled,
+.select__control--is-disabled *,
+.select__option--is-disabled {
+  cursor: not-allowed !important;
+}
+
+/* Options: no transitions, and hover looks exactly like keyboard focus, so
+   moving the pointer over the list never flickers between two states. */
+.select__option,
+.select__menu,
+.select__menu-list {
+  transition: none !important;
+  animation: none !important;
+}
+
+.select__option:hover:not(.select__option--is-selected):not(
+    .select__option--is-disabled
+  ) {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary) 14%,
+    var(--color-base-200)
+  ) !important;
+}
+
+.select__option:active:not(.select__option--is-selected) {
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary) 20%,
+    var(--color-base-200)
+  ) !important;
 }

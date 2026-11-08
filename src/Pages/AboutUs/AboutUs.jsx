@@ -12,7 +12,7 @@ const AboutUs = () => {
           <p className="mb-5 text-xs font-bold uppercase tracking-[.2em] text-primary">
             A little kitchen with a lot of heart
           </p>
-          <h1 className="max-w-2xl text-5xl leading-[.98] text-base-content sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-2xl text-4xl leading-[.98] text-base-content sm:text-6xl lg:text-7xl">
             The familiar taste of <em>home.</em>
           </h1>
           <p className="mt-6 max-w-xl text-base leading-7 text-base-content/70 sm:text-lg">

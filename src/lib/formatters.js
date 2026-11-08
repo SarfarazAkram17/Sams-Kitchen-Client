@@ -8,8 +8,4 @@ export const formatDate = (value) => {
   });
 };
 
-export const formatCurrency = (value) =>
-  `৳${Number(value || 0).toLocaleString("en-BD", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+export { formatCurrency } from "./money";

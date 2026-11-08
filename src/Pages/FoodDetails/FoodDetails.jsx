@@ -1,18 +1,29 @@
 import { useLocation, useNavigate, useParams } from "react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { PiShoppingCartBold } from "react-icons/pi";
-import { FiX } from "react-icons/fi";
+import { FiImage, FiX } from "react-icons/fi";
 import { useState, useRef } from "react";
 import useAxios from "../../Hooks/useAxios";
-import Loading from "../../Components/Loading/Loading";
 import { addToCart } from "../../CartUtils/cartUtils";
-import { Pagination, Rate, ConfigProvider } from "antd";
+import { Rate, ConfigProvider } from "antd";
+import AppPagination from "../../Components/Shared/AppPagination";
 import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../Hooks/useAuth";
 import useCanOrder from "../../Hooks/useCanOrder";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import ShareFood from "../../Components/Shared/ShareFood";
+import { foodPrice, formatAmount } from "../../lib/money";
+import { FoodDetailsSkeleton } from "../../Components/Skeletons/PageSkeletons";
+import { TextAreaField } from "../../Components/Forms/Field";
+import LazyImage from "../../Components/Shared/LazyImage";
+import ListToolbar from "../../Components/Shared/ListToolbar";
+import EmptyResults from "../../Components/Shared/EmptyResults";
 
 const FoodDetails = () => {
   const navigate = useNavigate();
@@ -45,15 +56,33 @@ const FoodDetails = () => {
     enabled: !!foodId,
   });
 
+  const [reviewSort, setReviewSort] = useState("newest");
+  const [reviewRating, setReviewRating] = useState("");
+  const [withPhotos, setWithPhotos] = useState("");
+  const reviewFiltersActive =
+    (reviewSort !== "newest" ? 1 : 0) +
+    (reviewRating ? 1 : 0) +
+    (withPhotos ? 1 : 0);
+  const resetReviewFilters = () => {
+    setReviewSort("newest");
+    setReviewRating("");
+    setWithPhotos("");
+    setPage(1);
+  };
+
   // Fetch reviews
   const { data: reviewData, isLoading: reviewLoading } = useQuery({
-    queryKey: ["reviews", foodId, page],
+    queryKey: ["reviews", foodId, page, reviewSort, reviewRating, withPhotos],
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const res = await axiosInstance.get(`/reviews`, {
         params: {
           foodId: foodId,
           page,
           limit: 3,
+          sort: reviewSort,
+          rating: reviewRating || undefined,
+          withPhotos: withPhotos || undefined,
         },
       });
       return res.data;
@@ -135,12 +164,9 @@ const FoodDetails = () => {
     onError: (err) => toast.error(`Failed: ${err.message}`),
   });
 
-  if (isLoading || reviewLoading) return <Loading />;
+  if (isLoading || reviewLoading) return <FoodDetailsSkeleton />;
 
-  const discountedPrice =
-    food.discount > 0
-      ? food.price - (food.price * food.discount) / 100
-      : food.price;
+  const discountedPrice = foodPrice(food);
 
   const handleAddToCart = (food) => {
     if (!user) {
@@ -190,7 +216,8 @@ const FoodDetails = () => {
         {/* Food image */}
         <div>
           <div className="w-full h-64 sm:h-80 border relative rounded-lg overflow-hidden">
-            <img
+            <LazyImage
+              priority
               src={food.image}
               alt={food.name}
               className="w-full h-full object-cover"
@@ -230,7 +257,11 @@ const FoodDetails = () => {
             >
               <Rate disabled allowHalf value={displayRating} />
             </ConfigProvider>{" "}
-            ( {reviewData.total} {reviewData.total > 1 ? "reviews" : "review"} )
+            ( {reviewData.allTotal ?? reviewData.total}{" "}
+            {(reviewData.allTotal ?? reviewData.total) > 1
+              ? "reviews"
+              : "review"}{" "}
+            )
           </div>
 
           <p className="text-base-content/80 text-sm leading-relaxed">
@@ -241,15 +272,15 @@ const FoodDetails = () => {
             {food.discount > 0 ? (
               <div className="space-x-2">
                 <span className="text-success font-semibold">
-                  ৳ {discountedPrice.toFixed(2)}
+                  ৳ {formatAmount(discountedPrice)}
                 </span>
                 <span className="line-through text-lg text-base-content/60">
-                  ৳ {food.price.toFixed(2)}
+                  ৳ {formatAmount(food.price)}
                 </span>
               </div>
             ) : (
               <span className="text-success font-semibold">
-                ৳ {food.price.toFixed(2)}
+                ৳ {formatAmount(food.price)}
               </span>
             )}
           </div>
@@ -282,7 +313,7 @@ const FoodDetails = () => {
                 </button>
               </div>
               <button
-                onClick={()=>handleAddToCart(food)}
+                onClick={() => handleAddToCart(food)}
                 disabled={!food.available}
                 className="btn btn-primary flex items-center"
               >
@@ -300,22 +331,22 @@ const FoodDetails = () => {
         </h3>
 
         {/* Add Review Form */}
-        <div className="border rounded-lg p-4 shadow mb-6">
-          <h4 className="text-lg font-semibold mb-2">Share your Review</h4>
-          <textarea
+        <section className="dash-panel mb-6 rounded-3xl border border-base-300 bg-base-100 p-4 sm:p-6">
+          <h4 className="mb-4 text-lg font-bold">Share your review</h4>
+          <TextAreaField
+            name="review-comment"
+            label="Your review"
             rows={4}
             value={comment}
-            placeholder="Write your review..."
-            aria-invalid={Boolean(reviewErrors.comment)}
+            placeholder="What did you think of this dish?"
+            error={reviewErrors.comment}
             onChange={(e) => {
               setComment(e.target.value);
               setReviewErrors((previous) => ({ ...previous, comment: "" }));
             }}
-            className="resize-none w-full border-2 p-2 rounded-md border-base-300"
           />
-          {reviewErrors.comment && <p className="mt-1 text-sm font-semibold text-error" role="alert">{reviewErrors.comment}</p>}
 
-          <div className="my-4">
+          <div className="my-5">
             <p className="mb-2 text-sm font-semibold">Rating</p>
             <ConfigProvider
               theme={{
@@ -336,52 +367,139 @@ const FoodDetails = () => {
                 value={rating}
               />
             </ConfigProvider>
-            {reviewErrors.rating && <p className="mt-1 text-sm font-semibold text-error" role="alert">{reviewErrors.rating}</p>}
+            {reviewErrors.rating && (
+              <p className="mt-1.5 text-sm font-medium text-error" role="alert">
+                {reviewErrors.rating}
+              </p>
+            )}
           </div>
 
           {/* Image upload */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => handleImageUpload(e.target.files)}
-            className="file-input file-input-bordered w-full"
-            disabled={uploading || imageURLs.length >= 4}
-          />
-          <div className="flex gap-3 mt-2 flex-wrap">
-            {imageURLs.map((url) => (
-              <div className="relative my-1 w-fit">
-                <img
-                  src={url}
-                  alt="food image"
-                  className="h-28 w-auto object-cover rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleImageRemove(url)}
-                  className="absolute top-1 right-1 bg-error text-error-content text-xs px-2 py-0.5 rounded opacity-80 hover:opacity-100"
-                >
-                  <FiX aria-hidden="true" />
-                </button>
-              </div>
-            ))}
-          </div>
+          <p className="mb-1.5 text-sm font-semibold">Photos (up to 4)</p>
+          <label
+            className={`flex min-h-20 items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-base-300 bg-base-200/40 px-4 py-4 text-center text-sm transition-colors ${
+              uploading || imageURLs.length >= 4
+                ? "cursor-not-allowed opacity-60"
+                : "cursor-pointer hover:border-primary hover:bg-primary/5"
+            }`}
+          >
+            {uploading ? (
+              <span className="loading loading-spinner loading-sm text-primary" />
+            ) : (
+              <FiImage aria-hidden="true" className="text-primary" size={20} />
+            )}
+            <span className="font-semibold">
+              {uploading
+                ? "Uploading…"
+                : imageURLs.length >= 4
+                  ? "Photo limit reached"
+                  : "Tap to add photos"}
+            </span>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => handleImageUpload(e.target.files)}
+              className="sr-only"
+              disabled={uploading || imageURLs.length >= 4}
+            />
+          </label>
+          {imageURLs.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-3">
+              {imageURLs.map((url) => (
+                <div key={url} className="relative">
+                  <img
+                    src={url}
+                    alt="Review upload"
+                    className="size-24 rounded-xl border border-base-300 object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleImageRemove(url)}
+                    aria-label="Remove photo"
+                    className="absolute -right-2 -top-2 grid size-7 place-items-center rounded-full bg-black/75 text-white shadow ring-2 ring-base-100 transition hover:bg-error hover:text-error-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    <FiX aria-hidden="true" size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           <button
-            className="mt-4 btn btn-primary disabled:text-base-content/50"
+            className="btn btn-primary mt-5 h-12 w-full sm:w-auto sm:min-w-48"
             onClick={handleReviewSubmit}
+            disabled={isPending || uploading}
+            aria-busy={isPending}
           >
             {isPending ? (
               <>
-                <span className="loading loading-spinner text-primary loading-md"></span>{" "}
-                Submitting Review
+                <span className="loading loading-spinner loading-sm" />{" "}
+                Submitting review
               </>
             ) : (
-              "Submit Review"
+              "Submit review"
             )}
           </button>
-        </div>
+        </section>
+
+        {(reviewData?.allTotal ?? 0) > 1 && (
+          <ListToolbar
+            className="mt-8"
+            searchId="reviews"
+            hideSearch
+            activeCount={reviewFiltersActive}
+            onReset={resetReviewFilters}
+            summary={`${reviewData.total} ${reviewData.total === 1 ? "review" : "reviews"} shown`}
+            filters={[
+              {
+                key: "sort",
+                label: "Sort by",
+                options: [
+                  { value: "newest", label: "Newest first" },
+                  { value: "oldest", label: "Oldest first" },
+                  { value: "highest", label: "Highest rated" },
+                  { value: "lowest", label: "Lowest rated" },
+                ],
+                value: reviewSort,
+                onChange: (value) => {
+                  setReviewSort(value);
+                  setPage(1);
+                },
+              },
+              {
+                key: "rating",
+                label: "Stars",
+                options: [
+                  { value: "", label: "All ratings" },
+                  ...[5, 4, 3, 2, 1].map((star) => ({
+                    value: String(star),
+                    label: `${star} ${star === 1 ? "star" : "stars"}`,
+                  })),
+                ],
+                value: reviewRating,
+                onChange: (value) => {
+                  setReviewRating(value);
+                  setPage(1);
+                },
+              },
+              {
+                key: "photos",
+                label: "Photos",
+                options: [
+                  { value: "", label: "All reviews" },
+                  { value: "true", label: "With photos" },
+                ],
+                value: withPhotos,
+                onChange: (value) => {
+                  setWithPhotos(value);
+                  setPage(1);
+                },
+              },
+            ]}
+          />
+        )}
 
         {/* Review List */}
         {reviewData?.reviews?.length > 0 ? (
@@ -393,11 +511,13 @@ const FoodDetails = () => {
               >
                 <div className="flex justify-between items-start gap-2">
                   <div className="flex items-center gap-4">
-                    <img
-                      className="object-cover h-10 sm:h-13 w-10 sm:w-13 rounded-full"
-                      src={review.userPhoto}
-                      alt={review.userName}
-                    />
+                    <div className="relative size-10 shrink-0 overflow-hidden rounded-full sm:size-13">
+                      <LazyImage
+                        className="size-full object-cover"
+                        src={review.userPhoto}
+                        alt={review.userName}
+                      />
+                    </div>
 
                     <div className="flex flex-col gap-2">
                       <h4 className="font-semibold text-xs lg:text-sm">
@@ -436,12 +556,16 @@ const FoodDetails = () => {
                 {review.images?.length > 0 && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {review.images.map((img) => (
-                      <img
+                      <div
                         key={img}
-                        src={img}
-                        alt="review"
-                        className="w-full h-auto object-cover rounded"
-                      />
+                        className="relative aspect-[4/3] overflow-hidden rounded bg-base-200"
+                      >
+                        <LazyImage
+                          src={img}
+                          alt="review"
+                          className="size-full object-cover"
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
@@ -449,16 +573,20 @@ const FoodDetails = () => {
             ))}
 
             {/* Ant Design Pagination */}
-            <div className="flex justify-center mt-10">
-              <Pagination
-                current={page}
-                align="center"
-                total={reviewData.total}
-                pageSize={3}
-                showSizeChanger={false}
-                onChange={(newPage) => setPage(newPage)}
-              />
-            </div>
+            <AppPagination
+              current={page}
+              total={reviewData.total}
+              pageSize={3}
+              onChange={(newPage) => setPage(newPage)}
+            />
+          </div>
+        ) : reviewFiltersActive ? (
+          <div className="mt-6">
+            <EmptyResults
+              title="No reviews match"
+              message="Try a different star rating or sort order."
+              onReset={resetReviewFilters}
+            />
           </div>
         ) : (
           <p className="text-base-content/80 text-center text-2xl mt-16 font-bold">

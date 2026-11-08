@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import logo from "../assets/images/logo.png";
+import { formatAmount, getDiscountedPrice } from "./money";
 
 export const generateReceipt = (order) => {
   const doc = new jsPDF();
@@ -185,10 +186,7 @@ export const generateReceipt = (order) => {
     doc.setFontSize(9);
     doc.setTextColor(100);
 
-    const unitPrice =
-      item.discount > 0
-        ? (item.price - (item.price * item.discount) / 100).toFixed(2)
-        : Number(item.price).toFixed(2);
+    const unitPrice = formatAmount(getDiscountedPrice(item.price, item.discount));
 
     doc.text(
       `${unitPrice} TK × ${item.quantity}`,
@@ -201,7 +199,7 @@ export const generateReceipt = (order) => {
     doc.setFontSize(11);
     doc.setTextColor(34, 85, 51);
     doc.text(
-      `${item.subtotal.toFixed(2)} TK`,
+      `${formatAmount(item.subtotal)} TK`,
       pageWidth - margin,
       currentY + 10,
       {
@@ -227,7 +225,7 @@ export const generateReceipt = (order) => {
 
   // Subtotal
   doc.text("Subtotal:", labelX, currentY);
-  doc.text(`${Number(order.subtotal).toFixed(2)} TK`, valueX, currentY, {
+  doc.text(`${formatAmount(order.subtotal)} TK`, valueX, currentY, {
     align: "right",
   });
   currentY += 8;
@@ -240,7 +238,7 @@ export const generateReceipt = (order) => {
     doc.setTextColor(0);
   } else {
     doc.text(
-      `${Number(order.deliveryCharge).toFixed(2)} TK`,
+      `${formatAmount(order.deliveryCharge)} TK`,
       valueX,
       currentY,
       {
@@ -253,7 +251,7 @@ export const generateReceipt = (order) => {
   // Discount
   doc.setTextColor(255, 87, 34);
   doc.text("Discount:", labelX, currentY);
-  doc.text(`- ${Number(order.discount).toFixed(2)} TK`, valueX, currentY, {
+  doc.text(`- ${formatAmount(order.discount)} TK`, valueX, currentY, {
     align: "right",
   });
   doc.setTextColor(0);
@@ -269,7 +267,7 @@ export const generateReceipt = (order) => {
   doc.setFontSize(13);
   doc.setTextColor(0, 128, 0);
   doc.text("Total Amount:", labelX, currentY);
-  doc.text(`${Number(order.total).toFixed(2)} TK`, valueX, currentY, {
+  doc.text(`${formatAmount(order.total)} TK`, valueX, currentY, {
     align: "right",
   });
 

@@ -1,26 +1,31 @@
-import Loading from "../../../Components/Loading/Loading";
-import useUserRole from "../../../Hooks/useUserRole";
-import Forbidden from "../../Forbidden/Forbidden";
+import { Navigate } from "react-router";
+import useUserProfile from "../../../Hooks/useUserProfile";
 import AdminDashboard from "./AdminDashboard";
 import CustomerDashboard from "./CustomerDashboard";
 import RiderDashboard from "./RiderDashboard";
+import RiderPending from "./RiderPending";
+import RiderRejected from "./RiderRejected";
+import { DashboardGateSkeleton } from "../../../Components/Skeletons/PageSkeletons";
 
 const Dashboard = () => {
-  const { role, roleLoading } = useUserRole();
+  const { profile, profileLoading } = useUserProfile();
 
-  if (roleLoading) {
-    return <Loading></Loading>;
+  if (profileLoading) {
+    return <DashboardGateSkeleton />;
   }
 
-  if (role === "admin") {
+  if (profile?.role === "admin") {
     return <AdminDashboard></AdminDashboard>;
-  } else if (role === "rider") {
-    return <RiderDashboard></RiderDashboard>;
-  } else if (role === "customer") {
-    return <CustomerDashboard></CustomerDashboard>;
-  } else {
-    return <Forbidden></Forbidden>;
   }
+  if (profile?.role === "rider") {
+    if (profile.riderStatus === "pending") return <RiderPending></RiderPending>;
+    if (profile.riderStatus === "rejected") return <RiderRejected></RiderRejected>;
+    return <RiderDashboard></RiderDashboard>;
+  }
+  if (profile?.role === "customer") {
+    return <CustomerDashboard></CustomerDashboard>;
+  }
+  return <Navigate to="/forbidden"></Navigate>;
 };
 
 export default Dashboard;

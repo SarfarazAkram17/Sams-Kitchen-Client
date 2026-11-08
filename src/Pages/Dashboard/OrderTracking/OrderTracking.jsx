@@ -2,7 +2,6 @@ import { createElement } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router";
 import {
-  FiArrowLeft,
   FiCheck,
   FiClock,
   FiCreditCard,
@@ -11,11 +10,12 @@ import {
   FiTruck,
 } from "react-icons/fi";
 import { LuChefHat } from "react-icons/lu";
-import Loading from "../../../Components/Loading/Loading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import OrderItemsList from "../OrderItemsList";
+import PageHeading from "../../../Components/Shared/PageHeading";
 import { formatCurrency } from "../../../lib/formatters";
+import { TrackingSkeleton } from "../../../Components/Skeletons/PageSkeletons";
 
 const milestones = [
   {
@@ -35,7 +35,8 @@ const milestones = [
   {
     key: "preparedAt",
     title: "Food prepared",
-    detail: "The kitchen has finished your order and it is waiting for a rider.",
+    detail:
+      "The kitchen has finished your order and it is waiting for a rider.",
     icon: LuChefHat,
     isComplete: (order) =>
       Boolean(order.preparedAt) ||
@@ -124,7 +125,7 @@ const OrderTracking = () => {
     },
   });
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <TrackingSkeleton />;
 
   if (isError || !data?._id) {
     return (
@@ -181,43 +182,26 @@ const OrderTracking = () => {
   const currentStatus = statusNames[data.status] || "Order update";
 
   return (
-    <div className="w-full space-y-5 pb-4">
-      <Link
-        to="/dashboard/myOrders"
-        className="inline-flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-semibold text-base-content/75 transition hover:bg-base-200 hover:text-primary"
+    <div className="w-full space-y-6 pb-8">
+      <PageHeading
+        backTo="/dashboard/myOrders"
+        backLabel="Back to My Orders"
+        eyebrow="Sam’s Kitchen · Order update"
+        title="A little closer."
+        description={`Order #${String(data._id).slice(-8).toUpperCase()}`}
       >
-        <FiArrowLeft aria-hidden="true" /> Back to My Orders
-      </Link>
-
-      <header className="tracking-hero relative overflow-hidden rounded-[1.75rem] border border-base-300 p-5 sm:p-8">
-        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.18em] text-primary">
-              Sam’s Kitchen · Order update
-            </p>
-            <h1 className="font-display mt-2 text-4xl leading-none text-base-content sm:text-5xl">
-              A little closer.
-            </h1>
-            <p className="mt-3 text-sm text-base-content/70">
-              Order{" "}
-              <span className="font-mono font-semibold">
-                #{String(data._id).slice(-8).toUpperCase()}
-              </span>
-            </p>
-          </div>
-          <span
-            className={`w-fit rounded-full border px-4 py-2 text-sm font-bold ${
-              cancelled
-                ? "border-error/40 bg-error/10 text-error"
-                : unpaid
-                  ? "border-warning/40 bg-warning/10 text-warning"
-                  : "border-primary/30 bg-primary/10 text-primary"
-            }`}
-          >
-            {currentStatus}
-          </span>
-        </div>
-      </header>
+        <span
+          className={`w-fit rounded-full border px-4 py-2 text-sm font-bold ${
+            cancelled
+              ? "border-error/40 bg-error/10 text-error"
+              : unpaid
+                ? "border-warning/40 bg-warning/10 text-warning"
+                : "border-primary/30 bg-primary/10 text-primary"
+          }`}
+        >
+          {currentStatus}
+        </span>
+      </PageHeading>
 
       {cancelled && (
         <div
@@ -233,7 +217,10 @@ const OrderTracking = () => {
           className="flex items-start gap-3 rounded-2xl border border-warning/35 bg-warning/10 p-4 text-sm leading-6 text-base-content/80"
           role="status"
         >
-          <FiCreditCard className="mt-1 shrink-0 text-warning" aria-hidden="true" />
+          <FiCreditCard
+            className="mt-1 shrink-0 text-warning"
+            aria-hidden="true"
+          />
           <p>
             Payment is still pending. Your order will be confirmed once payment
             is marked as paid.
@@ -309,7 +296,9 @@ const OrderTracking = () => {
               <FiTruck aria-hidden="true" />
             </span>
             <div>
-              <p className="text-xs text-base-content/60">Your delivery rider</p>
+              <p className="text-xs text-base-content/60">
+                Your delivery rider
+              </p>
               <p className="font-semibold text-base-content">
                 {data.assigned_rider_name}
               </p>

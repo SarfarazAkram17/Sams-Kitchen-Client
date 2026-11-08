@@ -16,8 +16,8 @@ import { FiDollarSign, FiGift, FiShoppingBag, FiTrendingUp } from "react-icons/f
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import useUserRole from "../../../Hooks/useUserRole";
-import Loading from "../../../Components/Loading/Loading";
 import EmptyState from "../../../Components/Shared/EmptyState";
+import { CustomerDashboardSkeleton } from "../../../Components/Skeletons/PageSkeletons";
 import {
   ChartTooltip,
   Donut,
@@ -60,7 +60,7 @@ const CustomerDashboard = () => {
     refetchInterval: 30000,
   });
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <CustomerDashboardSkeleton />;
 
   const monthly = stats.monthly || [];
   const weekday = stats.weekday || [];

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { getCart } from "../../CartUtils/cartUtils";
 import { useQuery } from "@tanstack/react-query";
-import Loading from "../../Components/Loading/Loading";
 import useAxios from "../../Hooks/useAxios";
 import PlaceOrderForm from "./PlaceOrderForm";
 import { useNavigate } from "react-router";
 import { PiShoppingCartBold } from "react-icons/pi";
+import { foodPrice, formatAmount, roundMoney } from "../../lib/money";
+import { CheckoutSkeleton } from "../../Components/Skeletons/PageSkeletons";
 
 const PlaceOrder = () => {
   const axiosInstance = useAxios();
@@ -43,20 +44,20 @@ const PlaceOrder = () => {
   }, []);
 
   if (isLoading) {
-    return <Loading></Loading>;
+    return <CheckoutSkeleton />;
   }
 
   const subtotal = cartItems.reduce((sum, item) => {
     const foodItem = foods?.find((food) => food._id === item.foodId);
     if (!foodItem) return sum;
-    return sum + foodItem.price * item.quantity;
+    return sum + roundMoney(foodItem.price) * item.quantity;
   }, 0);
 
   const discount = cartItems.reduce((sum, item) => {
     const foodItem = foods?.find((food) => food._id === item.foodId);
     if (!foodItem || foodItem.discount <= 0) return sum;
     const discountAmount =
-      ((foodItem.price * foodItem.discount) / 100) * item.quantity;
+      (roundMoney(foodItem.price) - foodPrice(foodItem)) * item.quantity;
     return sum + discountAmount;
   }, 0);
 
@@ -118,12 +119,7 @@ const PlaceOrder = () => {
                         <div className="flex w-fit items-center h-4 sm:h-6 border border-base-300 rounded-lg">
                           <span className="text-[8px] sm:text-xs font-semibold px-2.5">
                             {item.quantity} x ৳
-                            {foodItem?.discount > 0
-                              ? (
-                                  foodItem?.price -
-                                  (foodItem?.price * foodItem?.discount) / 100
-                                ).toFixed(2)
-                              : foodItem?.price}
+                            {formatAmount(foodPrice(foodItem))}
                           </span>
                         </div>
                       </div>
@@ -133,20 +129,16 @@ const PlaceOrder = () => {
                         {foodItem?.discount > 0 ? (
                           <div>
                             <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-base-content/60">
-                              ৳ {(foodItem?.price * item.quantity).toFixed(2)}
+                              ৳ {formatAmount(foodItem?.price * item.quantity)}
                             </span>
                             <span className="text-success whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
-                              {(
-                                (foodItem?.price -
-                                  (foodItem?.price * foodItem?.discount) / 100) *
-                                item.quantity
-                              ).toFixed(2)}
+                              {formatAmount(foodPrice(foodItem) * item.quantity)}
                             </span>
                           </div>
                         ) : (
                           <span className="text-success whitespace-nowrap text-xs sm:text-sm font-semibold">
-                            ৳ {(foodItem?.price * item?.quantity).toFixed(2)}
+                            ৳ {formatAmount(foodItem?.price * item?.quantity)}
                           </span>
                         )}
                       </div>
@@ -157,7 +149,7 @@ const PlaceOrder = () => {
             ) : (
               <div className="flex bg-info/10 rounded-lg flex-col items-center justify-center h-full pt-6 pb-16 sm:py-6">
                 <div className="lg:h-24 h-32 lg:w-24 w-32 flex justify-center items-center rounded-full animate-pulse p-4 bg-error/20 shadow">
-                  <PiShoppingCartBold className="text-error sm:text-4xl text-5xl" />
+                  <PiShoppingCartBold className="text-error sm:text-4xl text-4xl sm:text-5xl" />
                 </div>
                 <h4 className="font-semibold text-lg sm:text-[1rem] mt-6 mb-3">
                   Your Cart is empty.
@@ -180,7 +172,7 @@ const PlaceOrder = () => {
           <div className="mt-4 flex justify-between items-center">
             <span className="text-[13px] text-base-content/60">Subtotal</span>
             <span className="text-[12px] text-success font-semibold">
-              ৳ {subtotal.toFixed(2)}
+              ৳ {formatAmount(subtotal)}
             </span>
           </div>
 
@@ -188,7 +180,7 @@ const PlaceOrder = () => {
             <span className="text-[13px] text-base-content/60">Delivery Charge</span>
             <span className="text-[12px] font-semibold text-primary">
               {deliveryCharge ? (
-                <>৳ {deliveryCharge.toFixed(2)}</>
+                <>৳ {formatAmount(deliveryCharge)}</>
               ) : (
                 <span className="text-success">Free</span>
               )}
@@ -198,13 +190,13 @@ const PlaceOrder = () => {
           <div className="mt-4 flex justify-between items-center">
             <span className="text-[13px] text-base-content/60">Discount</span>
             <span className="text-[12px] text-warning font-semibold">
-              -৳ {discount.toFixed(2)}
+              -৳ {formatAmount(discount)}
             </span>
           </div>
           <div className="divider"></div>
           <div className="flex justify-between items-center font-semibold text-lg">
             <span>Total Amount:</span>
-            <span className="text-success">৳ {total.toFixed(2)}</span>
+            <span className="text-success">৳ {formatAmount(total)}</span>
           </div>
         </div>
       </div>

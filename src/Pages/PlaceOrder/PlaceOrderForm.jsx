@@ -1,17 +1,22 @@
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaUser } from "react-icons/fa6";
 import { HiTruck } from "react-icons/hi";
 import {
   PiArrowBendUpLeftLight,
   PiArrowBendUpRightLight,
 } from "react-icons/pi";
-import Select from "react-select";
+import AppSelect from "../../Components/Shared/AppSelect";
 import { toast } from "react-toastify";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { clearCart } from "../../CartUtils/cartUtils";
+import { getDiscountedPrice, roundMoney } from "../../lib/money";
+import { FiMail, FiMapPin, FiPhone, FiUser } from "react-icons/fi";
+import Field from "../../Components/Forms/Field";
+
+const toOptions = (list) => list.map((v) => ({ value: v, label: v }));
 
 const PlaceOrderForm = ({ cartItems, foods }) => {
   const navigate = useNavigate();
@@ -46,17 +51,33 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
   const [districts, setDistricts] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [thanas, setThanas] = useState([]);
+  const [selectedThana, setSelectedThana] = useState(null);
 
   // Fetch location data from the public folder.
   useEffect(() => {
-    fetch("/regions.json")
-      .then((res) => res.json())
-      .then((data) => setRegions(data));
+    let active = true;
 
-    fetch("/outlets.json")
-      .then((res) => res.json())
-      .then((data) => setOutlets(data));
+    Promise.all([
+      fetch("/regions.json").then((res) => res.json()),
+      fetch("/outlets.json").then((res) => res.json()),
+    ])
+      .then(([regionsData, outletsData]) => {
+        if (!active) return;
+        setRegions(regionsData);
+        setOutlets(outletsData);
+      })
+      .catch(() => toast.error("Failed to load location data."));
+
+    return () => {
+      active = false;
+    };
   }, []);
+
+  // Memoized options: stable references stop react-select from
+  // recomputing its focused option (which caused the blinking).
+  const regionOptions = useMemo(() => toOptions(regions), [regions]);
+  const districtOptions = useMemo(() => toOptions(districts), [districts]);
+  const thanaOptions = useMemo(() => toOptions(thanas), [thanas]);
 
   // Handle region changes.
   const handleRegionChange = (selected) => {
@@ -75,6 +96,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
     }
 
     setSelectedDistrict(null);
+    setSelectedThana(null);
     setThanas([]);
     setValue("district", "");
     setValue("thana", "");
@@ -91,20 +113,22 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
     if (selected) {
       const districtOutlets = outlets.filter(
         (o) =>
-          o.region === selectedRegion?.value && o.district === selected.value
+          o.region === selectedRegion?.value && o.district === selected.value,
       );
       const covered = districtOutlets.flatMap((o) => o.covered_area);
-      setThanas(covered);
+      setThanas([...new Set(covered)]);
     } else {
       setThanas([]);
     }
 
+    setSelectedThana(null);
     setValue("thana", "");
     trigger("thana");
   };
 
   // Handle thana changes.
   const handleThanaChange = (selected) => {
+    setSelectedThana(selected);
     setValue("thana", selected ? selected.value : "");
     trigger("thana");
   };
@@ -125,10 +149,9 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
 
           if (!food) return null;
 
-          const price = Number(food.price);
+          const price = roundMoney(food.price);
           const discount = Number(food.discount) || 0;
-          const discountedPrice = price - (price * discount) / 100;
-          const subtotal = discountedPrice * item.quantity;
+          const subtotal = getDiscountedPrice(price, discount) * item.quantity;
 
           return {
             foodId: item.foodId,
@@ -137,7 +160,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
             price,
             discount,
             quantity: item.quantity,
-            subtotal: Number(subtotal.toFixed(2)),
+            subtotal,
           };
         })
         .filter(Boolean);
@@ -145,8 +168,10 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
       // Calculate totals.
       const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
       const discount = items.reduce(
-        (sum, i) => sum + i.price * (i.discount / 100) * i.quantity,
-        0
+        (sum, i) =>
+          sum +
+          (i.price - getDiscountedPrice(i.price, i.discount)) * i.quantity,
+        0,
       );
 
       let deliveryCharge = cartItems.length > 1 ? 50 : 30;
@@ -171,10 +196,10 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
           },
         },
         items,
-        subtotal: Number(subtotal.toFixed(2)),
+        subtotal,
         deliveryCharge,
-        discount: Number(discount.toFixed(2)),
-        total: Number(total.toFixed(2)),
+        discount,
+        total,
         payment_status: "not_paid",
         status: "pending",
         placedAt: new Date().toISOString(),
@@ -183,7 +208,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
       // Send the order to the server.
       const res = await axiosSecure.post(
         `/orders?email=${userEmail}`,
-        orderPayload
+        orderPayload,
       );
 
       if (res.data.insertedId) {
@@ -215,87 +240,68 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-4">
-              <div>
-                <label className="text-xs font-semibold">
-                  First Name <span className="text-error">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
-                  {...register("firstName", {
-                    required: "First name is required",
-                    minLength: { value: 2, message: "Please enter at least 2 characters" },
-                  })}
-                />
-                {errors.firstName && (
-                  <span className="text-error text-xs mt-1 font-semibold">
-                    {errors.firstName.message}
-                  </span>
-                )}
-              </div>
-              <div>
-                <label className="text-xs font-semibold">
-                  Last Name <span className="text-error">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
-                  {...register("lastName", {
-                    required: "Last name is required",
-                    minLength: { value: 2, message: "Please enter at least 2 characters" },
-                  })}
-                />
-                {errors.lastName && (
-                  <span className="text-error text-xs mt-1 font-semibold">
-                    {errors.lastName.message}
-                  </span>
-                )}
-              </div>
+              <Field
+                label="First name"
+                type="text"
+                icon={FiUser}
+                autoComplete="given-name"
+                error={errors.firstName?.message}
+                {...register("firstName", {
+                  required: "First name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Please enter at least 2 characters",
+                  },
+                })}
+              />
+              <Field
+                label="Last name"
+                type="text"
+                icon={FiUser}
+                autoComplete="family-name"
+                error={errors.lastName?.message}
+                {...register("lastName", {
+                  required: "Last name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Please enter at least 2 characters",
+                  },
+                })}
+              />
 
               {/* Email Field (Read-only) */}
-              <div>
-                <label className="text-xs font-semibold">
-                  Email Address <span className="text-error">*</span>
-                </label>
-                <input
-                  type="email"
-                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
-                  value={userEmail}
-                  readOnly
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address" },
-                  })}
-                />
-                {errors.email && (
-                  <span className="text-error text-xs mt-1 font-semibold">
-                    {errors.email.message}
-                  </span>
-                )}
-              </div>
+              <Field
+                label="Email address"
+                type="email"
+                icon={FiMail}
+                autoComplete="email"
+                value={userEmail}
+                readOnly
+                error={errors.email?.message}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^\S+@\S+\.\S+$/,
+                    message: "Enter a valid email address",
+                  },
+                })}
+              />
 
               {/* Phone Number */}
-              <div>
-                <label className="text-xs font-semibold">
-                  Phone Number <span className="text-error">*</span>
-                </label>
-                <input
-                  type="tel"
-                  className="w-full p-2 border border-base-300 rounded-md text-xs xl:text-sm mt-1"
-                  {...register("phone", {
-                    required: "Phone number is required",
-                    pattern: {
-                      value: /^(?:\+?88)?01[3-9]\d{8}$/,
-                      message: "Enter a valid Bangladesh mobile number",
-                    },
-                  })}
-                />
-                {errors.phone && (
-                  <span className="text-error text-xs mt-1 font-semibold">
-                    {errors.phone.message}
-                  </span>
-                )}
-              </div>
+              <Field
+                label="Phone number"
+                type="tel"
+                icon={FiPhone}
+                autoComplete="tel"
+                error={errors.phone?.message}
+                {...register("phone", {
+                  required: "Phone number is required",
+                  pattern: {
+                    value: /^(?:\+?88)?01[3-9]\d{8}$/,
+                    message: "Enter a valid Bangladesh mobile number",
+                  },
+                })}
+              />
             </div>
           </div>
 
@@ -313,41 +319,33 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 items-start gap-4">
-              <div className="md:col-span-3">
-                <label className="text-xs font-semibold">
-                  Street Address <span className="text-error">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 mt-1 border border-base-300 rounded-md text-xs xl:text-sm"
-                  {...register("street", {
-                    required: "Street address is required",
-                  })}
-                />
-                {errors.street && (
-                  <span className="text-error text-xs mt-1 font-semibold">
-                    {errors.street.message}
-                  </span>
-                )}
-              </div>
+              <Field
+                className="md:col-span-3"
+                label="Street address"
+                type="text"
+                icon={FiMapPin}
+                autoComplete="street-address"
+                error={errors.street?.message}
+                {...register("street", {
+                  required: "Street address is required",
+                })}
+              />
 
               {/* Region Select */}
               <div>
-                <label className="text-xs font-semibold">
+                <label className="mb-1.5 block text-sm font-semibold">
                   Region <span className="text-error">*</span>
                 </label>
-                <Select
+                <AppSelect
                   aria-label="Region"
                   aria-invalid={Boolean(errors.region)}
-                  options={regions.map((r) => ({ value: r, label: r }))}
+                  options={regionOptions}
                   value={selectedRegion}
                   onChange={handleRegionChange}
                   placeholder="Select Region"
-                  className="text-xs xl:text-sm mt-1"
-                  classNamePrefix="select"
                 />
                 {errors.region && (
-                  <span className="text-error text-xs mt-1 font-semibold">
+                  <span className="mt-1.5 block text-sm font-medium text-error">
                     {errors.region.message}
                   </span>
                 )}
@@ -355,22 +353,20 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
 
               {/* District Select */}
               <div>
-                <label className="text-xs font-semibold">
+                <label className="mb-1.5 block text-sm font-semibold">
                   District <span className="text-error">*</span>
                 </label>
-                <Select
+                <AppSelect
                   aria-label="District"
                   aria-invalid={Boolean(errors.district)}
-                  options={districts.map((d) => ({ value: d, label: d }))}
+                  options={districtOptions}
                   value={selectedDistrict}
                   onChange={handleDistrictChange}
                   isDisabled={!selectedRegion}
                   placeholder="Select District"
-                  className="text-xs xl:text-sm mt-1"
-                  classNamePrefix="select"
                 />
                 {errors.district && (
-                  <span className="text-error text-xs mt-1 font-semibold">
+                  <span className="mt-1.5 block text-sm font-medium text-error">
                     {errors.district.message}
                   </span>
                 )}
@@ -378,21 +374,20 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
 
               {/* Thana Select */}
               <div>
-                <label className="text-xs font-semibold">
+                <label className="mb-1.5 block text-sm font-semibold">
                   Thana <span className="text-error">*</span>
                 </label>
-                <Select
+                <AppSelect
                   aria-label="Thana"
                   aria-invalid={Boolean(errors.thana)}
-                  options={thanas.map((t) => ({ value: t, label: t }))}
+                  options={thanaOptions}
+                  value={selectedThana}
                   onChange={handleThanaChange}
                   isDisabled={!selectedRegion || !selectedDistrict}
                   placeholder="Select Thana"
-                  className="text-xs xl:text-sm mt-1"
-                  classNamePrefix="select"
                 />
                 {errors.thana && (
-                  <span className="text-error text-xs mt-1 font-semibold">
+                  <span className="mt-1.5 block text-sm font-medium text-error">
                     {errors.thana.message}
                   </span>
                 )}
@@ -411,6 +406,7 @@ const PlaceOrderForm = ({ cartItems, foods }) => {
             </button>
             <button
               type="submit"
+              disabled={isProcessing}
               className="btn flex whitespace-nowrap w-full items-center gap-2 btn-primary sm:w-[49%] disabled:text-base-content/50"
             >
               {isProcessing ? (

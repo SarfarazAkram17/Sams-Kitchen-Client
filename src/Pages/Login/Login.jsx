@@ -1,168 +1,126 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link, Navigate, useLocation } from "react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import useAxios from "../../Hooks/useAxios";
+import { FiMail } from "react-icons/fi";
 import useAuth from "../../Hooks/useAuth";
+import { useContinueAfterSignIn } from "../../Hooks/useUserProfile";
+import { authErrorMessage } from "../../lib/authErrors";
+import AuthShell from "../../Components/Auth/AuthShell";
+import Field, { PasswordField } from "../../Components/Forms/Field";
 import SocialLogin from "../../Components/Shared/SocialLogin";
-import Lottie from "lottie-react";
-import loginLottie from "../../assets/animations/login.json";
+import useUserProfile from "../../Hooks/useUserProfile";
+import { safeDestination } from "../../lib/redirect";
+
 const Login = () => {
-  const axiosInstance = useAxios();
-  const [showPassword, setShowPassword] = useState(false);
   const { loginUser, forgotPassword, logOutUser } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const continueAfterSignIn = useContinueAfterSignIn();
   const location = useLocation();
+  const { user } = useAuth();
+  const { profile } = useUserProfile();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    reset,
     watch,
     formState: { errors },
   } = useForm();
 
   const email = watch("email")?.trim() || "";
 
-  const handleLogin = (formData) => {
+  const handleLogin = async (formData) => {
     if (loading) return;
     setLoading(true);
 
-    const email = formData.email.trim();
-    const password = formData.password.trim();
+    try {
+      const emailAddress = formData.email.trim();
+      const res = await loginUser(emailAddress, formData.password.trim());
 
-    loginUser(email, password)
-      .then(async (res) => {
-        if (!res.user.emailVerified) {
-          logOutUser().then(() => {
-            toast.warn("Verify your email and then login");
-          });
-          return;
-        }
-        toast.success("You logged in successfully");
-        reset();
+      if (!res.user.emailVerified) {
+        await logOutUser();
+        toast.warn("Verify your email, then sign in. Check your spam folder too.");
+        return;
+      }
 
-        await axiosInstance.post("/users", {
-          email,
-          name: res.user.displayName,
-          role: "customer",
-          photo: res.user.photoURL,
-          createdAt: res.user.metadata.createdAt,
-          last_log_in: Date.now().toString(),
-        });
-
-        navigate(location.state || "/");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      await continueAfterSignIn(emailAddress, location.state);
+      toast.success("You’re signed in.");
+    } catch (error) {
+      toast.error(authErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleForgotPassword = () => {
+  const handleForgotPassword = async () => {
     if (!email) {
-      return toast.warn("Please enter your email first.");
+      return toast.warn("Enter your email first.");
     }
 
-    forgotPassword(email)
-      .then(() => {
-        toast.success("Password reset email send.");
-        toast.warn("Also check email in the spam section");
-      })
-      .catch((err) => {
-        toast.error(`Error in password change: ${err.message}`);
-      });
+    try {
+      await forgotPassword(email);
+      toast.success("Password reset email sent. Check your spam folder too.");
+    } catch (error) {
+      toast.error(authErrorMessage(error));
+    }
   };
 
-  return (
-    <div className="auth-shell flex flex-col max-w-[1500px] mx-auto px-3 sm:px-5 sm:flex-row gap-6 justify-start items-center md:justify-center mb-16">
-      <Lottie
-        className="hidden sm:block flex-1 max-w-xl"
-        animationData={loginLottie}
-        loop={true}
-      ></Lottie>
-      <div className="card w-full min-w-0 flex-1 border border-base-300 shadow-xl">
-        <div className="card-body">
-          <h1 className="text-3xl font-extrabold">Welcome Back</h1>
-          <p className="mb-4 text-sm font-semibold">Login with Sam's Kitchen</p>
-          <form onSubmit={handleSubmit(handleLogin)} className="fieldset">
-            <label className="label font-semibold">Email</label>
-            <input
-              type="email"
-              {...register("email", {
-                required: "Email is required.",
-                pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address." },
-              })}
-              className="input placeholder:text-[13px] placeholder:font-bold w-full"
-              placeholder="Enter your email"
-            />
-            {errors.email && <p className="mt-1 text-sm font-semibold text-error">{errors.email.message}</p>}
+  if (user && profile && !profile.needsOnboarding) {
+    return <Navigate to={safeDestination(location.state)} replace />;
+  }
 
-            <label className="label font-semibold mt-4">Password</label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                className="input placeholder:text-[13px] placeholder:font-bold w-full"
-                {...register("password", {
-                  required: "Password is required.",
-                })}
-                placeholder="Enter your password"
-              />
-              {errors.password?.type === "required" && (
-                <p className="mt-1 text-sm font-semibold text-error">{errors.password.message}</p>
-              )}
-              <button
-                type="button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                aria-pressed={showPassword}
-                onClick={() => setShowPassword((visible) => !visible)}
-                className="absolute right-2 top-1/2 z-10 grid size-9 -translate-y-1/2 place-items-center rounded-full text-base-content/65 hover:bg-base-200 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary"
-              >
-                {showPassword ? <FaEyeSlash size={17} /> : <FaEye size={17} />}
-              </button>
-            </div>
-            <div>
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                className="link link-hover rounded-sm text-base-content/70 font-semibold focus-visible:outline-2 focus-visible:outline-primary"
-              >
-                Forgot password?
-              </button>
-            </div>
-            <button
-              className="btn btn-primary mt-6"
-            >
-              {" "}
-              {loading ? (
-                <span className="loading loading-spinner text-primary loading-md"></span>
-              ) : (
-                "Login"
-              )}
-            </button>
-            <p className="text-xs my-2">
-              Don't have any account ?{" "}
-              <Link
-                state={location.state}
-                to="/register"
-                className="hover:underline text-primary font-semibold"
-              >
-                Register
-              </Link>
-            </p>
-          </form>
-          <div className="divider my-4">Or continue with</div>
-          <SocialLogin
-            state={location.state}
-            message={"You login successfully"}
-          ></SocialLogin>
+  return (
+    <AuthShell
+      title="Welcome back"
+      subtitle="Sign in to track your orders and pick up where you left off."
+      footer={
+        <>
+          New to Sam’s Kitchen?{" "}
+          <Link to="/register" state={location.state} className="font-semibold text-primary hover:underline">
+            Create an account
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit(handleLogin)} className="space-y-4" noValidate>
+        <Field
+          label="Email"
+          type="email"
+          icon={FiMail}
+          autoComplete="email"
+          placeholder="you@example.com"
+          error={errors.email?.message}
+          {...register("email", {
+            required: "Enter your email.",
+            pattern: { value: /^\S+@\S+\.\S+$/, message: "Enter a valid email address." },
+          })}
+        />
+
+        <div>
+          <PasswordField
+            label="Password"
+            autoComplete="current-password"
+            placeholder="Your password"
+            error={errors.password?.message}
+            {...register("password", { required: "Enter your password." })}
+          />
+          <button
+            type="button"
+            onClick={handleForgotPassword}
+            className="mt-2 rounded-sm text-sm font-semibold text-base-content/70 hover:text-primary hover:underline"
+          >
+            Forgot password?
+          </button>
         </div>
-      </div>
-    </div>
+
+        <button type="submit" disabled={loading} className="btn btn-primary h-12 w-full text-base">
+          {loading ? <span className="loading loading-spinner loading-sm" /> : "Sign in"}
+        </button>
+      </form>
+
+      <div className="divider my-6 text-xs text-base-content/60">or continue with</div>
+      <SocialLogin state={location.state} message="You’re signed in." />
+    </AuthShell>
   );
 };
 

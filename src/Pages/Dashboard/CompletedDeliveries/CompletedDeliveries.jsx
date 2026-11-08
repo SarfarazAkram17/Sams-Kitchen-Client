@@ -1,13 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
-import { useState } from "react";
-import Loading from "../../../Components/Loading/Loading";
-import { Pagination } from "antd";
+import { useCallback, useState } from "react";
+import AppPagination from "../../../Components/Shared/AppPagination";
 import EmptyState from "../../../Components/Shared/EmptyState";
 import OrderItemsSection from "../OrderItemsSection";
 import { formatCurrency, formatDate } from "../../../lib/formatters";
+import { CompletedDeliveriesListSkeleton } from "../../../Components/Skeletons/PageSkeletons";
+import ListToolbar from "../../../Components/Shared/ListToolbar";
+import PageHeading from "../../../Components/Shared/PageHeading";
+import EmptyResults from "../../../Components/Shared/EmptyResults";
 import {
   FiCalendar,
   FiCheckCircle,
@@ -28,9 +31,22 @@ const CompletedDeliveries = () => {
   const axiosSecure = useAxiosSecure();
   const { userEmail } = useAuth();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("newest");
+
+  const updateSearch = useCallback((value) => {
+    setSearch(value);
+    setPage(1);
+  }, []);
+  const resetFilters = () => {
+    setSearch("");
+    setSort("newest");
+    setPage(1);
+  };
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["completedDeliveries", userEmail, page],
+    queryKey: ["completedDeliveries", userEmail, page, search, sort],
+    placeholderData: keepPreviousData,
     enabled: !!userEmail,
     queryFn: async () => {
       const res = await axiosSecure.get(`/riders/completedOrders`, {
@@ -38,6 +54,8 @@ const CompletedDeliveries = () => {
           email: userEmail,
           page,
           limit: 10,
+          search: search || undefined,
+          sort,
         },
       });
       return res.data;
@@ -49,27 +67,57 @@ const CompletedDeliveries = () => {
 
   return (
     <div className="space-y-6 pb-8">
-      <header className="flex flex-col gap-2 border-b border-base-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-secondary">
-            Rider workspace
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-base-content sm:text-4xl">
-            Completed deliveries
-          </h1>
-        </div>
-        <p className="max-w-md text-sm leading-6 text-base-content/70 sm:text-right">
-          Review customer details, delivery times, and earnings for your
-          completed orders. To get paid, request a payout from{" "}
-          <Link to="/dashboard/cashouts" className="font-semibold text-primary">
-            Cashouts
-          </Link>
-          .
-        </p>
-      </header>
+      <PageHeading
+        eyebrow="Rider workspace"
+        title="Completed deliveries"
+        description={
+          <>
+            Review customer details, delivery times, and earnings for your
+            completed orders. To get paid, request a payout from{" "}
+            <Link
+              to="/dashboard/cashouts"
+              className="font-semibold text-primary"
+            >
+              Cashouts
+            </Link>
+            .
+          </>
+        }
+      />
+
+      <ListToolbar
+        searchId="completed-search"
+        searchLabel="Search deliveries"
+        searchPlaceholder="Order ID, customer, area or dish"
+        search={search}
+        onSearch={updateSearch}
+        activeCount={(search ? 1 : 0) + (sort !== "newest" ? 1 : 0)}
+        onReset={resetFilters}
+        summary={
+          isLoading
+            ? "Loading deliveries"
+            : `${total} ${total === 1 ? "delivery" : "deliveries"} found`
+        }
+        filters={[
+          {
+            key: "sort",
+            label: "Sort by",
+            options: [
+              { value: "newest", label: "Newest first" },
+              { value: "oldest", label: "Oldest first" },
+              { value: "highest", label: "Highest order total" },
+            ],
+            value: sort,
+            onChange: (value) => {
+              setSort(value);
+              setPage(1);
+            },
+          },
+        ]}
+      />
 
       {isLoading ? (
-        <Loading />
+        <CompletedDeliveriesListSkeleton count={4} />
       ) : isError ? (
         <div
           className="rounded-2xl border border-error/30 bg-error/10 p-6 text-center"
@@ -86,6 +134,12 @@ const CompletedDeliveries = () => {
             Try again
           </button>
         </div>
+      ) : orders.length === 0 && search ? (
+        <EmptyResults
+          title="No deliveries match"
+          message="Try another order ID, customer, area or dish."
+          onReset={resetFilters}
+        />
       ) : orders.length === 0 ? (
         <EmptyState
           title="No deliveries yet"
@@ -237,16 +291,13 @@ const CompletedDeliveries = () => {
           </div>
 
           {total > 10 && (
-            <div className="flex justify-center pt-2">
-              <Pagination
-                current={page}
-                align="center"
-                total={total}
-                pageSize={10}
-                showSizeChanger={false}
-                onChange={setPage}
-              />
-            </div>
+            <AppPagination
+              className="pt-2"
+              current={page}
+              total={total}
+              pageSize={10}
+              onChange={setPage}
+            />
           )}
         </>
       )}

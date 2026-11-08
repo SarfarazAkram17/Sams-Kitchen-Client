@@ -15,9 +15,11 @@ import { SiStripe } from "react-icons/si";
 import { MdPayment } from "react-icons/md";
 import PaymentForm from "./PaymentForm";
 import SslPayment from "./SslPayment";
-import Loading from "../../../Components/Loading/Loading";
+import PageHeading from "../../../Components/Shared/PageHeading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
+import { formatCurrency } from "../../../lib/money";
+import { PaymentSkeleton } from "../../../Components/Skeletons/PageSkeletons";
 
 const stripePromise = loadStripe(import.meta.env.VITE_payment_key);
 
@@ -31,36 +33,23 @@ const Payment = () => {
     queryKey: ["orders", orderId],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/orders/${orderId}?email=${userEmail}`
+        `/orders/${orderId}?email=${userEmail}`,
       );
       return res.data;
     },
   });
 
-  const formatCurrency = (amt) =>
-    `৳${Number(amt).toLocaleString("en-BD", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-
   if (isPending) {
-    return <Loading />;
+    return <PaymentSkeleton />;
   }
 
   return (
-    <div className="px-4">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-          <FiCreditCard className="text-3xl text-primary" />
-        </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-base-content/80">
-          Complete Your Payment
-        </h1>
-        <p className="text-base-content/80 mt-2">
-          Secure checkout for your delicious order
-        </p>
-      </div>
+    <div className="w-full space-y-6 pb-8">
+      <PageHeading
+        eyebrow="Checkout"
+        title="Complete your payment"
+        description="Secure checkout for your order."
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left Side - Order Summary */}
@@ -71,7 +60,9 @@ const Payment = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FiPackage className="text-primary" />
-                  <h2 className="font-semibold text-base-content/80">Order Summary</h2>
+                  <h2 className="font-semibold text-base-content/80">
+                    Order Summary
+                  </h2>
                 </div>
                 <span className="text-xs font-mono bg-base-100 px-2 py-1 rounded text-base-content/80">
                   {orderId.toUpperCase()}
@@ -203,7 +194,9 @@ const Payment = () => {
             <div className="bg-emerald-50 p-4 border-b">
               <div className="flex items-center gap-2">
                 <FiCreditCard className="text-success" />
-                <h2 className="font-semibold text-base-content/80">Payment Method</h2>
+                <h2 className="font-semibold text-base-content/80">
+                  Payment Method
+                </h2>
               </div>
             </div>
 
@@ -220,12 +213,16 @@ const Payment = () => {
                 >
                   <SiStripe
                     className={`text-2xl mx-auto mb-2 ${
-                      method === "stripe" ? "text-primary" : "text-base-content/60"
+                      method === "stripe"
+                        ? "text-primary"
+                        : "text-base-content/60"
                     }`}
                   />
                   <p
                     className={`text-sm font-medium ${
-                      method === "stripe" ? "text-primary" : "text-base-content/80"
+                      method === "stripe"
+                        ? "text-primary"
+                        : "text-base-content/80"
                     }`}
                   >
                     Stripe
@@ -243,12 +240,16 @@ const Payment = () => {
                 >
                   <MdPayment
                     className={`text-2xl mx-auto mb-2 ${
-                      method === "sslcommerz" ? "text-primary" : "text-base-content/60"
+                      method === "sslcommerz"
+                        ? "text-primary"
+                        : "text-base-content/60"
                     }`}
                   />
                   <p
                     className={`text-sm font-medium ${
-                      method === "sslcommerz" ? "text-primary" : "text-base-content/80"
+                      method === "sslcommerz"
+                        ? "text-primary"
+                        : "text-base-content/80"
                     }`}
                   >
                     SSL Commerz

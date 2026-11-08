@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import { FiEdit3, FiX } from "react-icons/fi";
+import { FiCamera, FiEdit3, FiMail, FiShield, FiUser, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import axios from "axios";
 import useAuth from "../../../Hooks/useAuth";
 import useUserRole from "../../../Hooks/useUserRole";
-import { Link } from "react-router";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import Field from "../../../Components/Forms/Field";
+import { FormPage } from "../../../Components/Forms/FormKit";
 
 const ManageProfile = () => {
   const axiosSecure = useAxiosSecure();
   const { user, userEmail, updateUserProfile } = useAuth();
-  const { role, roleLoading } = useUserRole();
+  const { roleLabel, roleLoading } = useUserRole();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -112,146 +113,131 @@ const ManageProfile = () => {
   const isSaveDisabled =
     formData.name.trim() === user?.displayName && preview === user?.photoURL;
 
-  return (
-    <div className="px-4">
-      <h2 className="text-3xl font-bold mb-8 text-primary">
-        Welcome back, {user?.displayName}
-      </h2>
+  const nameMissing = !formData.name.trim();
 
-      <div className="surface-panel w-full max-w-3xl p-4 sm:p-6 rounded-2xl">
-        <div className="flex flex-col sm:flex-row gap-8 md:items-center">
+  return (
+    <FormPage
+      eyebrow="Account"
+      title={`Welcome back, ${user?.displayName || ""}`}
+      subtitle="Your name and photo appear on orders, deliveries and reviews."
+    >
+      <section className="dash-panel rounded-3xl border border-base-300 bg-base-100 p-5 sm:p-8">
+        <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:text-left">
           <img
             src={user?.photoURL}
-            alt="Profile"
-            className="w-44 h-44 rounded-full object-cover border-4 border-primary shadow"
+            alt="Your profile"
+            className="size-36 shrink-0 rounded-full border-4 border-primary object-cover shadow-[var(--shadow-float)] sm:size-40"
           />
-          <div className="flex-1 space-y-3">
-            <p>
-              <span className="font-semibold">Name:</span> {user?.displayName}
-            </p>
-            <p>
-              <span className="font-semibold">Email:</span> {userEmail}
-            </p>
-            <p>
-              <span className="font-semibold">Role:</span>{" "}
-              <span className="capitalize">{!roleLoading && role}</span>
-            </p>
-            <button
-              onClick={handleEditClick}
-              className="btn btn-outline btn-primary mt-4 flex items-center gap-2"
-            >
-              <FiEdit3 />
-              Edit Profile
+          <div className="min-w-0 flex-1 space-y-3">
+            <dl className="space-y-3 text-sm">
+              {[
+                { icon: FiUser, label: "Name", value: user?.displayName },
+                { icon: FiMail, label: "Email", value: userEmail },
+                { icon: FiShield, label: "Role", value: !roleLoading && roleLabel },
+              ].map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex items-center gap-3 rounded-2xl bg-base-200/60 px-4 py-3 text-left">
+                  <Icon className="shrink-0 text-primary" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-base-content/60">{label}</dt>
+                    <dd className="break-words font-semibold">{value}</dd>
+                  </div>
+                </div>
+              ))}
+            </dl>
+            <button onClick={handleEditClick} className="btn btn-primary h-11 gap-2 rounded-full px-6">
+              <FiEdit3 aria-hidden="true" />
+              Edit profile
             </button>
           </div>
         </div>
+      </section>
 
-        {!roleLoading && role === "customer" && (
-          <div className="mt-10">
-            <Link to="/dashboard/beARider" className="btn btn-primary text-primary-content">
-              Be a Rider
-            </Link>
-          </div>
-        )}
+      {isModalOpen && (
+        <>
+          <button
+            type="button"
+            aria-label="Close edit profile dialog"
+            className="fixed inset-0 z-40 cursor-default bg-black/40 backdrop-blur-md"
+            onClick={() => !loading && setIsModalOpen(false)}
+          />
 
-        {isModalOpen && (
-          <>
-            <button
-              type="button"
-              aria-label="Close edit profile dialog"
-              className="fixed inset-0 z-40 cursor-default backdrop-blur-md"
-              onClick={() => !loading && setIsModalOpen(false)}
-            />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="profile-edit-title"
+              className="surface-panel relative max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-3xl p-5 shadow-xl sm:p-8"
+            >
+              <button
+                onClick={() => !loading && setIsModalOpen(false)}
+                className="absolute right-4 top-4 grid size-9 place-items-center rounded-full text-base-content/60 transition hover:bg-base-200 hover:text-error"
+                aria-label="Close dialog"
+                disabled={loading}
+              >
+                <FiX size={20} />
+              </button>
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-              <div role="dialog" aria-modal="true" aria-labelledby="profile-edit-title" className="surface-panel relative max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl p-5 shadow-xl sm:p-8">
-                <button
-                  onClick={() => !loading && setIsModalOpen(false)}
-                  className="absolute top-4 right-4 hover:text-error cursor-pointer text-base-content/60 transition"
-                  aria-label="Close modal"
-                  disabled={loading}
+              <h3 id="profile-edit-title" className="mb-6 pr-8 font-display text-2xl">
+                Edit profile
+              </h3>
+
+              <div className="mb-5 flex items-center gap-4">
+                <label
+                  htmlFor="profileImage"
+                  className="group relative size-24 shrink-0 cursor-pointer overflow-hidden rounded-full border-2 border-primary"
                 >
-                  <FiX size={26} />
-                </button>
-
-                <h3 id="profile-edit-title" className="text-2xl font-semibold mb-6 text-center">
-                  Edit Profile
-                </h3>
-
-                <div className="flex flex-col items-start mb-4">
-                  <label
-                    htmlFor="profileImage"
-                    className="cursor-pointer block w-32 h-32 rounded-full border-2 border-primary overflow-hidden mb-2"
-                  >
-                    <img
-                      src={preview}
-                      alt="Profile Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  </label>
-
+                  {preview && <img src={preview} alt="Profile preview" className="size-full object-cover" />}
+                  <span className="absolute inset-0 grid place-items-center bg-black/45 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <FiCamera size={20} aria-hidden="true" />
+                  </span>
+                </label>
+                <div>
                   <button
-                    onClick={() =>
-                      document.getElementById("profileImage").click()
-                    }
-                    className="btn border border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-content"
+                    type="button"
+                    onClick={() => document.getElementById("profileImage").click()}
+                    disabled={loading}
+                    className="btn btn-sm rounded-full border-primary/50 text-primary hover:bg-primary hover:text-primary-content"
                   >
-                    Change Profile Photo
+                    Change photo
                   </button>
                   <input
                     type="file"
                     id="profileImage"
                     accept="image/*"
-                    className="hidden"
+                    className="sr-only"
                     onChange={handleImageChange}
                   />
-                  {!preview && (
-                    <p className="text-error text-center font-semibold mb-4">
-                      Profile image is required.
-                    </p>
-                  )}
-                </div>
-
-                <label className="label font-semibold mt-4 mb-2">Name</label>
-                <input
-                  type="text"
-                  className="input input-bordered w-full"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                />
-                {!formData.name.trim() && (
-                  <p className="text-error text-sm font-semibold mt-2">
-                    Name is required.
-                  </p>
-                )}
-
-                <div className="flex justify-end gap-4 mt-8">
-                  <button
-                    onClick={() => !loading && setIsModalOpen(false)}
-                    className="btn btn-outline"
-                    disabled={loading}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleUpdate}
-                    className="btn btn-primary"
-                  >
-                    {loading ? (
-                      <span className="loading loading-spinner text-primary"></span>
-                    ) : (
-                      "Update"
-                    )}
-                  </button>
+                  {!preview && <p className="mt-1.5 text-sm font-medium text-error">Profile image is required.</p>}
                 </div>
               </div>
+
+              <Field
+                label="Name"
+                icon={FiUser}
+                name="profile-name"
+                autoComplete="name"
+                value={formData.name}
+                error={nameMissing ? "Name is required." : undefined}
+                onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+              />
+
+              <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  onClick={() => !loading && setIsModalOpen(false)}
+                  className="btn h-11"
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+                <button onClick={handleUpdate} className="btn btn-primary h-11 sm:min-w-32" disabled={loading} aria-busy={loading}>
+                  {loading ? <span className="loading loading-spinner loading-sm" /> : "Save changes"}
+                </button>
+              </div>
             </div>
-          </>
-        )}
-      </div>
-    </div>
+          </div>
+        </>
+      )}
+    </FormPage>
   );
 };
 

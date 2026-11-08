@@ -2,10 +2,10 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import useAuth from "../../../Hooks/useAuth";
-import Swal from "sweetalert2";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import { FiLock } from "react-icons/fi";
+import { formatCurrency } from "../../../lib/money";
 
 const PaymentForm = ({ orderInfo }) => {
   const stripe = useStripe();
@@ -36,13 +36,7 @@ const PaymentForm = ({ orderInfo }) => {
   }, []);
 
   const amount = orderInfo.total;
-  const amountInCents = amount * 100;
-
-  const formatCurrency = (amt) =>
-    `৳${Number(amt).toLocaleString("en-BD", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+  const amountInCents = Math.round(amount) * 100;
 
   const handlePay = async (e) => {
     e.preventDefault();
@@ -116,13 +110,7 @@ const PaymentForm = ({ orderInfo }) => {
             paymentData
           );
           if (paymentRes.data.insertedId) {
-            await Swal.fire({
-              icon: "success",
-              title: "Payment Successful!",
-              text: "Your order is being prepared",
-              confirmButtonText: "Go to My Orders",
-              confirmButtonColor: "#22c55e",
-            });
+            toast.success("Payment successful. Your order is being prepared.");
             setLoading(false);
             navigate("/dashboard/myOrders");
           }

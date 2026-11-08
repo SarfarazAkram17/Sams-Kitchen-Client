@@ -4,9 +4,10 @@ import AllFoods from "../Pages/AllFoods/AllFoods";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Dashboard from "../Pages/Dashboard/Dashboard/Dashboard";
 import PrivateRoutes from "../Routes/PrivateRoutes";
+import SessionGate from "../Routes/SessionGate";
 import ManageProfile from "../Pages/Dashboard/ManageProfile/ManageProfile";
 import { lazy, Suspense } from "react";
-import Loading from "../Components/Loading/Loading";
+import RouteSkeleton from "../Components/Skeletons/RouteSkeleton";
 import AdminRoutes from "../Routes/AdminRoutes";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
@@ -16,7 +17,6 @@ import EditFood from "../Pages/Dashboard/EditFood/EditFood";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
 import PlaceOrder from "../Pages/PlaceOrder/PlaceOrder";
 import Payment from "../Pages/Dashboard/Payment/Payment";
-import BeARider from "../Pages/Dashboard/BeARider/BeARider";
 import CustomerRoutes from "../Routes/CustomerRoutes";
 import PendingRiders from "../Pages/Dashboard/PendingRiders/PendingRiders";
 import RiderRoutes from "../Routes/RiderRoutes";
@@ -25,6 +25,7 @@ import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/Complete
 import Offers from "../Pages/Offers/Offers";
 import OrderTracking from "../Pages/Dashboard/OrderTracking/OrderTracking";
 import KitchenOrders from "../Pages/Dashboard/KitchenOrders/KitchenOrders";
+import AllOrders from "../Pages/Dashboard/AllOrders/AllOrders";
 import CashoutRequests from "../Pages/Dashboard/CashoutRequests/CashoutRequests";
 import RiderCashouts from "../Pages/Dashboard/RiderCashouts/RiderCashouts";
 
@@ -32,10 +33,14 @@ const Home = lazy(() => import("../Pages/Home/Home/Home"));
 const AboutUs = lazy(() => import("../Pages/AboutUs/AboutUs"));
 const Login = lazy(() => import("../Pages/Login/Login"));
 const Register = lazy(() => import("../Pages/Register/Register"));
+const Onboarding = lazy(() => import("../Pages/Onboarding/Onboarding"));
 const ErrorPage = lazy(() => import("../Pages/ErrorPage/ErrorPage"));
 const Forbidden = lazy(() => import("../Pages/Forbidden/Forbidden"));
 
 export const router = createBrowserRouter([
+  {
+    Component: SessionGate,
+    children: [
   {
     path: "/",
     Component: RootLayout,
@@ -43,31 +48,15 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <Suspense fallback={<Loading></Loading>}>
+          <Suspense fallback={<RouteSkeleton />}>
             <Home></Home>
-          </Suspense>
-        ),
-      },
-      {
-        path: "/register",
-        element: (
-          <Suspense fallback={<Loading></Loading>}>
-            <Register></Register>
-          </Suspense>
-        ),
-      },
-      {
-        path: "/login",
-        element: (
-          <Suspense fallback={<Loading></Loading>}>
-            <Login></Login>
           </Suspense>
         ),
       },
       {
         path: "/about",
         element: (
-          <Suspense fallback={<Loading></Loading>}>
+          <Suspense fallback={<RouteSkeleton />}>
             <AboutUs></AboutUs>
           </Suspense>
         ),
@@ -188,21 +177,19 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "allOrders",
+        element: (
+          <AdminRoutes>
+            <AllOrders></AllOrders>
+          </AdminRoutes>
+        ),
+      },
+      {
         path: "cashoutRequests",
         element: (
           <AdminRoutes>
             <CashoutRequests></CashoutRequests>
           </AdminRoutes>
-        ),
-      },
-
-      // customer routes
-      {
-        path: "/dashboard/beARider",
-        element: (
-          <CustomerRoutes>
-            <BeARider></BeARider>
-          </CustomerRoutes>
         ),
       },
 
@@ -234,9 +221,33 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    path: "/login",
+    element: (
+      <Suspense fallback={<RouteSkeleton />}>
+        <Login></Login>
+      </Suspense>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <Suspense fallback={<RouteSkeleton />}>
+        <Register></Register>
+      </Suspense>
+    ),
+  },
+  {
+    path: "/onboarding",
+    element: (
+      <Suspense fallback={<RouteSkeleton />}>
+        <Onboarding></Onboarding>
+      </Suspense>
+    ),
+  },
+  {
     path: "/forbidden",
     element: (
-      <Suspense fallback={<Loading></Loading>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <Forbidden></Forbidden>
       </Suspense>
     ),
@@ -244,9 +255,11 @@ export const router = createBrowserRouter([
   {
     path: "*",
     element: (
-      <Suspense fallback={<Loading></Loading>}>
+      <Suspense fallback={<RouteSkeleton />}>
         <ErrorPage></ErrorPage>
       </Suspense>
     ),
+  },
+    ],
   },
 ]);

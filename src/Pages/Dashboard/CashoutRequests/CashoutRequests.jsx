@@ -1,15 +1,24 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pagination } from "antd";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import AppPagination from "../../../Components/Shared/AppPagination";
 import { toast } from "react-toastify";
 import { FiCalendar, FiUser } from "react-icons/fi";
-import Loading from "../../../Components/Loading/Loading";
 import EmptyState from "../../../Components/Shared/EmptyState";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import { CASHOUT_METHODS } from "../../../lib/cashoutMethods";
 import { formatCurrency, formatDate } from "../../../lib/formatters";
+import { CashoutRequestsListSkeleton } from "../../../Components/Skeletons/PageSkeletons";
+import ListToolbar from "../../../Components/Shared/ListToolbar";
+import PageHeading from "../../../Components/Shared/PageHeading";
+import FilterTabs from "../../../Components/Shared/FilterTabs";
+import EmptyResults from "../../../Components/Shared/EmptyResults";
 import {
   CashoutStatusBadge,
   PayoutDetails,
@@ -173,14 +182,37 @@ const CashoutRequests = () => {
   const [status, setStatus] = useState("pending");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
+  const [search, setSearch] = useState("");
+  const [method, setMethod] = useState("");
+  const [sort, setSort] = useState("");
+
+  const updateSearch = useCallback((value) => {
+    setSearch(value);
+    setPage(1);
+  }, []);
+  const resetFilters = () => {
+    setSearch("");
+    setMethod("");
+    setSort("");
+    setPage(1);
+  };
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["cashoutRequests", status, page],
+    queryKey: ["cashoutRequests", status, page, search, method, sort],
+    placeholderData: keepPreviousData,
     enabled: !!userEmail,
     refetchInterval: 30000,
     queryFn: async () => {
       const res = await axiosSecure.get("/cashouts", {
-        params: { email: userEmail, status, page, limit: PAGE_SIZE },
+        params: {
+          email: userEmail,
+          status,
+          page,
+          limit: PAGE_SIZE,
+          search: search || undefined,
+          method: method || undefined,
+          sort: sort || undefined,
+        },
       });
       return res.data;
     },
@@ -222,43 +254,71 @@ const CashoutRequests = () => {
 
   return (
     <div className="w-full space-y-6 pb-8">
-      <header className="flex flex-col gap-2 border-b border-base-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">
-            Admin workspace
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-base-content sm:text-4xl">
-            Cashout requests
-          </h1>
-        </div>
-        <p className="max-w-md text-sm leading-6 text-base-content/70 sm:text-right">
-          Send each rider their payment using the details below, then mark the
-          request as cashed out with a proof attachment.
-        </p>
-      </header>
+      <PageHeading
+        eyebrow="Admin workspace"
+        title="Cashout requests"
+        description="Send each rider their payment using the details below, then mark the request as cashed out with a proof attachment."
+      />
 
-      <div role="tablist" className="flex flex-wrap gap-2">
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={status === key}
-            onClick={() => changeTab(key)}
-            className={`btn btn-sm min-h-10 rounded-full ${
-              status === key
-                ? "btn-primary"
-                : "border border-base-300 bg-base-100 text-base-content"
-            }`}
-          >
-            {label}
-            <span className="ml-1 font-bold">{counts[key] ?? 0}</span>
-          </button>
-        ))}
-      </div>
+      <FilterTabs
+        label="Request status"
+        value={status}
+        onChange={changeTab}
+        tabs={TABS.map(({ key, label }) => ({
+          key,
+          label,
+          count: counts[key] ?? 0,
+        }))}
+      />
+
+      <ListToolbar
+        searchId="cashout-search"
+        searchLabel="Search requests"
+        searchPlaceholder="Rider name, email or transaction ID"
+        search={search}
+        onSearch={updateSearch}
+        activeCount={(search ? 1 : 0) + (method ? 1 : 0) + (sort ? 1 : 0)}
+        onReset={resetFilters}
+        summary={
+          isLoading
+            ? "Loading requests"
+            : `${total} ${total === 1 ? "request" : "requests"} found`
+        }
+        filters={[
+          {
+            key: "method",
+            label: "Payout method",
+            options: [
+              { value: "", label: "All methods" },
+              ...Object.entries(CASHOUT_METHODS).map(([value, { label }]) => ({
+                value,
+                label,
+              })),
+            ],
+            value: method,
+            onChange: (value) => {
+              setMethod(value);
+              setPage(1);
+            },
+          },
+          {
+            key: "sort",
+            label: "Sort by",
+            options: [
+              { value: "", label: "Default order" },
+              { value: "highest", label: "Highest amount" },
+            ],
+            value: sort,
+            onChange: (value) => {
+              setSort(value);
+              setPage(1);
+            },
+          },
+        ]}
+      />
 
       {isLoading ? (
-        <Loading />
+        <CashoutRequestsListSkeleton />
       ) : isError ? (
         <div
           className="rounded-2xl border border-error/30 bg-error/10 p-6 text-center"
@@ -275,6 +335,12 @@ const CashoutRequests = () => {
             Try again
           </button>
         </div>
+      ) : requests.length === 0 && (search || method) ? (
+        <EmptyResults
+          title="No requests match"
+          message="Try another rider, transaction ID or payout method."
+          onReset={resetFilters}
+        />
       ) : requests.length === 0 ? (
         <EmptyState
           title={
@@ -373,16 +439,13 @@ const CashoutRequests = () => {
           </div>
 
           {total > PAGE_SIZE && (
-            <div className="flex justify-center pt-2">
-              <Pagination
-                current={page}
-                align="center"
-                total={total}
-                pageSize={PAGE_SIZE}
-                showSizeChanger={false}
-                onChange={setPage}
-              />
-            </div>
+            <AppPagination
+              className="pt-2"
+              current={page}
+              total={total}
+              pageSize={PAGE_SIZE}
+              onChange={setPage}
+            />
           )}
         </>
       )}

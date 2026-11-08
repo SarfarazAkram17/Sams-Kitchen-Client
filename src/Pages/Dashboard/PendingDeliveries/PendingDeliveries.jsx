@@ -1,5 +1,10 @@
-import { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   FiCalendar,
   FiCheckCircle,
@@ -10,11 +15,14 @@ import {
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import EmptyState from "../../../Components/Shared/EmptyState";
-import Loading from "../../../Components/Loading/Loading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
 import OrderItemsSection from "../OrderItemsSection";
 import { formatCurrency, formatDate } from "../../../lib/formatters";
+import { PendingDeliveriesSkeleton } from "../../../Components/Skeletons/PageSkeletons";
+import ListToolbar from "../../../Components/Shared/ListToolbar";
+import PageHeading from "../../../Components/Shared/PageHeading";
+import EmptyResults from "../../../Components/Shared/EmptyResults";
 
 const getOrderNumber = (order) => `${String(order._id || "").toUpperCase()}`;
 
@@ -60,6 +68,8 @@ const PendingDeliveries = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const { userEmail } = useAuth();
+  const [search, setSearch] = useState("");
+  const updateSearch = useCallback((value) => setSearch(value), []);
   const [busyOrderId, setBusyOrderId] = useState("");
   const [otpPrompt, setOtpPrompt] = useState(null);
   const [otpValue, setOtpValue] = useState("");
@@ -80,10 +90,16 @@ const PendingDeliveries = () => {
     isLoading: offersLoading,
     isError: offersError,
   } = useQuery({
-    queryKey: ["riderOffers", userEmail],
+    queryKey: ["riderOffers", userEmail, search],
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const res = await axiosSecure.get("/riders/offers", {
-        params: { email: userEmail, page: 1, limit: 20 },
+        params: {
+          email: userEmail,
+          page: 1,
+          limit: 20,
+          search: search || undefined,
+        },
       });
       return res.data;
     },
@@ -96,10 +112,16 @@ const PendingDeliveries = () => {
     isLoading: ordersLoading,
     isError: ordersError,
   } = useQuery({
-    queryKey: ["riderOrders", userEmail],
+    queryKey: ["riderOrders", userEmail, search],
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const res = await axiosSecure.get("/riders/orders", {
-        params: { email: userEmail, page: 1, limit: 20 },
+        params: {
+          email: userEmail,
+          page: 1,
+          limit: 20,
+          search: search || undefined,
+        },
       });
       return res.data;
     },
@@ -195,7 +217,7 @@ const PendingDeliveries = () => {
     onSettled: () => setBusyOrderId(""),
   });
 
-  if (offersLoading || ordersLoading) return <Loading />;
+  if (offersLoading || ordersLoading) return <PendingDeliveriesSkeleton />;
 
   const offers = offersData?.offers || [];
   const orders = ordersData?.orders || [];
@@ -208,21 +230,23 @@ const PendingDeliveries = () => {
   };
 
   return (
-    <div className="w-full space-y-8 pb-8">
-      <header className="flex flex-col gap-2 border-b border-base-300 pb-5 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[.16em] text-primary">
-            Rider workspace
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-base-content sm:text-4xl">
-            Pending deliveries
-          </h1>
-        </div>
-        <p className="max-w-md text-sm leading-6 text-base-content/70 sm:text-right">
-          Accept a nearby offer, then update its status as you complete the
-          delivery.
-        </p>
-      </header>
+    <div className="w-full space-y-6 pb-8">
+      <PageHeading
+        eyebrow="Rider workspace"
+        title="Pending deliveries"
+        description="Accept a nearby offer, then update its status as you complete the delivery."
+      />
+
+      <ListToolbar
+        searchId="deliveries-search"
+        searchLabel="Search deliveries"
+        searchPlaceholder="Order ID, customer, area or dish"
+        search={search}
+        onSearch={updateSearch}
+        activeCount={search ? 1 : 0}
+        onReset={() => setSearch("")}
+        summary="Filters offers and your active deliveries"
+      />
 
       {offersError && (
         <div
@@ -333,7 +357,11 @@ const PendingDeliveries = () => {
         ) : (
           <EmptyState
             title={
-              offersError ? "Offers are unavailable" : "No open offers nearby"
+              offersError
+                ? "Offers are unavailable"
+                : search
+                  ? "No offers match your search"
+                  : "No open offers nearby"
             }
             description={
               offersError
@@ -445,7 +473,11 @@ const PendingDeliveries = () => {
           </div>
         ) : (
           <EmptyState
-            title="No active deliveries"
+            title={
+              search
+                ? "No active deliveries match your search"
+                : "No active deliveries"
+            }
             description="When you accept an offer, it will move into this list."
           />
         )}

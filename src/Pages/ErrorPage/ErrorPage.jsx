@@ -1,33 +1,25 @@
 import { Link } from "react-router";
-import Lottie from "lottie-react";
-import errorAnimation from "../../assets/animations/error.json";
+import useAuth from "../../Hooks/useAuth";
+import StatusPage from "../../Components/Shared/StatusPage";
 
 const ErrorPage = () => {
+  const { user } = useAuth();
+
   return (
-    <div className="pb-8 flex flex-col items-center justify-center text-center bg-base-100 px-4">
-      <Lottie animationData={errorAnimation} loop={true} className="w-[28%]" />
-
-      {/* Error Title */}
-      <h1 className="text-3xl md:text-4xl font-bold text-primary">
-        Oops! Page Not Found
-      </h1>
-
-      {/* Subtitle */}
-      <p className="mt-3 text-base-content/80 text-lg max-w-md">
-        The page you’re looking for doesn’t exist or has been moved. Let’s get
-        you back on track.
-      </p>
-
-      {/* Actions */}
-      <div className="space-y-6 flex flex-col mt-6">
-        <Link to="/" className="btn btn-primary">
-          Go to Home
+    <StatusPage
+      code="404"
+      title="Page not found"
+      description="The link may be broken, or the page may have moved. Check the address, or head back to a page that works."
+    >
+      <Link to="/" className="btn btn-primary h-12 w-full sm:w-auto sm:min-w-44">
+        Back to home
+      </Link>
+      {user && (
+        <Link to="/dashboard" className="btn h-12 w-full sm:w-auto sm:min-w-44">
+          Open dashboard
         </Link>
-        <Link to="/dashboard" className="btn btn-primary">
-          Go to Dashboard
-        </Link>
-      </div>
-    </div>
+      )}
+    </StatusPage>
   );
 };
 

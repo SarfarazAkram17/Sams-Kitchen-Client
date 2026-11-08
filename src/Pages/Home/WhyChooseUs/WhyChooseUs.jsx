@@ -20,7 +20,7 @@ const WhyChooseUs = () => (
 
       <div className="grid gap-5 lg:grid-cols-[1.15fr_1fr]">
         <Reveal>
-          <article className="relative flex h-full min-h-[22rem] flex-col justify-between overflow-hidden rounded-[2rem] border border-base-300 bg-base-100 p-8 sm:p-10">
+          <article className="relative flex h-full min-h-[22rem] flex-col justify-between overflow-hidden rounded-[2rem] border border-base-300 bg-base-100 p-5 sm:p-8 sm:p-10">
             <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-success/15 blur-3xl" aria-hidden="true" />
             <span className="relative grid size-14 place-items-center rounded-2xl bg-success/15 text-success">
               <FaLeaf size={24} aria-hidden="true" />

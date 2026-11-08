@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FiArrowRight } from "react-icons/fi";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import useAuth from "../../../Hooks/useAuth";
+import { formatCurrency } from "../../../lib/money";
 
 const SslPayment = ({ orderInfo }) => {
   const axiosSecure = useAxiosSecure();
@@ -11,12 +12,6 @@ const SslPayment = ({ orderInfo }) => {
   const { user, userEmail } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  const formatCurrency = (amt) =>
-    `৳${Number(amt).toLocaleString("en-BD", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
 
   const handlePay = async (e) => {
     e.preventDefault();

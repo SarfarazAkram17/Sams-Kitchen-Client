@@ -10,6 +10,9 @@ import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../Hooks/useAxios";
 import { RxCross2 } from "react-icons/rx";
 import { useEffect, useState, useRef } from "react";
+import { foodPrice, formatAmount } from "../../lib/money";
+import LazyImage from "./LazyImage";
+import { CartItemSkeleton } from "../Skeletons/CardSkeletons";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -62,14 +65,9 @@ const Cart = () => {
       const food = foods[i];
       const cartItem = cartItems.find((item) => item.foodId === food._id);
 
-      if (food.discount > 0) {
-        const price = food.price - (food.price * food.discount) / 100;
-        total += price * cartItem.quantity;
-      } else {
-        total += food.price * cartItem.quantity;
-      }
+      total += foodPrice(food) * cartItem.quantity;
     }
-    return total.toFixed(2);
+    return total;
   };
 
   const total = calculateCartTotal();
@@ -126,18 +124,13 @@ const Cart = () => {
         {/* Scroll container: flex column so empty/error states can fill and center */}
         <div className="hide-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto px-3">
           {isLoading ? (
-            <div className="space-y-3 py-5" aria-label="Loading cart items">
-              {[0, 1].map((item) => (
-                <div
-                  key={item}
-                  className="flex gap-3 rounded-xl border border-base-300 p-3"
-                >
-                  <div className="size-16 animate-pulse rounded-lg bg-base-200" />
-                  <div className="flex-1 space-y-2 py-1">
-                    <div className="h-3 w-3/4 animate-pulse rounded bg-base-300" />
-                    <div className="h-3 w-1/2 animate-pulse rounded bg-base-200" />
-                  </div>
-                </div>
+            <div
+              className="space-y-4 pt-6"
+              role="status"
+              aria-label="Loading cart items"
+            >
+              {[0, 1, 2].map((item) => (
+                <CartItemSkeleton key={item} />
               ))}
             </div>
           ) : isError ? (
@@ -179,11 +172,13 @@ const Cart = () => {
                     className="flex items-center justify-between gap-2 rounded-xl border border-base-300 bg-base-200 p-2 pr-3"
                   >
                     <div className="flex items-center">
-                      <img
-                        src={foodItem?.image}
-                        alt={foodItem?.name}
-                        className="h-12 sm:h-16 w-15 sm:w-20 object-cover rounded-md"
-                      />
+                      <div className="relative h-12 w-15 shrink-0 overflow-hidden rounded-md sm:h-16 sm:w-20">
+                        <LazyImage
+                          src={foodItem?.image}
+                          alt={foodItem?.name}
+                          className="size-full object-cover"
+                        />
+                      </div>
                       <div className="ml-4 space-y-1 sm:space-y-3 px-0.5">
                         <h4 className="font-bold text-xs sm:text-[1rem]">
                           {foodItem?.name}
@@ -201,13 +196,8 @@ const Cart = () => {
                             -
                           </button>
                           <span className="text-[8px] sm:text-xs font-semibold">
-                            {item.quantity} x ৳
-                            {foodItem.discount > 0
-                              ? (
-                                  foodItem.price -
-                                  (foodItem.price * foodItem.discount) / 100
-                                ).toFixed(2)
-                              : foodItem.price}
+                            {item.quantity} x ৳{" "}
+                            {formatAmount(foodPrice(foodItem))}
                           </span>
                           <button
                             type="button"
@@ -227,20 +217,18 @@ const Cart = () => {
                         {foodItem.discount > 0 ? (
                           <div>
                             <span className="line-through whitespace-nowrap block text-[10px] sm:text-xs text-base-content/60">
-                              ৳ {(foodItem.price * item.quantity).toFixed(2)}
+                              ৳ {formatAmount(foodItem.price * item.quantity)}
                             </span>
                             <span className="text-success whitespace-nowrap text-xs sm:text-sm block font-semibold">
                               ৳{" "}
-                              {(
-                                (foodItem.price -
-                                  (foodItem.price * foodItem.discount) / 100) *
-                                item.quantity
-                              ).toFixed(2)}
+                              {formatAmount(
+                                foodPrice(foodItem) * item.quantity,
+                              )}
                             </span>
                           </div>
                         ) : (
                           <span className="text-success whitespace-nowrap text-xs sm:text-sm font-semibold">
-                            ৳ {(foodItem.price * item.quantity).toFixed(2)}
+                            ৳ {formatAmount(foodItem.price * item.quantity)}
                           </span>
                         )}
                       </div>
@@ -266,7 +254,9 @@ const Cart = () => {
             <span className="text-lg font-semibold text-base-content/70">
               Total
             </span>
-            <span className="text-xl font-bold text-primary">৳ {total}</span>
+            <span className="text-xl font-bold text-primary">
+              ৳ {formatAmount(total)}
+            </span>
           </div>
           {cartItems.length === 0 ? (
             <button

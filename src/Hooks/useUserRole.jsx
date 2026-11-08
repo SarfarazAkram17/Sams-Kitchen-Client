@@ -1,24 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import useAuth from './useAuth';
-import useAxiosSecure from './useAxiosSecure';
+import useUserProfile from "./useUserProfile";
 
+// Role information comes from the database through the account profile.
 const useUserRole = () => {
-    const { loading: authLoading, userEmail } = useAuth();
-    const axiosSecure = useAxiosSecure();
+  const { profile, profileLoading } = useUserProfile();
 
-    const {
-        data: role = 'customer',
-        isLoading: roleLoading,
-    } = useQuery({
-        queryKey: ['userRole', userEmail],
-        enabled: !authLoading && !!userEmail,
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/users/${userEmail}/role`);
-            return res.data.role;
-        },
-    });
-
-    return { role, roleLoading: authLoading || roleLoading };
+  return {
+    role: profile?.role ?? null,
+    roleLabel: profile?.roleLabel ?? null,
+    roleLoading: profileLoading,
+  };
 };
 
 export default useUserRole;

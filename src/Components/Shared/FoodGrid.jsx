@@ -5,12 +5,8 @@ import { addToCart } from "../../CartUtils/cartUtils";
 import useAuth from "../../Hooks/useAuth";
 import FoodCard from "./FoodCard";
 import Reveal from "./Reveal";
-
-const getDiscountedPrice = (food) => {
-  const price = Number(food.price || 0);
-  const discount = Number(food.discount || 0);
-  return discount > 0 ? price - (price * discount) / 100 : price;
-};
+import { foodPrice } from "../../lib/money";
+import { HomeFoodGridSkeleton } from "../Skeletons/PageSkeletons";
 
 /** Loading / error / empty / populated states for a row of FoodCards. */
 const FoodGrid = ({ query, label, emptyTitle, emptyText, emptyAction }) => {
@@ -30,24 +26,13 @@ const FoodGrid = ({ query, label, emptyTitle, emptyText, emptyAction }) => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" role="status" aria-label={`Loading ${label}`}>
-        {Array.from({ length: 3 }, (_, index) => (
-          <div key={index} className="overflow-hidden rounded-3xl border border-base-300 bg-base-100">
-            <div className="aspect-[1.3/1] animate-pulse bg-base-200" />
-            <div className="space-y-3 p-5">
-              <div className="h-6 w-2/3 animate-pulse rounded-full bg-base-200" />
-              <div className="h-4 w-full animate-pulse rounded-full bg-base-200" />
-              <div className="h-4 w-1/2 animate-pulse rounded-full bg-base-200" />
-            </div>
-          </div>
-        ))}
-      </div>
+      <HomeFoodGridSkeleton />
     );
   }
 
   if (isError) {
     return (
-      <div className="rounded-3xl border border-error/30 bg-base-100 p-8 text-center" role="alert">
+      <div className="rounded-3xl border border-error/30 bg-base-100 p-5 sm:p-8 text-center" role="alert">
         <FiAlertCircle className="mx-auto text-3xl text-error" aria-hidden="true" />
         <h3 className="mt-3 font-bold text-base-content">We couldn’t load the {label}</h3>
         <p className="mt-1 text-sm text-base-content/70">Please try again in a moment.</p>
@@ -74,7 +59,7 @@ const FoodGrid = ({ query, label, emptyTitle, emptyText, emptyAction }) => {
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {foods.map((food, index) => (
         <Reveal key={food._id} delay={index * 0.08} className="h-full">
-          <FoodCard food={food} discountedPrice={getDiscountedPrice(food)} handleAddToCart={handleAddToCart} />
+          <FoodCard food={food} discountedPrice={foodPrice(food)} handleAddToCart={handleAddToCart} />
         </Reveal>
       ))}
     </div>

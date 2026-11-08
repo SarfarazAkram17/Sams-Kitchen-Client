@@ -1,18 +1,23 @@
 import useAuth from "../Hooks/useAuth";
-import useUserRole from "../Hooks/useUserRole";
+import useUserProfile from "../Hooks/useUserProfile";
 import { Navigate } from "react-router";
-import Loading from "../Components/Loading/Loading";
+import RouteSkeleton from "../Components/Skeletons/RouteSkeleton";
 
 const RiderRoutes = ({ children }) => {
   const { user, loading } = useAuth();
-  const { role, roleLoading } = useUserRole();
+  const { profile, profileLoading } = useUserProfile();
 
-  if (loading || roleLoading) {
-    return <Loading></Loading>;
+  if (loading || profileLoading) {
+    return <RouteSkeleton />;
   }
 
-  if (!user || role !== "rider") {
+  if (!user || profile?.role !== "rider") {
     return <Navigate to="/forbidden"></Navigate>;
+  }
+
+  // Applications under review or rejected land on the dashboard notice instead.
+  if (["pending", "rejected"].includes(profile.riderStatus)) {
+    return <Navigate to="/dashboard"></Navigate>;
   }
 
   return children;
