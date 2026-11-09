@@ -571,6 +571,14 @@ button,
   transform: translateY(1px);
 }
 
+/* Buttons keep their height inside flex columns on small screens (no collapsing). */
+@layer components {
+  .btn {
+    flex-shrink: 0;
+    min-height: var(--size, 2.5rem);
+  }
+}
+
 /* Primary buttons read as a raised key: lit top edge, darker base, grounded shadow. */
 .btn-primary {
   color: var(--color-primary-content) !important;

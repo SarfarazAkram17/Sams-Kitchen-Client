@@ -4,7 +4,13 @@ import { FiBriefcase, FiPhone, FiUser } from "react-icons/fi";
 import Field, { SelectField } from "../Forms/Field";
 
 // Delivery profile an admin reviews before a rider can take orders.
-const RiderDetailsForm = ({ onSubmit, onBack, submitting, defaultValues, submitLabel = "Send application" }) => {
+const RiderDetailsForm = ({
+  onSubmit,
+  onBack,
+  submitting,
+  defaultValues,
+  submitLabel = "Send application",
+}) => {
   const {
     register,
     control,
@@ -12,7 +18,9 @@ const RiderDetailsForm = ({ onSubmit, onBack, submitting, defaultValues, submitL
     watch,
     setValue,
     formState: { errors },
-  } = useForm({ defaultValues: { region: "", district: "", thana: "", ...defaultValues } });
+  } = useForm({
+    defaultValues: { region: "", district: "", thana: "", ...defaultValues },
+  });
 
   const [regions, setRegions] = useState([]);
   const [outlets, setOutlets] = useState([]);
@@ -41,13 +49,21 @@ const RiderDetailsForm = ({ onSubmit, onBack, submitting, defaultValues, submitL
   const district = watch("district");
 
   const districts = useMemo(
-    () => [...new Set(outlets.filter((outlet) => outlet.region === region).map((outlet) => outlet.district))],
+    () => [
+      ...new Set(
+        outlets
+          .filter((outlet) => outlet.region === region)
+          .map((outlet) => outlet.district),
+      ),
+    ],
     [outlets, region],
   );
   const thanas = useMemo(
     () =>
       outlets
-        .filter((outlet) => outlet.region === region && outlet.district === district)
+        .filter(
+          (outlet) => outlet.region === region && outlet.district === district,
+        )
         .flatMap((outlet) => outlet.covered_area),
     [outlets, region, district],
   );
@@ -79,7 +95,10 @@ const RiderDetailsForm = ({ onSubmit, onBack, submitting, defaultValues, submitL
           error={errors.age?.message}
           {...register("age", {
             required: "Enter your age.",
-            min: { value: 18, message: "Riders must be at least 18 years old." },
+            min: {
+              value: 18,
+              message: "Riders must be at least 18 years old.",
+            },
           })}
         />
         <Field
@@ -140,12 +159,25 @@ const RiderDetailsForm = ({ onSubmit, onBack, submitting, defaultValues, submitL
 
       <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row">
         {onBack && (
-          <button type="button" onClick={onBack} disabled={submitting} className="btn h-12 sm:w-32">
+          <button
+            type="button"
+            onClick={onBack}
+            disabled={submitting}
+            className="btn h-12 w-full shrink-0 sm:w-32"
+          >
             Back
           </button>
         )}
-        <button type="submit" disabled={submitting || loadFailed} className="btn btn-primary h-12 flex-1 text-base">
-          {submitting ? <span className="loading loading-spinner loading-sm" /> : submitLabel}
+        <button
+          type="submit"
+          disabled={submitting || loadFailed}
+          className="btn btn-primary h-12 w-full shrink-0 text-base sm:flex-1"
+        >
+          {submitting ? (
+            <span className="loading loading-spinner loading-sm" />
+          ) : (
+            submitLabel
+          )}
         </button>
       </div>
     </form>
