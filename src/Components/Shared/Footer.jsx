@@ -1,8 +1,11 @@
 import { Link, NavLink } from "react-router";
 import { FiArrowUpRight, FiMapPin } from "react-icons/fi";
 import logo from "../../assets/images/logo.png";
+import useAuth from "../../Hooks/useAuth";
 
 const Footer = () => {
+  const { user } = useAuth();
+
   const linkClass = "shared-route-link w-fit text-sm px-4";
   return (
     <footer className="border-t border-base-300 bg-base-200">
@@ -41,12 +44,16 @@ const Footer = () => {
             <NavLink to="/offers" className={linkClass}>
               Offers
             </NavLink>
-            <NavLink to="/register" className={linkClass}>
-              Create account
-            </NavLink>
-            <NavLink to="/login" className={linkClass}>
-              Sign in
-            </NavLink>
+            {!user && (
+              <>
+                <NavLink to="/register" className={linkClass}>
+                  Create account
+                </NavLink>
+                <NavLink to="/login" className={linkClass}>
+                  Sign in
+                </NavLink>
+              </>
+            )}
           </nav>
         </div>
 
